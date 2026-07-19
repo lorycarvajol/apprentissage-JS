@@ -1,0 +1,34 @@
+/* La preview réutilise MainLayout + SidebarNavigation + .page-content /
+   .theory-container / .theory-content de Content.css — ces styles ne
+   couvrent donc plus que ce qui est spécifique à la fenêtre de preview
+   elle-même (le bandeau "aperçu en direct" et l'état vide). */
+
+.preview-live-banner {
+  background: var(--color-info-bg);
+  color: var(--color-info-text);
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 13.5px;
+  font-style: italic;
+}
+
+.preview-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.preview-empty p {
+  margin: 8px 0;
+  font-size: 18px;
+}
+
+.preview-empty .text-muted {
+  font-size: 14px;
+  color: var(--text-muted);
+}

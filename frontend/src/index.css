@@ -1,0 +1,162 @@
+/* ============================================
+   THEME TOKENS (light / dark)
+   ============================================
+   Stratégie : valeurs claires par défaut sur :root, surchargées
+   automatiquement si le système est en sombre (prefers-color-scheme),
+   sauf si l'utilisateur a explicitement choisi un thème (data-theme
+   posé par ThemeContext sur <html>, qui a alors toujours la priorité).
+*/
+
+:root {
+  color-scheme: light;
+
+  /* Réserve toujours la place de la scrollbar verticale, même quand la page
+     est assez courte pour ne pas en avoir besoin. Sans ça, naviguer entre
+     des pages de hauteurs très différentes (ex: onglets admin, dont le
+     contenu va d'une simple carte à une longue liste imbriquée) fait
+     apparaître/disparaître la scrollbar, ce qui décale horizontalement tout
+     le contenu (donc aussi la barre d'onglets) de sa largeur (~15-17px) à
+     chaque changement.
+     `scrollbar-gutter` n'a d'effet que si `overflow` n'est pas `visible`
+     (la valeur par défaut sur <html>) : sans le `overflow-y: auto` ci-
+     dessous, la déclaration ci-dessus est silencieusement ignorée par le
+     navigateur — comportement de scroll inchangé, seul l'espace de la
+     gutter devient réservé en permanence. */
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+
+  /* Marque : bleu technique (diagramme de classes / éditeur de code) */
+  --brand-start: #2e7daf;
+  --brand-end: #1e5f8a;
+  --brand-gradient: linear-gradient(135deg, var(--brand-start) 0%, var(--brand-end) 100%);
+
+  /* Polices de l'identité "diagramme de classes" (chargées via index.html) */
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-display: 'Space Grotesk', sans-serif;
+
+  /* Surfaces */
+  --bg-page: #f5f7fa;
+  --bg-card: #ffffff;
+  --bg-subtle: #f5f7fb;
+  --bg-hover: #f0f2f8;
+
+  /* Texte */
+  --text-primary: #262b38;
+  --text-secondary: #63697b;
+  --text-muted: #8991a3;
+  --text-on-brand: #ffffff;
+
+  /* Bordures & séparateurs */
+  --border-color: #e4e7ee;
+  --border-color-strong: #d3d8e3;
+
+  /* Ombres */
+  --shadow-sm: 0 2px 8px rgba(23, 28, 43, 0.06);
+  --shadow-md: 0 4px 16px rgba(23, 28, 43, 0.1);
+  --shadow-lg: 0 8px 28px rgba(23, 28, 43, 0.14);
+
+  /* États sémantiques */
+  --color-success-bg: #d4edda;
+  --color-success-text: #155724;
+  --color-error-bg: #fdecea;
+  --color-error-text: #c0392b;
+  --color-warning-bg: #fff3cd;
+  --color-warning-text: #856404;
+  --color-info-bg: #f0f7ff;
+  --color-info-text: #2f6fa8;
+
+  /* Code (fond/texte de bloc volontairement identiques dans les deux thèmes,
+     comme un éditeur ; le texte inline suit lui le thème clair/sombre) */
+  --code-bg: #2d3748;
+  --code-header-bg: #1a202c;
+  --code-text: #e2e8f0;
+  --code-muted: #8b9bb4;
+  --code-inline-bg: #f5f7fa;
+  --code-inline-text: #b35900;
+
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --brand-start: #6fbee8;
+    --brand-end: #4a9bc9;
+
+    --bg-page: #12141b;
+    --bg-card: #1b1e28;
+    --bg-subtle: #21242f;
+    --bg-hover: #262a37;
+
+    --text-primary: #e7e9f0;
+    --text-secondary: #a4aabd;
+    --text-muted: #767c8e;
+
+    --border-color: #2b2f3d;
+    --border-color-strong: #383d4e;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.55);
+
+    --color-success-bg: rgba(72, 187, 120, 0.15);
+    --color-success-text: #68d391;
+    --color-error-bg: rgba(245, 101, 101, 0.15);
+    --color-error-text: #fc8181;
+    --color-warning-bg: rgba(236, 201, 75, 0.15);
+    --color-warning-text: #f6e05e;
+    --color-info-bg: rgba(102, 126, 234, 0.15);
+    --color-info-text: #90a4f0;
+
+    --code-inline-bg: #262a37;
+    --code-inline-text: #e8a575;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --brand-start: #6fbee8;
+  --brand-end: #4a9bc9;
+
+  --bg-page: #12141b;
+  --bg-card: #1b1e28;
+  --bg-subtle: #21242f;
+  --bg-hover: #262a37;
+
+  --text-primary: #e7e9f0;
+  --text-secondary: #a4aabd;
+  --text-muted: #767c8e;
+
+  --border-color: #2b2f3d;
+  --border-color-strong: #383d4e;
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.55);
+
+  --color-success-bg: rgba(72, 187, 120, 0.15);
+  --color-success-text: #68d391;
+  --color-error-bg: rgba(245, 101, 101, 0.15);
+  --color-error-text: #fc8181;
+  --color-warning-bg: rgba(236, 201, 75, 0.15);
+  --color-warning-text: #f6e05e;
+  --color-info-bg: rgba(102, 126, 234, 0.15);
+  --color-info-text: #90a4f0;
+
+  --code-inline-bg: #262a37;
+  --code-inline-text: #e8a575;
+}
+
+body {
+  background-color: var(--bg-page);
+  color: var(--text-primary);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}

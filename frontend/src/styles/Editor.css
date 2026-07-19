@@ -1,0 +1,480 @@
+/* ============================================
+   FULLSCREEN EDITOR
+   ============================================ */
+
+.fullscreen-editor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #1e1e1e;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Editor Header */
+.editor-header {
+  background: #2d2d30;
+  color: #fff;
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #3e3e42;
+  flex-shrink: 0;
+}
+
+.editor-header-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.editor-header-left h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.editor-id {
+  font-size: 12px;
+  color: #999;
+  background: #3e3e42;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.editor-header-right {
+  display: flex;
+  gap: 10px;
+}
+
+/* Editor Form Layout */
+.editor-form {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* Sidebar */
+.editor-sidebar {
+  width: 280px;
+  background: #252526;
+  border-right: 1px solid #3e3e42;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+
+.editor-sidebar-section {
+  padding: 20px;
+  border-bottom: 1px solid #3e3e42;
+}
+
+.editor-sidebar-section h3 {
+  margin: 0 0 15px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.editor-sidebar .form-group {
+  margin-bottom: 15px;
+}
+
+.editor-sidebar .form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  color: #ccc;
+  font-weight: 500;
+}
+
+.editor-sidebar .form-control {
+  width: 100%;
+  padding: 8px 10px;
+  background: #3c3c3c;
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 13px;
+}
+
+.editor-sidebar .form-control:focus {
+  outline: none;
+  border-color: #007acc;
+  background: #2d2d30;
+}
+
+.editor-sidebar select.form-control {
+  cursor: pointer;
+}
+
+/* Insert Buttons */
+.insert-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.insert-buttons .btn {
+  justify-content: flex-start;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 13px;
+  background: #3c3c3c;
+  border: 1px solid #555;
+  color: #ccc;
+  transition: all 0.2s;
+}
+
+.insert-buttons .btn:hover {
+  background: #505050;
+  border-color: #666;
+  color: #fff;
+}
+
+/* Editor Actions */
+.editor-actions {
+  padding: 20px;
+  margin-top: auto;
+}
+
+.editor-actions .btn-primary {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* Main Editor Area */
+.editor-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.editor-main-header {
+  padding: 15px 20px;
+  background: #2d2d30;
+  border-bottom: 1px solid #3e3e42;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.editor-main-header .form-label {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.editor-hint {
+  font-size: 12px;
+  color: #999;
+  font-style: italic;
+}
+
+/* Monaco Wrapper */
+.monaco-wrapper {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Preview Panel */
+.editor-preview {
+  width: 500px;
+  background: #f5f7fa;
+  border-left: 1px solid #3e3e42;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.editor-preview-header {
+  padding: 15px 20px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.editor-preview-header h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.editor-preview-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+/* Override theory content styles for preview */
+.editor-preview-content.theory-content {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.editor-preview-content.theory-content h2 {
+  font-size: 22px;
+  margin-top: 20px;
+}
+
+.editor-preview-content.theory-content h3 {
+  font-size: 18px;
+  margin-top: 16px;
+}
+
+.editor-preview-content.theory-content pre {
+  font-size: 12px;
+  padding: 15px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .editor-preview {
+    width: 400px;
+  }
+}
+
+@media (max-width: 900px) {
+  .editor-sidebar {
+    width: 240px;
+  }
+
+  .editor-preview {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .editor-sidebar {
+    position: absolute;
+    left: -280px;
+    top: 53px;
+    bottom: 0;
+    z-index: 100;
+    transition: left 0.3s ease;
+  }
+
+  .editor-sidebar.open {
+    left: 0;
+  }
+
+  .editor-header-left h2 {
+    font-size: 14px;
+  }
+
+  .editor-id {
+    display: none;
+  }
+}
+
+/* Custom Scrollbar for Dark Theme */
+.editor-sidebar::-webkit-scrollbar,
+.editor-preview-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.editor-sidebar::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.editor-sidebar::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 5px;
+}
+
+.editor-sidebar::-webkit-scrollbar-thumb:hover {
+  background: #666;
+}
+
+.editor-preview-content::-webkit-scrollbar-track {
+  background: #f5f7fa;
+}
+
+.editor-preview-content::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 5px;
+}
+
+.editor-preview-content::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* Block Button Style */
+.btn-block {
+  display: block;
+  width: 100%;
+}
+
+/* ============================================
+   AIDE-MÉMOIRE JS (overlay)
+   ============================================ */
+
+.cheat-sheet-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cheat-sheet-panel {
+  width: 420px;
+  max-width: 100%;
+  height: 100%;
+  background: #252526;
+  border-left: 1px solid #3e3e42;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: cheat-sheet-slide-in 0.2s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cheat-sheet-panel {
+    animation: none;
+  }
+}
+
+@keyframes cheat-sheet-slide-in {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.cheat-sheet-header {
+  padding: 16px 20px;
+  background: #2d2d30;
+  border-bottom: 1px solid #3e3e42;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.cheat-sheet-header h2 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.cheat-sheet-close {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.cheat-sheet-close:hover {
+  color: #fff;
+}
+
+.cheat-sheet-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 20px 20px;
+}
+
+.cheat-sheet-section h3 {
+  color: #9cdcfe;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 20px 0 10px;
+}
+
+.cheat-sheet-item {
+  margin-bottom: 10px;
+}
+
+.cheat-sheet-label {
+  display: block;
+  color: #ccc;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.cheat-sheet-code {
+  background: #1e1e1e;
+  color: #d4d4d4;
+  padding: 8px 10px;
+  border-radius: 4px;
+  font-family: 'Fira Code', 'Courier New', Courier, monospace;
+  font-size: 12.5px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* ============================================
+   ERREUR JS TRADUITE
+   ============================================ */
+
+.js-error-technical {
+  margin-top: 10px;
+}
+
+.js-error-technical summary {
+  cursor: pointer;
+  color: #999;
+  font-size: 12px;
+  user-select: none;
+}
+
+.js-error-technical summary:hover {
+  color: #ccc;
+}
+
+.js-error-technical pre {
+  margin-top: 8px;
+}
+
+/* Alert in Editor */
+.fullscreen-editor .alert {
+  border-radius: 0;
+  margin: 0 !important;
+  padding: 12px 20px;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.fullscreen-editor .alert-success {
+  background: #155724;
+  color: #d4edda;
+}
+
+.fullscreen-editor .alert-error {
+  background: #721c24;
+  color: #f8d7da;
+}

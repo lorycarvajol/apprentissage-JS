@@ -1,0 +1,365 @@
+/* ===========================================
+   SALLE DES TROPHÉES — thème "sceaux de cire"
+   ===========================================
+   Chaque badge est un sceau de cire frappé dans une des 5 teintures
+   héraldiques du royaume (une par catégorie). Un badge non obtenu reste
+   un sceau vierge : la cire est coulée, mais rien n'y a encore été
+   imprimé — c'est la métaphore du mystère total, pas une simple grille
+   grisée. Les grades (Manant → Roi) portent en plus un listel/ruban,
+   pour signaler qu'ils forment une hiérarchie et non une collection libre.
+*/
+
+.trophy-room-page {
+  /* Teintures héraldiques (identiques dans les deux thèmes, ajustées en luminosité) */
+  --tr-bg: #ede3cc;
+  --tr-bg-deep: #e3d5b3;
+  --tr-ink: #2b1d0e;
+  --tr-ink-soft: #5b4a34;
+  --tr-rule: #b08d3f;
+  --tr-wax-blank: #c9bfa4;
+  --tr-wax-blank-shade: #b3a688;
+
+  --tr-vert: #3b5d40;
+  --tr-tenne: #a85b21;
+  --tr-or: #a8791f;
+  --tr-purpure: #5b3a73;
+  --tr-gules: #8c2f1b;
+
+  background: var(--tr-bg);
+  border-radius: 16px;
+  padding: 40px clamp(16px, 4vw, 56px) 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  color: var(--tr-ink);
+}
+
+:root[data-theme="dark"] .trophy-room-page {
+  --tr-bg: #1b140d;
+  --tr-bg-deep: #241a10;
+  --tr-ink: #ede3cc;
+  --tr-ink-soft: #b9aa8c;
+  --tr-rule: #d4af5a;
+  --tr-wax-blank: #3a2f22;
+  --tr-wax-blank-shade: #2c2318;
+
+  --tr-vert: #5c8b63;
+  --tr-tenne: #c97a3b;
+  --tr-or: #d4af5a;
+  --tr-purpure: #8b63a8;
+  --tr-gules: #c1503a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .trophy-room-page {
+    --tr-bg: #1b140d;
+    --tr-bg-deep: #241a10;
+    --tr-ink: #ede3cc;
+    --tr-ink-soft: #b9aa8c;
+    --tr-rule: #d4af5a;
+    --tr-wax-blank: #3a2f22;
+    --tr-wax-blank-shade: #2c2318;
+
+    --tr-vert: #5c8b63;
+    --tr-tenne: #c97a3b;
+    --tr-or: #d4af5a;
+    --tr-purpure: #8b63a8;
+    --tr-gules: #c1503a;
+  }
+}
+
+/* ===========================================
+   BANNIÈRE D'EN-TÊTE
+   =========================================== */
+
+.trophy-room-hero {
+  text-align: center;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--tr-rule);
+  position: relative;
+}
+
+.trophy-emblem {
+  width: 52px;
+  height: 52px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  color: var(--tr-bg);
+  background: radial-gradient(circle at 35% 30%, var(--tr-rule), var(--tr-gules) 75%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+}
+
+.trophy-room-hero h1 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(26px, 3.4vw, 38px);
+  letter-spacing: 0.05em;
+  margin: 0 0 10px 0;
+  color: var(--tr-ink);
+}
+
+.trophy-room-subtitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tr-ink-soft);
+  margin: 0;
+}
+
+/* ===========================================
+   GRILLE DE SCEAUX — 5 colonnes x 4 lignes
+   =========================================== */
+
+.seal-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 28px 20px;
+}
+
+.seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  opacity: 0;
+  transform: translateY(10px) scale(0.94);
+  animation: seal-stamp 0.5s ease forwards;
+  animation-delay: var(--seal-delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seal {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+@keyframes seal-stamp {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.seal-medallion {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34px;
+  position: relative;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow:
+    inset 0 -6px 10px rgba(0, 0, 0, 0.18),
+    inset 0 4px 6px rgba(255, 255, 255, 0.12),
+    0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.seal:hover .seal-medallion {
+  transform: translateY(-3px) scale(1.04);
+}
+
+/* Sceau vierge : cire coulée, rien d'imprimé. Pas de couleur de
+   catégorie tant que le titre n'est pas obtenu — c'est le mystère. */
+.seal-locked .seal-medallion {
+  background: radial-gradient(circle at 35% 30%, var(--tr-wax-blank), var(--tr-wax-blank-shade) 80%);
+  color: transparent;
+}
+
+.seal-earned.seal-category-progression .seal-medallion {
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--tr-vert), white 12%), var(--tr-vert) 75%);
+}
+
+.seal-earned.seal-category-streak .seal-medallion {
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--tr-tenne), white 12%), var(--tr-tenne) 75%);
+}
+
+.seal-earned.seal-category-achievement .seal-medallion {
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--tr-or), white 12%), var(--tr-or) 75%);
+}
+
+.seal-earned.seal-category-special .seal-medallion {
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--tr-purpure), white 12%), var(--tr-purpure) 75%);
+}
+
+.seal-earned.seal-category-grade .seal-medallion {
+  background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--tr-gules), white 12%), var(--tr-gules) 75%);
+}
+
+.seal-earned .seal-medallion {
+  color: var(--tr-bg);
+}
+
+.seal-locked {
+  opacity: 0.85;
+}
+
+.seal-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--tr-ink);
+  margin: 0;
+}
+
+.seal-locked .seal-name {
+  color: var(--tr-ink-soft);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.seal-description {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: var(--tr-ink-soft);
+  margin: 0;
+}
+
+/* Les grades (Manant -> Roi) portent un listel : ils forment une
+   hiérarchie, pas une collection libre — la forme le signale. */
+.seal-ribbon {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 2px 10px;
+  clip-path: polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%);
+  background: var(--tr-rule);
+  color: var(--tr-bg);
+}
+
+.seal-locked .seal-ribbon {
+  background: var(--tr-wax-blank-shade);
+  color: var(--tr-ink-soft);
+}
+
+/* ===========================================
+   LÉGENDE HÉRALDIQUE
+   =========================================== */
+
+.trophy-legend {
+  border-top: 1px solid var(--tr-rule);
+  padding-top: 18px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  color: var(--tr-ink-soft);
+}
+
+.trophy-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.trophy-legend-swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* ===========================================
+   LOADING & EMPTY STATES
+   =========================================== */
+
+.loading-state {
+  background: var(--tr-bg-deep);
+  border-radius: 12px;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.loading-state .spinner {
+  width: 40px;
+  height: 40px;
+  margin: 0 auto 20px;
+}
+
+.loading-state p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--tr-ink-soft);
+  font-size: 16px;
+  margin: 0;
+}
+
+.empty-state {
+  background: var(--tr-bg-deep);
+  border-radius: 12px;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.empty-state p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--tr-ink-soft);
+  font-size: 16px;
+  margin: 0;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid var(--tr-wax-blank);
+  border-top: 4px solid var(--tr-gules);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+
+@media (max-width: 1024px) {
+  .seal-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .seal-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .trophy-room-page {
+    padding: 28px 20px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seal-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .seal-medallion {
+    width: 84px;
+    height: 84px;
+    font-size: 28px;
+  }
+}

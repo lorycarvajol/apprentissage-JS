@@ -1,0 +1,213 @@
+.account-page {
+  --account-public: #2f9e6e;
+  --account-protected: #c98a2c;
+  --account-private: #8a93a6;
+
+  min-height: 100vh;
+  background: var(--bg-page);
+  padding: 40px 20px 80px;
+}
+
+:root[data-theme="dark"] .account-page {
+  --account-public: #58c896;
+  --account-protected: #e3a857;
+  --account-private: #7c879c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .account-page {
+    --account-public: #58c896;
+    --account-protected: #e3a857;
+    --account-private: #7c879c;
+  }
+}
+
+.account-container {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.account-container h1 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.account-section {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.account-section h2 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 18px;
+  margin-bottom: 16px;
+}
+
+.account-section-description {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+/* Les infos du compte, lues comme les propriétés d'une classe Utilisateur
+   (même grammaire de visibilité +/-/# qu'à l'accueil) */
+.account-properties-eyebrow {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.account-properties {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.account-property-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 12px 18px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.account-property-row:last-child {
+  border-bottom: none;
+}
+
+.account-property-visibility {
+  font-weight: 700;
+  width: 14px;
+  flex-shrink: 0;
+}
+
+.account-property-visibility.is-public { color: var(--account-public); }
+.account-property-visibility.is-protected { color: var(--account-protected); }
+.account-property-visibility.is-private { color: var(--account-private); }
+
+.account-property-name {
+  color: var(--text-secondary);
+}
+
+.account-property-value {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-left: auto;
+}
+
+.account-action {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 18px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.account-action:last-of-type {
+  border-bottom: none;
+}
+
+.account-action h3 {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.account-action p {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin: 0;
+}
+
+.account-action-danger h3 {
+  color: var(--color-error-text);
+}
+
+.btn-secondary {
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color-strong);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.btn-danger {
+  background: var(--color-error-text);
+  color: white;
+  border: none;
+}
+
+.btn-danger:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-danger:disabled,
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.account-delete-confirm {
+  margin-top: 16px;
+  padding: 20px;
+  background: var(--color-error-bg);
+  border-radius: 8px;
+}
+
+.account-delete-confirm p {
+  color: var(--text-primary);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.account-delete-confirm input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border-color-strong);
+  border-radius: 6px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.account-delete-confirm-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+@media (max-width: 600px) {
+  .account-action {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .account-action button {
+    width: 100%;
+  }
+
+  .account-delete-confirm-actions {
+    flex-direction: column-reverse;
+  }
+
+  .account-delete-confirm-actions button {
+    width: 100%;
+  }
+}
