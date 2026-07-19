@@ -13,6 +13,9 @@
 # Build output
 /frontend/dist/
 
+# Test caches
+/backend/.phpunit.cache/
+
 # IDE
 .vscode/
 .idea/
