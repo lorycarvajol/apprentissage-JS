@@ -72,6 +72,7 @@ class ExerciceController
                      ->setDescription($data['description'])
                      ->setInstructions($data['instructions'] ?? null)
                      ->setStarterCode($data['starter_code'] ?? null)
+                     ->setHtmlFixture($data['html_fixture'] ?? null)
                      ->setSolutionCode($data['solution_code'] ?? null)
                      ->setExpectedOutput($data['expected_output'] ?? null)
                      ->setDifficulty($data['difficulty'] ?? 'medium')
@@ -128,6 +129,9 @@ class ExerciceController
             }
             if (isset($data['starter_code'])) {
                 $exercice->setStarterCode($data['starter_code']);
+            }
+            if (isset($data['html_fixture'])) {
+                $exercice->setHtmlFixture($data['html_fixture']);
             }
             if (isset($data['solution_code'])) {
                 $exercice->setSolutionCode($data['solution_code']);

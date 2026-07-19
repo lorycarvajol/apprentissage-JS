@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getModules, getChapitres, getExercices } from '../../services/contentService';
 import { createExercice, updateExercice, deleteExercice } from '../../services/adminService';
-import { runJs } from '../../utils/jsSandbox';
+import { runJs, runJsWithDom } from '../../utils/jsSandbox';
 
 const ExerciceManager = () => {
   const [exercices, setExercices] = useState([]);
@@ -20,6 +20,7 @@ const ExerciceManager = () => {
     description: '',
     instructions: '',
     starter_code: '',
+    html_fixture: '',
     solution_code: '',
     expected_output: '',
     difficulty: 'easy',
@@ -117,6 +118,7 @@ const ExerciceManager = () => {
         description: exercice.description || '',
         instructions: exercice.instructions || '',
         starter_code: exercice.starter_code || '',
+        html_fixture: exercice.html_fixture || '',
         solution_code: exercice.solution_code || '',
         expected_output: exercice.expected_output || '',
         difficulty: exercice.difficulty || 'easy',
@@ -137,6 +139,7 @@ const ExerciceManager = () => {
         description: '',
         instructions: '',
         starter_code: '',
+        html_fixture: '',
         solution_code: '',
         expected_output: '',
         difficulty: 'easy',
@@ -168,6 +171,7 @@ const ExerciceManager = () => {
       description: '',
       instructions: '',
       starter_code: '',
+      html_fixture: '',
       solution_code: '',
       expected_output: '',
       difficulty: 'easy',
@@ -191,7 +195,9 @@ const ExerciceManager = () => {
     setMessage({ type: '', text: '' });
 
     try {
-      const executed = await runJs(formData.solution_code);
+      const executed = formData.html_fixture.trim()
+        ? await runJsWithDom(formData.solution_code, formData.html_fixture)
+        : await runJs(formData.solution_code);
 
       if (executed.timedOut) {
         setMessage({ type: 'error', text: 'La solution met trop de temps à s\'exécuter (boucle infinie ?)' });
@@ -468,6 +474,22 @@ const ExerciceManager = () => {
                     onChange={(e) => setFormData({ ...formData, starter_code: e.target.value })}
                     placeholder={'// Code de départ pour l\'exercice'}
                   />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">HTML de départ (exercice avec DOM réel)</label>
+                  <textarea
+                    className="form-control"
+                    style={{ minHeight: '100px', fontFamily: 'monospace', fontSize: '13px' }}
+                    value={formData.html_fixture}
+                    onChange={(e) => setFormData({ ...formData, html_fixture: e.target.value })}
+                    placeholder={'<h1>Titre</h1>\n<button>+1</button>'}
+                  />
+                  <p className="form-hint">
+                    Laissez vide pour un exercice classique (sandbox Worker, pas de DOM). Renseigné,
+                    le code s'exécute dans une iframe sandboxée avec ce HTML déjà en place -- accès
+                    réel à document.querySelector, addEventListener, etc.
+                  </p>
                 </div>
 
                 <div className="form-group">

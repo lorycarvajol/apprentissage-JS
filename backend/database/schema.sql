@@ -113,6 +113,7 @@ CREATE TABLE exercices (
     description TEXT NOT NULL,
     instructions TEXT,
     starter_code TEXT COMMENT 'Code de départ fourni',
+    html_fixture TEXT COMMENT 'HTML de départ pour un exercice avec DOM réel (runJsWithDom), NULL sinon',
     solution_code TEXT COMMENT 'Solution de référence',
     expected_output TEXT COMMENT 'Sortie de référence, précalculée côté client',
     test_cases JSON COMMENT 'Tests unitaires pour validation',

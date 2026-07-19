@@ -13,6 +13,7 @@ class Exercice
     private string $description;
     private ?string $instructions = null;
     private ?string $starter_code = null;
+    private ?string $html_fixture = null;
     private ?string $solution_code = null;
     private ?string $expected_output = null;
     private ?array $test_cases = null;
@@ -54,6 +55,17 @@ class Exercice
     public function getStarterCode(): ?string
     {
         return $this->starter_code;
+    }
+
+    /**
+     * HTML de départ inséré dans le <body> de l'iframe sandboxée avant
+     * exécution -- non NULL uniquement pour un exercice avec DOM réel (voir
+     * runJsWithDom() côté frontend). NULL pour un exercice classique, qui
+     * continue de passer par le Worker (runJs()).
+     */
+    public function getHtmlFixture(): ?string
+    {
+        return $this->html_fixture;
     }
 
     public function getSolutionCode(): ?string
@@ -127,6 +139,12 @@ class Exercice
     public function setStarterCode(?string $starter_code): self
     {
         $this->starter_code = $starter_code;
+        return $this;
+    }
+
+    public function setHtmlFixture(?string $html_fixture): self
+    {
+        $this->html_fixture = $html_fixture;
         return $this;
     }
 
@@ -277,10 +295,10 @@ class Exercice
         $stmt = $db->prepare("
             INSERT INTO exercices (
                 chapitre_id, title, description, instructions,
-                starter_code, solution_code, expected_output, test_cases,
+                starter_code, html_fixture, solution_code, expected_output, test_cases,
                 difficulty, points, order_index
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
         $testCasesJson = $this->test_cases ? json_encode($this->test_cases) : null;
@@ -291,6 +309,7 @@ class Exercice
             $this->description,
             $this->instructions,
             $this->starter_code,
+            $this->html_fixture,
             $this->solution_code,
             $this->expected_output,
             $testCasesJson,
@@ -316,7 +335,7 @@ class Exercice
         $stmt = $db->prepare("
             UPDATE exercices
             SET chapitre_id = ?, title = ?, description = ?, instructions = ?,
-                starter_code = ?, solution_code = ?, expected_output = ?, test_cases = ?,
+                starter_code = ?, html_fixture = ?, solution_code = ?, expected_output = ?, test_cases = ?,
                 difficulty = ?, points = ?, order_index = ?
             WHERE id = ?
         ");
@@ -329,6 +348,7 @@ class Exercice
             $this->description,
             $this->instructions,
             $this->starter_code,
+            $this->html_fixture,
             $this->solution_code,
             $this->expected_output,
             $testCasesJson,
@@ -366,6 +386,7 @@ class Exercice
         $exercice->description = $data['description'];
         $exercice->instructions = $data['instructions'];
         $exercice->starter_code = $data['starter_code'];
+        $exercice->html_fixture = $data['html_fixture'] ?? null;
         $exercice->solution_code = $data['solution_code'];
         $exercice->expected_output = $data['expected_output'] ?? null;
         $exercice->test_cases = $data['test_cases'] ? json_decode($data['test_cases'], true) : null;
@@ -391,6 +412,7 @@ class Exercice
             'description' => $this->description,
             'instructions' => $this->instructions,
             'starter_code' => $this->starter_code,
+            'html_fixture' => $this->html_fixture,
             'test_cases' => $this->test_cases,
             'difficulty' => $this->difficulty,
             'points' => $this->points,

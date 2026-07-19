@@ -17,7 +17,7 @@ centrale du curriculum.
 
 **9 modules · 27 chapitres · 54 exercices suggérés · 54 illustrations suggérées**
 
-**Statut** : ✅ Fait = créé en base (`apprentissage_js`) via un script `backend/database/seed_moduleN.php`, théories + exercices + illustrations SVG réels, vérifié via l'API. 🟡 Théorie seule = théories + illustrations créées et vérifiées, mais sans exercices notés (limitation du sandbox actuel, voir Notes de suivi). ⏳ À faire = plan ci-dessous, rien en base pour l'instant.
+**Statut** : ✅ Fait = créé en base (`apprentissage_js`) via un script `backend/database/seed_moduleN.php`, théories + exercices + illustrations SVG réels, vérifié via l'API. 🟡 Partiel = au moins un chapitre en théorie + illustrations seulement, sans exercices notés (limitation du sandbox pour ce chapitre précis, voir Notes de suivi). ⏳ À faire = plan ci-dessous, rien en base pour l'instant.
 
 ---
 
@@ -29,7 +29,7 @@ centrale du curriculum.
 | M2 | Boucles et collections | 2.1 – 2.3 | ✅ Fait |
 | M3 | Fonctions | 3.1 – 3.3 | ✅ Fait |
 | M4 | Chaînes, dates et données textuelles | 4.1 – 4.3 | ✅ Fait |
-| M5 | Le DOM et les événements | 5.1 – 5.3 | 🟡 Théorie seule |
+| M5 | Le DOM et les événements | 5.1 – 5.3 | ✅ Fait |
 | M6 | JavaScript asynchrone | 6.1 – 6.3 | ✅ Fait |
 | M7 | Programmation orientée objet | 7.1 – 7.3 | ✅ Fait |
 | M8 | JavaScript moderne et bonnes pratiques | 8.1 – 8.3 | 🟡 Partiel (8.2 théorie seule) |
@@ -228,11 +228,11 @@ Manipuler du texte et des dates, deux besoins omniprésents.
 
 ---
 
-## M5 — Le DOM et les événements 🟡 Théorie seule
+## M5 — Le DOM et les événements ✅ Fait
 
 Le premier module vraiment spécifique au navigateur — sans équivalent PHP.
 
-*Créé en base via `backend/database/seed_module5.php` — 3 théories, 6 illustrations SVG (`frontend/public/images/module5-chap{1,2,3}/`), **sans exercices notés** : voir la note d'architecture ci-dessous (Notes de suivi).*
+*Créé en base via `backend/database/seed_module5.php` (3 théories, 6 illustrations SVG dans `frontend/public/images/module5-chap{1,2,3}/`) puis `backend/database/seed_module5_exercices.php` (6 exercices, ajoutés après coup une fois le sandbox étendu au DOM réel — voir Notes de suivi).*
 
 ### 5.1 Sélectionner et manipuler le DOM
 - **Théorie** : `querySelector`/`querySelectorAll`, lecture/écriture de contenu et
@@ -478,13 +478,15 @@ contenu de panorama sans exercice de code à y rattacher naturellement).*
 ## Notes de suivi
 
 - Avancement : **les 9 modules sont créés en base et vérifiés via l'API — le
-  plan initial est entièrement authored** (27/27 chapitres). M1-M4, M6, M7 et
-  M9.2 ont théorie + exercices + illustrations complets ; M8 a 8.1/8.3
-  complets mais 8.2 théorie seule ; M5 et M9.1/M9.3 sont théorie +
-  illustrations seulement. Ce qui reste, si on y revient : noter M5 (sandbox
-  DOM) et M8.2 (sandbox multi-fichiers) une fois ces chantiers d'architecture
-  faits — voir notes ci-dessous ; ce ne sont pas des priorités immédiates,
-  plutôt des chantiers à part entière.
+  plan initial est entièrement authored** (27/27 chapitres). M1-M7 et M9.2
+  ont théorie + exercices + illustrations complets (le sandbox DOM de M5 a
+  été construit rétroactivement, voir plus bas) ; seul M8 reste partiel
+  (8.1/8.3 complets, 8.2 théorie seule) ainsi que M9.1/M9.3 (théorie +
+  illustrations seulement, pas d'exercices de code prévus pour ces
+  chapitres de panorama). Ce qui reste, si on y revient : M8.2 attend le
+  même genre de chantier que celui qui a débloqué M5 (support multi-fichiers
+  pour `import`/`export`, plus lourd — touche aussi le schéma et l'UI admin,
+  pas seulement le sandbox) — pas une priorité immédiate.
 - **M9 a été entièrement redéfini sur demande explicite de l'utilisateur : ce
   n'est plus le "Projet intégrateur" que ce document décrivait à l'origine.**
   L'ancien plan (rédiger un cahier des charges en texte libre, construire une
@@ -540,24 +542,39 @@ contenu de panorama sans exercice de code à y rattacher naturellement).*
   aucune régression). `fetch`/`XMLHttpRequest` restent désactivés (politique
   de non-accès réseau inchangée) : les exercices 6.3 utilisent une fonction
   async simulée (Promise + `setTimeout`) à la place d'un vrai `fetch`.
-- **M5 n'a aucun exercice noté, décision assumée avec l'utilisateur.** Le
-  sandbox d'exécution (`jsSandbox.js`) tourne dans un Web Worker sans
-  `document`/`window` (isolation délibérée pour permettre `worker.terminate()`
-  sur une boucle infinie — voir CLAUDE.md). Du code utilisant
-  `document.querySelector`/`addEventListener` y lève systématiquement une
-  `ReferenceError`, donc aucun exercice DOM réel ne peut être corrigé avec le
-  mécanisme actuel (comparaison de `console.log` à `expected_output`).
-  Options envisagées : (a) reformuler les exercices sans vrai DOM (string
-  building) — écarté, ça viderait M5 de sa raison d'être, le seul module sans
-  équivalent PHP ; (b) étendre le sandbox avec un mode d'exécution DOM
-  (probablement une iframe avec fixture HTML par exercice + comparaison d'un
-  `innerHTML` normalisé) — retenu en principe, mais volontairement traité
-  comme un chantier d'architecture séparé plutôt qu'improvisé en pleine
-  session de contenu, notamment parce que le choix initial du Worker plutôt
-  qu'une iframe était justifié par une garantie de sécurité (kill fiable d'une
-  boucle infinie) qu'une iframe n'offre pas nativement. En attendant : théorie
-  + illustrations livrées pour M5, exercices à ajouter rétroactivement une
-  fois ce chantier fait.
+- **M5 a d'abord été livré sans exercices notés, puis le sandbox DOM a été
+  construit comme chantier séparé et M5 complété rétroactivement — résolu.**
+  Rappel du blocage initial : le sandbox (`jsSandbox.js`) tournait
+  uniquement dans un Web Worker sans `document`/`window` (isolation
+  délibérée, `worker.terminate()` garantit le kill d'une boucle infinie).
+  Du code utilisant `document.querySelector`/`addEventListener` y levait
+  systématiquement une `ReferenceError`. Décision prise (option b de
+  l'analyse d'alors) : ajouter `runJsWithDom(code, htmlFixture)`, un second
+  mode d'exécution utilisant une vraie iframe sandboxée
+  (`sandbox="allow-scripts allow-forms"`, pas de `allow-same-origin` —
+  origine opaque, aucun accès aux cookies/storage de la page, aucune
+  navigation top-level) plutôt qu'un DOM simulé. Compromis assumé :
+  contrairement à `worker.terminate()`, aucune API web n'offre de kill
+  garanti d'un script synchrone en cours d'exécution dans une iframe — un
+  `while(true)` gèlerait l'onglet jusqu'à fermeture/rechargement (récupérable,
+  pas catastrophique, même risque que n'importe quel bac à sable JS grand
+  public type CodePen/JSFiddle). Deux filets ajoutés en plus du timeout de
+  5s : un rejet heuristique de `while(true)`/`while(1)`/`for(;;)` avant même
+  d'exécuter le code, et le sandboxing de l'iframe lui-même (aucune fuite
+  possible vers la page ou les autres utilisateurs même en cas de blocage).
+  `expected_output`/`normalizeOutput()` restent inchangés côté backend — le
+  contrat de retour de `runJsWithDom` est identique à `runJs` (Worker), donc
+  aucun nouveau mécanisme de comparaison n'a été nécessaire ; seul un champ
+  `exercices.html_fixture` (nullable) a été ajouté au schéma pour porter le
+  HTML de départ. Mécanisme vérifié par exécution réelle (Chrome headless
+  piloté via le protocole DevTools, pas par lecture de code) avant d'écrire
+  le moindre exercice — a permis de détecter deux bugs concrets avant mise
+  en prod : `form.requestSubmit()` silencieusement bloqué sans
+  `allow-forms`, et un faux timeout dû à un budget de test trop court plutôt
+  qu'à un vrai défaut. Les 6 exercices de M5 simulent l'interaction
+  utilisateur directement dans le code (`element.click()`,
+  `form.requestSubmit()`, déjà fournis dans `starter_code`) puisqu'il n'y a
+  personne pour cliquer pendant une correction automatique.
 - Pour M3.2 Défi, le scénario ROADMAP initial ("bug de closure dans un
   `setTimeout`") a été adapté en un tableau de fonctions appelées après la
   boucle : `jsSandbox.js` envoie sa sortie capturée dès la fin de l'exécution

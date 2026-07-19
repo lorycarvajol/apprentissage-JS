@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import Editor from '@monaco-editor/react';
 import api from '../../services/api';
 import JsCheatSheet from './JsCheatSheet';
-import { runJs } from '../../utils/jsSandbox';
+import { runJs, runJsWithDom } from '../../utils/jsSandbox';
 import { translateJsError } from '../../utils/jsErrorTranslator';
 import '../../styles/Editor.css';
 
@@ -22,10 +22,13 @@ const ExerciceSolver = ({ exercice, onClose }) => {
     try {
       // Contrairement au projet PHP jumeau (où le serveur exécutait le code
       // soumis via un subprocess), le code JS est exécuté ici même, dans le
-      // navigateur de l'apprenant (sandbox Worker, voir jsSandbox.js). Le
-      // backend ne reçoit que le résultat déjà capturé et se contente de le
-      // comparer à expected_output pour la notation.
-      const executed = await runJs(code);
+      // navigateur de l'apprenant (sandbox Worker par défaut, ou iframe
+      // sandboxée avec un vrai DOM si l'exercice a un html_fixture -- voir
+      // jsSandbox.js). Le backend ne reçoit que le résultat déjà capturé et
+      // se contente de le comparer à expected_output pour la notation.
+      const executed = exercice.html_fixture
+        ? await runJsWithDom(code, exercice.html_fixture)
+        : await runJs(code);
 
       const response = await api.post(`/exercices/${exercice.id}/submit`, {
         code,
@@ -98,6 +101,18 @@ const ExerciceSolver = ({ exercice, onClose }) => {
               <p style={{ color: '#ccc', fontSize: '13px', lineHeight: 1.6 }}>
                 {exercice.instructions}
               </p>
+            </div>
+          )}
+
+          {exercice.html_fixture && (
+            <div className="editor-sidebar-section">
+              <h3>HTML de départ</h3>
+              <p style={{ color: '#ccc', fontSize: '12px', lineHeight: 1.6, marginBottom: '8px' }}>
+                Cette page existe déjà quand votre code s'exécute :
+              </p>
+              <pre style={{ background: '#1e1e1e', color: '#f8f8f2', padding: '12px', borderRadius: '6px', fontSize: '12px', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                {exercice.html_fixture}
+              </pre>
             </div>
           )}
 
