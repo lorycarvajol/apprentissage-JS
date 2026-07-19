@@ -580,3 +580,43 @@ contenu de panorama sans exercice de code à y rattacher naturellement).*
   ont un garde-fou qui les arrête si le module existe déjà en base.
 - `CLAUDE.md` a été mis à jour pour refléter la portée définie ici (curriculum
   JS complet, POO = un module parmi d'autres).
+
+---
+
+## Chantiers techniques futurs
+
+Liste de chantiers identifiés mais volontairement non traités dans le cadre
+de la mise en place de la CI (2026-07-19) — priorisation à revoir plus tard.
+
+- **Couvrir les Services PDO par des tests PHPUnit** (`AuthService`,
+  `GamificationService`, `ProgressionService`, etc.) — actuellement
+  impossible à tester isolément car ils appellent `Database::getConnection()`
+  de façon statique, sans point d'injection. Nécessite un petit refactor
+  (injection de la connexion) avant de pouvoir écrire ces tests.
+- **Tester `jsSandbox.js`** (le sandbox d'exécution en Web Worker) — jsdom
+  n'implémente pas les Web Workers, il faudrait soit un mock lourd, soit un
+  vrai test runner en navigateur headless (Playwright/Puppeteer).
+- **Tester les flux mutants** (inscription, connexion, soumission
+  d'exercice) — le test d'intégration actuel est volontairement en lecture
+  seule sur la vraie base de dev ; une couverture correcte demanderait une
+  base de données de test dédiée.
+- **Faire tourner réellement la suite Integration en CI** (pas seulement la
+  laisser se skip) — demande un service container MySQL dans le workflow
+  GitHub Actions, l'exécution de `backend/database/migrate.php` + au moins un
+  `seed_moduleN.php`, et le démarrage de `php -S localhost:8010 -t public/`
+  en arrière-plan avant `phpunit`.
+- **Audit UX apprenant** — vérifier que le dashboard et la salle des trophées
+  font vraiment ressortir la progression/les séries/les badges de façon
+  utile (non vérifié en profondeur jusqu'ici).
+- **Audit d'accessibilité** — navigation clavier, contraste des couleurs en
+  thèmes clair/sombre, comportement lecteur d'écran : rien n'a été vérifié
+  systématiquement.
+- **Outillage admin d'import/export en masse pour le contenu des cours** — le
+  contenu des 9 modules a été écrit à la main via des scripts PHP de seed ;
+  une fonctionnalité d'import/export en masse dans le panneau admin
+  accélérerait beaucoup la rédaction de contenu future.
+- **Revisiter les deux limitations connues du sandbox déjà documentées
+  ci-dessus dans "Notes de suivi"** : M5 (DOM — pas de `document` dans le
+  Worker) et M8.2 (modules ES6 — `import`/`export` lève une SyntaxError sous
+  `new Function()`). Voir les entrées correspondantes plus haut pour le
+  raisonnement détaillé, non répété ici.
