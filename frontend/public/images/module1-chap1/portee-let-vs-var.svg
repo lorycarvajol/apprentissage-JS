@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 340" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="600" height="340" fill="#ffffff"/>
+  <text x="300" y="28" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="16" font-weight="600" fill="#262b38">Une variable "var" fuit son bloc, "let" reste enfermée</text>
+
+  <!-- LEFT: let -->
+  <g>
+    <text x="150" y="55" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="13" font-weight="600" fill="#2e7daf">let (portée de bloc)</text>
+    <rect x="30" y="65" width="240" height="230" rx="10" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="45" y="85" font-size="11" fill="#8991a3">function essai() {</text>
+
+    <rect x="45" y="95" width="210" height="70" rx="8" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="55" y="112" font-size="10" fill="#2e7daf">if (vrai) {</text>
+    <text x="65" y="132" font-size="12" fill="#262b38">let x = 1;</text>
+    <text x="55" y="155" font-size="10" fill="#2e7daf">}</text>
+
+    <text x="55" y="195" font-size="12" fill="#262b38">console.log(x);</text>
+    <rect x="45" y="205" width="210" height="30" rx="6" fill="#fdecea"/>
+    <text x="150" y="225" text-anchor="middle" font-size="11" fill="#c0392b">✗ ReferenceError</text>
+
+    <text x="45" y="270" font-size="11" fill="#8991a3">}</text>
+  </g>
+
+  <!-- RIGHT: var -->
+  <g>
+    <text x="450" y="55" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="13" font-weight="600" fill="#2e7daf">var (portée de fonction)</text>
+    <rect x="330" y="65" width="240" height="230" rx="10" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="345" y="85" font-size="11" fill="#8991a3">function essai() {</text>
+
+    <rect x="345" y="95" width="210" height="70" rx="8" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <text x="355" y="112" font-size="10" fill="#2e7daf">if (vrai) {</text>
+    <text x="365" y="132" font-size="12" fill="#262b38">var x = 1;</text>
+    <text x="355" y="155" font-size="10" fill="#2e7daf">}</text>
+
+    <path d="M 450 165 L 450 190" stroke="#2e7daf" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+    <text x="465" y="182" font-size="9" fill="#8991a3">fuit le bloc</text>
+
+    <text x="355" y="215" font-size="12" fill="#262b38">console.log(x);</text>
+    <rect x="345" y="225" width="210" height="30" rx="6" fill="#d4edda"/>
+    <text x="450" y="245" text-anchor="middle" font-size="11" fill="#155724">✓ 1</text>
+
+    <text x="345" y="278" font-size="11" fill="#8991a3">}</text>
+  </g>
+
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#2e7daf"/>
+    </marker>
+  </defs>
+</svg>

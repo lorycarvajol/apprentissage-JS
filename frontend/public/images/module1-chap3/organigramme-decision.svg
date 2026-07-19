@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 380" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="480" height="380" fill="#ffffff"/>
+  <text x="240" y="28" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="16" font-weight="600" fill="#262b38">Anatomie d'une décision</text>
+
+  <defs>
+    <marker id="a3" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <!-- start -->
+  <rect x="190" y="50" width="100" height="34" rx="17" fill="#2e7daf"/>
+  <text x="240" y="72" text-anchor="middle" font-size="12" fill="#ffffff" font-weight="600">début</text>
+  <line x1="240" y1="84" x2="240" y2="106" stroke="#8991a3" stroke-width="1.5" marker-end="url(#a3)"/>
+
+  <!-- diamond -->
+  <polygon points="240,105 320,150 240,195 160,150" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+  <text x="240" y="146" text-anchor="middle" font-size="12" fill="#262b38">condition</text>
+  <text x="240" y="162" text-anchor="middle" font-size="12" fill="#262b38">vraie ?</text>
+
+  <!-- yes branch -->
+  <line x1="320" y1="150" x2="380" y2="150" stroke="#155724" stroke-width="1.5" marker-end="url(#a3)"/>
+  <text x="345" y="140" text-anchor="middle" font-size="11" fill="#155724">oui</text>
+  <rect x="355" y="170" width="100" height="40" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+  <text x="405" y="194" text-anchor="middle" font-size="12" fill="#155724">action A</text>
+
+  <!-- no branch -->
+  <line x1="160" y1="150" x2="100" y2="150" stroke="#c0392b" stroke-width="1.5" marker-end="url(#a3)"/>
+  <text x="135" y="140" text-anchor="middle" font-size="11" fill="#c0392b">non</text>
+  <rect x="25" y="170" width="100" height="40" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+  <text x="75" y="194" text-anchor="middle" font-size="12" fill="#c0392b">action B</text>
+
+  <!-- merge to end -->
+  <line x1="405" y1="210" x2="405" y2="240" stroke="#8991a3" stroke-width="1.5"/>
+  <line x1="75" y1="210" x2="75" y2="240" stroke="#8991a3" stroke-width="1.5"/>
+  <line x1="75" y1="240" x2="405" y2="240" stroke="#8991a3" stroke-width="1.5"/>
+  <line x1="240" y1="240" x2="240" y2="262" stroke="#8991a3" stroke-width="1.5" marker-end="url(#a3)"/>
+
+  <rect x="190" y="262" width="100" height="34" rx="17" fill="#63697b"/>
+  <text x="240" y="284" text-anchor="middle" font-size="12" fill="#ffffff" font-weight="600">fin</text>
+
+  <text x="240" y="335" text-anchor="middle" font-size="12" fill="#8991a3">if (condition) { A } else { B }</text>
+</svg>

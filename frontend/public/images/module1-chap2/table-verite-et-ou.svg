@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="300" fill="#ffffff"/>
+  <text x="280" y="30" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="16" font-weight="600" fill="#262b38">Table de vérité — &amp;&amp; et ||</text>
+
+  <!-- header row -->
+  <g font-size="13" font-weight="600" fill="#ffffff">
+    <rect x="40" y="55" width="110" height="36" fill="#2e7daf"/>
+    <text x="95" y="78" text-anchor="middle">A</text>
+    <rect x="150" y="55" width="110" height="36" fill="#2e7daf"/>
+    <text x="205" y="78" text-anchor="middle">B</text>
+    <rect x="260" y="55" width="140" height="36" fill="#1e5f8a"/>
+    <text x="330" y="78" text-anchor="middle">A &amp;&amp; B</text>
+    <rect x="400" y="55" width="140" height="36" fill="#1e5f8a"/>
+    <text x="470" y="78" text-anchor="middle">A || B</text>
+  </g>
+
+  <!-- rows -->
+  <!-- row data: [A,B,AND,OR] -->
+  <!-- row 1: true,true,true,true -->
+  <g font-size="13">
+    <rect x="40" y="91" width="110" height="40" fill="#f5f7fb"/>
+    <rect x="150" y="91" width="110" height="40" fill="#f5f7fb"/>
+    <text x="95" y="116" text-anchor="middle" fill="#262b38">true</text>
+    <text x="205" y="116" text-anchor="middle" fill="#262b38">true</text>
+    <rect x="260" y="91" width="140" height="40" fill="#d4edda"/>
+    <text x="330" y="116" text-anchor="middle" fill="#155724">true</text>
+    <rect x="400" y="91" width="140" height="40" fill="#d4edda"/>
+    <text x="470" y="116" text-anchor="middle" fill="#155724">true</text>
+  </g>
+
+  <!-- row 2: true,false,false,true -->
+  <g font-size="13">
+    <rect x="40" y="131" width="110" height="40" fill="#ffffff"/>
+    <rect x="150" y="131" width="110" height="40" fill="#ffffff"/>
+    <text x="95" y="156" text-anchor="middle" fill="#262b38">true</text>
+    <text x="205" y="156" text-anchor="middle" fill="#262b38">false</text>
+    <rect x="260" y="131" width="140" height="40" fill="#fdecea"/>
+    <text x="330" y="156" text-anchor="middle" fill="#c0392b">false</text>
+    <rect x="400" y="131" width="140" height="40" fill="#d4edda"/>
+    <text x="470" y="156" text-anchor="middle" fill="#155724">true</text>
+  </g>
+
+  <!-- row 3: false,true,false,true -->
+  <g font-size="13">
+    <rect x="40" y="171" width="110" height="40" fill="#f5f7fb"/>
+    <rect x="150" y="171" width="110" height="40" fill="#f5f7fb"/>
+    <text x="95" y="196" text-anchor="middle" fill="#262b38">false</text>
+    <text x="205" y="196" text-anchor="middle" fill="#262b38">true</text>
+    <rect x="260" y="171" width="140" height="40" fill="#fdecea"/>
+    <text x="330" y="196" text-anchor="middle" fill="#c0392b">false</text>
+    <rect x="400" y="171" width="140" height="40" fill="#d4edda"/>
+    <text x="470" y="196" text-anchor="middle" fill="#155724">true</text>
+  </g>
+
+  <!-- row 4: false,false,false,false -->
+  <g font-size="13">
+    <rect x="40" y="211" width="110" height="40" fill="#ffffff"/>
+    <rect x="150" y="211" width="110" height="40" fill="#ffffff"/>
+    <text x="95" y="236" text-anchor="middle" fill="#262b38">false</text>
+    <text x="205" y="236" text-anchor="middle" fill="#262b38">false</text>
+    <rect x="260" y="211" width="140" height="40" fill="#fdecea"/>
+    <text x="330" y="236" text-anchor="middle" fill="#c0392b">false</text>
+    <rect x="400" y="211" width="140" height="40" fill="#fdecea"/>
+    <text x="470" y="236" text-anchor="middle" fill="#c0392b">false</text>
+  </g>
+
+  <rect x="40" y="55" width="500" height="196" fill="none" stroke="#d3d8e3" stroke-width="1.5"/>
+
+  <text x="280" y="275" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="12" fill="#8991a3">&amp;&amp; n'est vrai que si les deux côtés le sont · || est vrai dès qu'un seul côté l'est</text>
+</svg>

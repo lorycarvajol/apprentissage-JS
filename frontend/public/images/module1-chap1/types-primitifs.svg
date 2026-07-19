@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="600" height="320" fill="#ffffff"/>
+  <text x="300" y="34" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="17" font-weight="600" fill="#262b38">Chaque valeur primitive est une boîte avec une étiquette</text>
+
+  <!-- string box -->
+  <g>
+    <rect x="30" y="70" width="160" height="170" rx="10" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <rect x="30" y="70" width="160" height="30" rx="10" fill="#2e7daf"/>
+    <rect x="30" y="85" width="160" height="15" fill="#2e7daf"/>
+    <text x="110" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">string</text>
+    <text x="110" y="150" text-anchor="middle" font-size="18" fill="#262b38">"Ana"</text>
+    <line x1="50" y1="175" x2="170" y2="175" stroke="#d3d8e3" stroke-width="1"/>
+    <text x="110" y="200" text-anchor="middle" font-size="11" fill="#63697b">typeof v</text>
+    <text x="110" y="220" text-anchor="middle" font-size="13" fill="#155724">"string"</text>
+  </g>
+
+  <!-- number box -->
+  <g>
+    <rect x="220" y="70" width="160" height="170" rx="10" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <rect x="220" y="70" width="160" height="30" rx="10" fill="#2e7daf"/>
+    <rect x="220" y="85" width="160" height="15" fill="#2e7daf"/>
+    <text x="300" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">number</text>
+    <text x="300" y="150" text-anchor="middle" font-size="18" fill="#262b38">42</text>
+    <line x1="240" y1="175" x2="360" y2="175" stroke="#d3d8e3" stroke-width="1"/>
+    <text x="300" y="200" text-anchor="middle" font-size="11" fill="#63697b">typeof v</text>
+    <text x="300" y="220" text-anchor="middle" font-size="13" fill="#155724">"number"</text>
+  </g>
+
+  <!-- boolean box -->
+  <g>
+    <rect x="410" y="70" width="160" height="170" rx="10" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <rect x="410" y="70" width="160" height="30" rx="10" fill="#2e7daf"/>
+    <rect x="410" y="85" width="160" height="15" fill="#2e7daf"/>
+    <text x="490" y="90" text-anchor="middle" font-size="13" font-weight="600" fill="#ffffff">boolean</text>
+    <text x="490" y="150" text-anchor="middle" font-size="18" fill="#262b38">true</text>
+    <line x1="430" y1="175" x2="550" y2="175" stroke="#d3d8e3" stroke-width="1"/>
+    <text x="490" y="200" text-anchor="middle" font-size="11" fill="#63697b">typeof v</text>
+    <text x="490" y="220" text-anchor="middle" font-size="13" fill="#155724">"boolean"</text>
+  </g>
+
+  <text x="300" y="275" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="12" fill="#8991a3">const v = ...  →  la boîte définit ce que v peut contenir et comment JS le traite</text>
+</svg>

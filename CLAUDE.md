@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a learning platform for teaching Object-Oriented Programming (OOP) in **JavaScript**. It is the JS-flavored sibling of `apprentissage-POO-PHP` (same directory tree up one level: `C:\Dev\apprentissage-POO-PHP`), built by cloning that project's architecture wholesale and swapping only what genuinely differs between the two languages. The project consists of:
+This is a learning platform for teaching **JavaScript** relatively comprehensively — language fundamentals, loops/collections, functions, strings/dates, the DOM and events, asynchronous JS, object-oriented programming, modern JS/ES6+, and a capstone project. OOP is one module among nine (see `ROADMAP.md`), not the organizing theme of the curriculum. Architecturally, it is still the JS-flavored sibling of `apprentissage-POO-PHP` (same directory tree up one level: `C:\Dev\apprentissage-POO-PHP`), built by cloning that project's architecture wholesale and swapping only what genuinely differs between the two languages — but the *content* curriculum has diverged from the PHP sibling's OOP-centric shape (see "Course Content Structure" below). The project consists of:
 - A **backend API** built with PHP 8.2+ using the exact same hand-rolled MVC architecture as the PHP sibling project (custom `Router` in `backend/src/Helpers/Router.php`) — the backend is still PHP, it just serves a JavaScript curriculum instead of a PHP one
 - A **frontend** built with React 19 + Vite
 - A **MySQL database** (`apprentissage_js`) for storing course content, user progress, and gamification data — shares the same MySQL server instance as the PHP sibling project, just a different database name
@@ -75,8 +75,9 @@ Identical layout to the PHP sibling project, with these JS-specific additions/re
                             (ReferenceError, TypeError, SyntaxError, RangeError...).
                             Renamed/rewritten from the PHP project's phpErrorTranslator.js.
   /components/content
-    JsCheatSheet.jsx     - JS/OOP syntax reference overlay (classes, `#private` fields,
-                            inheritance, modules). Renamed/rewritten from PhpCheatSheet.jsx.
+    JsCheatSheet.jsx     - JS syntax reference overlay, organized by section (Bases,
+                            Classe, Héritage, Fonctions & modules...). Renamed/rewritten
+                            from PhpCheatSheet.jsx.
     ExerciceSolver.jsx   - Reworked: runs student code locally via jsSandbox.js before
                             submitting the captured result to the backend (see above).
   /components/admin
@@ -87,7 +88,7 @@ Identical layout to the PHP sibling project, with these JS-specific additions/re
 
 ## Course Content Structure
 
-**Empty by design.** No modules/chapitres/theories/exercices are seeded. The PHP sibling project's curriculum shape (6 modules / 18 chapters, progressing OOP fundamentals → encapsulation → inheritance → polymorphism/interfaces → advanced concepts → a "real-world integration" module) is a reasonable template to follow if you're authoring the JS curriculum from scratch, but nothing here assumes that exact shape — modules/chapitres are created and ordered entirely through `/admin`.
+**Empty by design.** No modules/chapitres/theories/exercices are seeded. The intended curriculum shape — **not** a copy of the PHP sibling's OOP-centric one — is planned in `ROADMAP.md` at the repo root: 9 modules / 27 chapters covering language basics, loops/collections, functions, strings/dates, the DOM and events, asynchronous JS, OOP (module 7 of 9 — one topic among several, not the spine of the curriculum), modern JS/ES6+, and a capstone project. `ROADMAP.md` also proposes, per chapter, a *Guidé*/*Défi* exercise pair and a *Concept*/*Application* illustration pair. It's a working plan, not fixed content — modules/chapitres are still created and ordered entirely through `/admin`, and the plan can be freely reshaped during authoring.
 
 ## Database Schema
 
