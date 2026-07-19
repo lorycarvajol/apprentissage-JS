@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="600" height="300" fill="#ffffff"/>
+  <text x="300" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Une classe est un moule, chaque new une instance</text>
+
+  <defs>
+    <marker id="mi-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <!-- mold -->
+  <g>
+    <rect x="30" y="90" width="140" height="110" rx="10" fill="#262b38"/>
+    <text x="100" y="130" text-anchor="middle" font-size="12" fill="#ffffff">class</text>
+    <text x="100" y="150" text-anchor="middle" font-size="12" fill="#ffffff">Personne</text>
+    <text x="100" y="172" text-anchor="middle" font-size="9" fill="#c7cbd6">(nom, age)</text>
+  </g>
+
+  <line x1="170" y1="110" x2="230" y2="80" stroke="#8991a3" stroke-width="1.5" marker-end="url(#mi-ap)"/>
+  <line x1="170" y1="145" x2="230" y2="145" stroke="#8991a3" stroke-width="1.5" marker-end="url(#mi-ap)"/>
+  <line x1="170" y1="180" x2="230" y2="215" stroke="#8991a3" stroke-width="1.5" marker-end="url(#mi-ap)"/>
+
+  <!-- instance 1 -->
+  <g font-size="10">
+    <rect x="235" y="45" width="150" height="60" rx="8" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <text x="310" y="65" text-anchor="middle" fill="#2e7daf">nom = "Ana"</text>
+    <text x="310" y="83" text-anchor="middle" fill="#2e7daf">age = 28</text>
+  </g>
+
+  <!-- instance 2 -->
+  <g font-size="10">
+    <rect x="235" y="115" width="150" height="60" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="310" y="135" text-anchor="middle" fill="#155724">nom = "Léo"</text>
+    <text x="310" y="153" text-anchor="middle" fill="#155724">age = 34</text>
+  </g>
+
+  <!-- instance 3 -->
+  <g font-size="10">
+    <rect x="235" y="185" width="150" height="60" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="310" y="205" text-anchor="middle" fill="#c0392b">nom = "Mia"</text>
+    <text x="310" y="223" text-anchor="middle" fill="#c0392b">age = 41</text>
+  </g>
+
+  <text x="300" y="270" text-anchor="middle" font-size="12" fill="#8991a3">le même moule, des valeurs différentes à chaque instance</text>
+</svg>

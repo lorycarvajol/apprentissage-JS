@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getChapitreWithContent, markTheorieAsRead } from '../services/contentService';
+import { getChapitreWithContent, getModuleWithChapitres, getModules, markTheorieAsRead } from '../services/contentService';
 import SidebarNavigation from '../components/content/SidebarNavigation';
 import MainLayout from '../components/layout/MainLayout';
 import ExerciceSolver from '../components/content/ExerciceSolver';
@@ -16,6 +16,11 @@ const ChapitrePage = () => {
   const [error, setError] = useState('');
   const [activeExercice, setActiveExercice] = useState(null);
   const [readTheorieIds, setReadTheorieIds] = useState(new Set());
+  // Chapitres du même module (pour "chapitre précédent/suivant") et liste
+  // complète des modules (pour basculer vers le module précédent/suivant
+  // une fois arrivé au premier/dernier chapitre du module courant).
+  const [siblingChapitres, setSiblingChapitres] = useState([]);
+  const [allModules, setAllModules] = useState([]);
   const pageEnteredAt = useRef(Date.now());
 
   useEffect(() => {
@@ -45,6 +50,15 @@ const ChapitrePage = () => {
         setModule(response.module || null);
         setTheories(response.theories || []);
         setExercices(response.exercices || []);
+
+        if (response.chapitre?.module_id) {
+          const [moduleChapitresRes, modulesRes] = await Promise.all([
+            getModuleWithChapitres(response.chapitre.module_id),
+            getModules(),
+          ]);
+          setSiblingChapitres(moduleChapitresRes.success ? moduleChapitresRes.chapitres || [] : []);
+          setAllModules(modulesRes.success ? modulesRes.modules || [] : []);
+        }
       }
     } catch (err) {
       console.error('Erreur lors du chargement du chapitre:', err);
@@ -53,6 +67,22 @@ const ChapitrePage = () => {
       setLoading(false);
     }
   };
+
+  // Détermine le chapitre/module précédent et suivant à partir de la
+  // position du chapitre courant dans sa fratrie, avec bascule vers le
+  // module voisin une fois arrivé au premier/dernier chapitre du module.
+  const currentIndex = siblingChapitres.findIndex((c) => c.id === chapitre?.id);
+  const prevChapitre = currentIndex > 0 ? siblingChapitres[currentIndex - 1] : null;
+  const nextChapitre =
+    currentIndex >= 0 && currentIndex < siblingChapitres.length - 1
+      ? siblingChapitres[currentIndex + 1]
+      : null;
+  const prevModule = !prevChapitre && module
+    ? allModules.find((m) => m.order_index === module.order_index - 1)
+    : null;
+  const nextModule = !nextChapitre && module
+    ? allModules.find((m) => m.order_index === module.order_index + 1)
+    : null;
 
   if (activeExercice) {
     return (
@@ -243,9 +273,53 @@ const ChapitrePage = () => {
 
           {/* Navigation Buttons */}
           <div className="chapter-navigation">
-            <Link to={`/modules/${chapitre.module_id}`} className="btn btn-secondary">
-              ← Retour au module
-            </Link>
+            <div className="nav-slot nav-prev">
+              {prevChapitre ? (
+                <Link to={`/chapitres/${prevChapitre.id}`} className="btn btn-secondary nav-btn">
+                  <span className="nav-btn-arrow">←</span>
+                  <span className="nav-btn-text">
+                    <span className="nav-btn-label">Chapitre précédent</span>
+                    <span className="nav-btn-title">{prevChapitre.title}</span>
+                  </span>
+                </Link>
+              ) : prevModule ? (
+                <Link to={`/modules/${prevModule.id}`} className="btn btn-secondary nav-btn">
+                  <span className="nav-btn-arrow">←</span>
+                  <span className="nav-btn-text">
+                    <span className="nav-btn-label">Module précédent</span>
+                    <span className="nav-btn-title">{prevModule.title}</span>
+                  </span>
+                </Link>
+              ) : (
+                <Link to="/modules" className="btn btn-secondary nav-btn">
+                  ← Tous les modules
+                </Link>
+              )}
+            </div>
+
+            <div className="nav-slot nav-next">
+              {nextChapitre ? (
+                <Link to={`/chapitres/${nextChapitre.id}`} className="btn btn-primary nav-btn">
+                  <span className="nav-btn-text">
+                    <span className="nav-btn-label">Chapitre suivant</span>
+                    <span className="nav-btn-title">{nextChapitre.title}</span>
+                  </span>
+                  <span className="nav-btn-arrow">→</span>
+                </Link>
+              ) : nextModule ? (
+                <Link to={`/modules/${nextModule.id}`} className="btn btn-primary nav-btn">
+                  <span className="nav-btn-text">
+                    <span className="nav-btn-label">Module suivant</span>
+                    <span className="nav-btn-title">{nextModule.title}</span>
+                  </span>
+                  <span className="nav-btn-arrow">→</span>
+                </Link>
+              ) : (
+                <Link to="/modules" className="btn btn-primary nav-btn">
+                  🎉 Parcours terminé — Voir tous les modules
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>

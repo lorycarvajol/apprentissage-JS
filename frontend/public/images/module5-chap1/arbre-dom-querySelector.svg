@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="320" fill="#ffffff"/>
+  <text x="280" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">document.querySelector("h1")</text>
+
+  <!-- tree edges -->
+  <g stroke="#d3d8e3" stroke-width="1.5" fill="none">
+    <line x1="280" y1="70" x2="140" y2="130"/>
+    <line x1="280" y1="70" x2="280" y2="130"/>
+    <line x1="280" y1="70" x2="420" y2="130"/>
+    <line x1="140" y1="160" x2="90" y2="220"/>
+    <line x1="140" y1="160" x2="190" y2="220"/>
+    <line x1="420" y1="160" x2="420" y2="220"/>
+  </g>
+
+  <!-- root: html -->
+  <rect x="240" y="45" width="80" height="30" rx="6" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="280" y="65" text-anchor="middle" font-size="11" fill="#262b38">html</text>
+
+  <!-- head -->
+  <rect x="105" y="130" width="70" height="30" rx="6" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="140" y="150" text-anchor="middle" font-size="11" fill="#262b38">head</text>
+
+  <!-- body -->
+  <rect x="245" y="130" width="70" height="30" rx="6" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="280" y="150" text-anchor="middle" font-size="11" fill="#262b38">body</text>
+
+  <!-- footer -->
+  <rect x="385" y="130" width="70" height="30" rx="6" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="420" y="150" text-anchor="middle" font-size="11" fill="#262b38">footer</text>
+
+  <!-- title -->
+  <rect x="55" y="220" width="70" height="30" rx="6" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="90" y="240" text-anchor="middle" font-size="10" fill="#8991a3">title</text>
+
+  <!-- meta -->
+  <rect x="155" y="220" width="70" height="30" rx="6" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="190" y="240" text-anchor="middle" font-size="10" fill="#8991a3">meta</text>
+
+  <!-- h1 : highlighted -->
+  <rect x="385" y="220" width="70" height="34" rx="6" fill="#2e7daf" stroke="#1c5d85" stroke-width="2"/>
+  <text x="420" y="242" text-anchor="middle" font-size="12" font-weight="600" fill="#ffffff">h1</text>
+
+  <!-- highlight ring -->
+  <circle cx="420" cy="145" r="4" fill="#2e7daf"/>
+
+  <text x="280" y="290" text-anchor="middle" font-size="12" fill="#8991a3">querySelector descend l'arbre et s'arrête au premier nœud &lt;h1&gt; trouvé</text>
+</svg>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="620" height="300" fill="#ffffff"/>
+  <text x="310" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">slugify("Écrire du JavaScript !")</text>
+
+  <defs>
+    <marker id="sf-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <g font-size="12">
+    <rect x="30" y="55" width="220" height="34" rx="6" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="140" y="77" text-anchor="middle" fill="#c0392b">"Écrire du JavaScript !"</text>
+
+    <line x1="255" y1="72" x2="300" y2="72" stroke="#8991a3" stroke-width="1.5" marker-end="url(#sf-ap)"/>
+    <text x="277" y="62" text-anchor="middle" font-size="9" fill="#8991a3">sans accents</text>
+
+    <rect x="305" y="55" width="220" height="34" rx="6" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="415" y="77" text-anchor="middle" fill="#c0392b">"Ecrire du JavaScript !"</text>
+  </g>
+
+  <line x1="415" y1="89" x2="415" y2="120" stroke="#8991a3" stroke-width="1.5" marker-end="url(#sf-ap)"/>
+  <text x="465" y="108" text-anchor="middle" font-size="9" fill="#8991a3">minuscules</text>
+
+  <g font-size="12">
+    <rect x="305" y="125" width="220" height="34" rx="6" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="415" y="147" text-anchor="middle" fill="#c0392b">"ecrire du javascript !"</text>
+  </g>
+
+  <line x1="305" y1="142" x2="260" y2="142" stroke="#8991a3" stroke-width="1.5" marker-end="url(#sf-ap)"/>
+  <text x="282" y="130" text-anchor="middle" font-size="9" fill="#8991a3">tirets</text>
+
+  <g font-size="12">
+    <rect x="30" y="125" width="220" height="34" rx="6" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <text x="140" y="147" text-anchor="middle" fill="#2e7daf">"ecrire-du-javascript-"</text>
+  </g>
+
+  <line x1="140" y1="159" x2="140" y2="195" stroke="#8991a3" stroke-width="1.5" marker-end="url(#sf-ap)"/>
+  <text x="200" y="180" text-anchor="middle" font-size="9" fill="#8991a3">retire le tiret final</text>
+
+  <g font-size="13">
+    <rect x="180" y="205" width="260" height="40" rx="8" fill="#d4edda" stroke="#155724" stroke-width="2"/>
+    <text x="310" y="230" text-anchor="middle" font-weight="600" fill="#155724">"ecrire-du-javascript"</text>
+  </g>
+
+  <text x="310" y="280" text-anchor="middle" font-size="12" fill="#8991a3">chaque étape de slugify() transforme un peu plus le texte</text>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="600" height="280" fill="#ffffff"/>
+  <text x="300" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Fichiers reliés par import / export</text>
+
+  <defs>
+    <marker id="fi-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#2e7daf"/>
+    </marker>
+  </defs>
+
+  <!-- formaterPrix.js -->
+  <g font-size="10">
+    <rect x="30" y="60" width="150" height="70" rx="8" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <text x="105" y="80" text-anchor="middle" font-weight="600" fill="#2e7daf">formaterPrix.js</text>
+    <text x="105" y="98" text-anchor="middle" fill="#2e7daf">export function</text>
+    <text x="105" y="112" text-anchor="middle" fill="#2e7daf">formaterPrix()</text>
+  </g>
+
+  <!-- Panier.js -->
+  <g font-size="10">
+    <rect x="30" y="160" width="150" height="70" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="105" y="180" text-anchor="middle" font-weight="600" fill="#155724">Panier.js</text>
+    <text x="105" y="198" text-anchor="middle" fill="#155724">export default</text>
+    <text x="105" y="212" text-anchor="middle" fill="#155724">class Panier</text>
+  </g>
+
+  <!-- app.js -->
+  <g font-size="10">
+    <rect x="410" y="105" width="160" height="90" rx="8" fill="#262b38"/>
+    <text x="490" y="128" text-anchor="middle" fill="#ffffff">app.js</text>
+    <text x="490" y="148" text-anchor="middle" font-size="9" fill="#c7cbd6">import { formaterPrix }</text>
+    <text x="490" y="162" text-anchor="middle" font-size="9" fill="#c7cbd6">import Panier</text>
+    <text x="490" y="178" text-anchor="middle" font-size="9" fill="#c7cbd6">utilise les deux</text>
+  </g>
+
+  <path d="M 180 95 C 280 95, 330 130, 405 145" fill="none" stroke="#2e7daf" stroke-width="1.5" marker-end="url(#fi-ap)"/>
+  <path d="M 180 195 C 280 195, 330 165, 405 150" fill="none" stroke="#155724" stroke-width="1.5" marker-end="url(#fi-ap)"/>
+
+  <text x="300" y="250" text-anchor="middle" font-size="12" fill="#8991a3">app.js assemble ce que chaque fichier expose, sans dupliquer leur code</text>
+</svg>

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 280" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="280" fill="#ffffff"/>
+  <text x="280" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">const { nom, email } = utilisateur;</text>
+
+  <defs>
+    <marker id="oe-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#2e7daf"/>
+    </marker>
+  </defs>
+
+  <!-- source object -->
+  <g font-size="10.5">
+    <text x="110" y="60" text-anchor="middle" font-size="10" fill="#8991a3">utilisateur</text>
+    <rect x="30" y="70" width="160" height="110" rx="8" fill="#262b38"/>
+    <text x="110" y="100" text-anchor="middle" fill="#ffffff">nom: "Ana"</text>
+    <text x="110" y="122" text-anchor="middle" fill="#ffffff">email: "ana@..."</text>
+    <text x="110" y="144" text-anchor="middle" fill="#c7cbd6">age: 28</text>
+  </g>
+
+  <!-- arrows to extracted vars -->
+  <path d="M 190 90 C 280 90, 320 60, 380 60" fill="none" stroke="#2e7daf" stroke-width="1.5" marker-end="url(#oe-ap)"/>
+  <path d="M 190 112 C 280 130, 320 150, 380 150" fill="none" stroke="#155724" stroke-width="1.5" marker-end="url(#oe-ap)"/>
+
+  <!-- extracted vars -->
+  <g font-size="11">
+    <rect x="385" y="40" width="140" height="40" rx="8" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <text x="455" y="65" text-anchor="middle" fill="#2e7daf">nom = "Ana"</text>
+
+    <rect x="385" y="130" width="140" height="40" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="455" y="155" text-anchor="middle" fill="#155724">email = "ana@..."</text>
+  </g>
+
+  <text x="280" y="240" text-anchor="middle" font-size="12" fill="#8991a3">age n'est pas demandé, il reste sur l'objet source sans être extrait</text>
+</svg>

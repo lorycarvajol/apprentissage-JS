@@ -9,6 +9,15 @@
 // un scope isolé (pas de `document`/`window`, pas d'accès au DOM ou aux
 // cookies de la page), et fetch/XMLHttpRequest/importScripts y sont
 // neutralisés pour rester dans l'esprit du sandbox PHP (pas de réseau).
+//
+// Le Worker attend la fin du code asynchrone (setTimeout/Promise/async-await)
+// avant de renvoyer sa sortie capturée — voir waitForPendingWork ci-dessous.
+// Sans cette attente, postMessage partait immédiatement après l'exécution
+// synchrone, avant que la moindre microtâche (Promise/await) ou macrotâche
+// (setTimeout) n'ait eu la chance de s'exécuter : tout console.log placé
+// dans un callback asynchrone était alors silencieusement perdu, sans erreur
+// — un bug découvert à l'écriture du module 6 (JavaScript asynchrone) et
+// corrigé ici plutôt que travaillé autour dans chaque exercice.
 
 const TIMEOUT_MS = 5000;
 
@@ -28,6 +37,23 @@ function stringifyArg(arg) {
   }
 }
 
+// setTimeout est remplacé par une version qui compte les minuteurs encore en
+// attente (pendingTimers), pour savoir quand tout le code asynchrone du code
+// soumis est réellement terminé. setInterval n'est volontairement PAS suivi :
+// un intervalle jamais nettoyé ne doit pas bloquer indéfiniment l'envoi du
+// résultat (le timeout global de 5s côté thread principal reste le filet de
+// sécurité final dans tous les cas).
+let pendingTimers = 0;
+const nativeSetTimeout = self.setTimeout;
+
+self.setTimeout = function (fn, delay, ...args) {
+  pendingTimers++;
+  return nativeSetTimeout(function () {
+    pendingTimers--;
+    if (typeof fn === 'function') fn(...args);
+  }, delay);
+};
+
 self.onmessage = function (event) {
   const logs = [];
   const capture = (...args) => {
@@ -38,14 +64,51 @@ self.onmessage = function (event) {
   console.warn = capture;
   console.error = capture;
 
+  let capturedError = null;
+
+  self.onerror = function (message, source, lineno, colno, error) {
+    if (capturedError === null) {
+      capturedError = error && error.message ? \`\${error.name}: \${error.message}\` : String(message);
+    }
+    return true;
+  };
+  self.addEventListener('unhandledrejection', function (evt) {
+    if (capturedError === null) {
+      const reason = evt.reason;
+      capturedError = reason && reason.message
+        ? \`\${reason.name}: \${reason.message}\`
+        : String(reason);
+    }
+  });
+
   try {
     const runner = new Function(event.data.code);
     runner();
-    self.postMessage({ output: logs.join('\\n'), error: null });
   } catch (err) {
-    const message = err && err.message ? \`\${err.name}: \${err.message}\` : String(err);
-    self.postMessage({ output: logs.join('\\n'), error: message });
+    capturedError = err && err.message ? \`\${err.name}: \${err.message}\` : String(err);
   }
+
+  function post() {
+    self.postMessage({ output: logs.join('\\n'), error: capturedError });
+  }
+
+  function waitForPendingWork() {
+    if (pendingTimers > 0) {
+      nativeSetTimeout(waitForPendingWork, 15);
+      return;
+    }
+    // un tour de plus pour laisser les microtâches en attente (Promise.then,
+    // continuation après await) se vider avant de conclure que tout est fini
+    nativeSetTimeout(function () {
+      if (pendingTimers > 0) {
+        waitForPendingWork();
+      } else {
+        post();
+      }
+    }, 0);
+  }
+
+  waitForPendingWork();
 };
 `;
 

@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 260" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="260" fill="#ffffff"/>
+  <text x="280" y="28" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="16" font-weight="600" fill="#262b38">La même date, trois formats</text>
+
+  <circle cx="280" cy="90" r="30" fill="#262b38"/>
+  <text x="280" y="95" text-anchor="middle" font-size="11" fill="#ffffff">19/07</text>
+  <text x="280" y="107" text-anchor="middle" font-size="9" fill="#c7cbd6">2026</text>
+
+  <defs>
+    <marker id="tf-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <line x1="255" y1="112" x2="120" y2="150" stroke="#8991a3" stroke-width="1.5" marker-end="url(#tf-ap)"/>
+  <line x1="280" y1="120" x2="280" y2="150" stroke="#8991a3" stroke-width="1.5" marker-end="url(#tf-ap)"/>
+  <line x1="305" y1="112" x2="440" y2="150" stroke="#8991a3" stroke-width="1.5" marker-end="url(#tf-ap)"/>
+
+  <g font-size="12">
+    <rect x="40" y="155" width="160" height="60" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="120" y="178" text-anchor="middle" font-size="10" fill="#8991a3">ISO</text>
+    <text x="120" y="198" text-anchor="middle" fill="#262b38">2026-07-19</text>
+
+    <rect x="200" y="155" width="160" height="60" rx="8" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <text x="280" y="178" text-anchor="middle" font-size="10" fill="#2e7daf">français</text>
+    <text x="280" y="198" text-anchor="middle" fill="#2e7daf">19/07/2026</text>
+
+    <rect x="360" y="155" width="160" height="60" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="440" y="178" text-anchor="middle" font-size="10" fill="#155724">relatif</text>
+    <text x="440" y="198" text-anchor="middle" fill="#155724">dans 6 jours</text>
+  </g>
+
+  <text x="280" y="245" text-anchor="middle" font-size="12" fill="#8991a3">un seul instant, plusieurs façons de l'afficher selon le contexte</text>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="320" fill="#ffffff"/>
+  <text x="280" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Un clic se propage vers les parents (bubbling)</text>
+
+  <!-- tree edges -->
+  <g stroke="#d3d8e3" stroke-width="1.5" fill="none">
+    <line x1="280" y1="90" x2="280" y2="150"/>
+    <line x1="280" y1="180" x2="280" y2="240"/>
+  </g>
+
+  <!-- ul (grandparent) -->
+  <rect x="220" y="60" width="120" height="34" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="280" y="82" text-anchor="middle" font-size="11" fill="#262b38">&lt;ul&gt; (3. reçoit)</text>
+
+  <!-- li (parent) -->
+  <rect x="220" y="150" width="120" height="34" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="280" y="172" text-anchor="middle" font-size="11" fill="#262b38">&lt;li&gt; (2. reçoit)</text>
+
+  <!-- button/span (target) -->
+  <rect x="220" y="240" width="120" height="34" rx="8" fill="#2e7daf" stroke="#1c5d85" stroke-width="2"/>
+  <text x="280" y="262" text-anchor="middle" font-size="11" fill="#ffffff">&lt;span&gt; (1. clic)</text>
+
+  <!-- concentric bubble waves -->
+  <circle cx="280" cy="257" r="40" fill="none" stroke="#2e7daf" stroke-width="1.5" opacity="0.5"/>
+  <circle cx="280" cy="257" r="70" fill="none" stroke="#2e7daf" stroke-width="1.5" opacity="0.35"/>
+  <circle cx="280" cy="257" r="100" fill="none" stroke="#2e7daf" stroke-width="1.5" opacity="0.2"/>
+
+  <defs>
+    <marker id="bp-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+  <line x1="360" y1="255" x2="360" y2="90" stroke="#8991a3" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#bp-ap)"/>
+
+  <text x="280" y="300" text-anchor="middle" font-size="12" fill="#8991a3">l'événement remonte du span cliqué jusqu'à ses ancêtres, un par un</text>
+</svg>

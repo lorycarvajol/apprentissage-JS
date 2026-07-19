@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 220" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="220" fill="#ffffff"/>
+  <text x="280" y="28" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="16" font-weight="600" fill="#262b38">Une durée est une distance sur la frise du temps</text>
+
+  <defs>
+    <marker id="fr-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <line x1="40" y1="120" x2="520" y2="120" stroke="#d3d8e3" stroke-width="2" marker-end="url(#fr-ap)"/>
+
+  <circle cx="110" cy="120" r="7" fill="#2e7daf"/>
+  <text x="110" y="100" text-anchor="middle" font-size="11" fill="#2e7daf">aujourd'hui</text>
+  <text x="110" y="150" text-anchor="middle" font-size="10" fill="#8991a3">19 juillet</text>
+
+  <circle cx="430" cy="120" r="7" fill="#c0392b"/>
+  <text x="430" y="100" text-anchor="middle" font-size="11" fill="#c0392b">échéance</text>
+  <text x="430" y="150" text-anchor="middle" font-size="10" fill="#8991a3">25 juillet</text>
+
+  <line x1="110" y1="170" x2="430" y2="170" stroke="#155724" stroke-width="2"/>
+  <line x1="110" y1="163" x2="110" y2="177" stroke="#155724" stroke-width="2"/>
+  <line x1="430" y1="163" x2="430" y2="177" stroke="#155724" stroke-width="2"/>
+  <text x="270" y="192" text-anchor="middle" font-size="12" fill="#155724">6 jours restants</text>
+</svg>

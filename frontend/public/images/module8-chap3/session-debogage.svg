@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 280" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="600" height="280" fill="#ffffff"/>
+  <text x="300" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Un point d'arrêt fige l'exécution</text>
+
+  <!-- code panel -->
+  <g font-size="10.5">
+    <rect x="30" y="55" width="280" height="160" rx="8" fill="#262b38"/>
+    <text x="45" y="80" fill="#c7cbd6">function calculerTotal(panier) {</text>
+    <text x="55" y="100" fill="#c7cbd6">let total = 0;</text>
+    <rect x="45" y="108" width="250" height="22" fill="#c0392b" opacity="0.85"/>
+    <text x="55" y="124" fill="#ffffff">debugger;</text>
+    <text x="55" y="146" fill="#c7cbd6">for (const a of panier) {</text>
+    <text x="65" y="166" fill="#c7cbd6">total += a.prix;</text>
+    <text x="55" y="186" fill="#c7cbd6">}</text>
+  </g>
+
+  <!-- inspector panel -->
+  <g font-size="10">
+    <rect x="330" y="55" width="240" height="160" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="345" y="78" font-weight="600" fill="#262b38">Variables</text>
+    <text x="345" y="100" fill="#262b38">panier: [3 objets]</text>
+    <text x="345" y="120" fill="#262b38">total: 0</text>
+    <text x="345" y="140" fill="#262b38">a: undefined</text>
+    <text x="345" y="165" font-size="9" fill="#8991a3">le programme est en pause</text>
+    <text x="345" y="180" font-size="9" fill="#8991a3">exactement à la ligne debugger;</text>
+  </g>
+
+  <text x="300" y="245" text-anchor="middle" font-size="12" fill="#8991a3">chaque variable peut être inspectée avant de reprendre l'exécution pas à pas</text>
+</svg>

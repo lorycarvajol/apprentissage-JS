@@ -17,7 +17,7 @@ centrale du curriculum.
 
 **9 modules · 27 chapitres · 54 exercices suggérés · 54 illustrations suggérées**
 
-**Statut** : ✅ Fait = créé en base (`apprentissage_js`) via un script `backend/database/seed_moduleN.php`, théories + exercices + illustrations SVG réels, vérifié via l'API. ⏳ À faire = plan ci-dessous, rien en base pour l'instant.
+**Statut** : ✅ Fait = créé en base (`apprentissage_js`) via un script `backend/database/seed_moduleN.php`, théories + exercices + illustrations SVG réels, vérifié via l'API. 🟡 Théorie seule = théories + illustrations créées et vérifiées, mais sans exercices notés (limitation du sandbox actuel, voir Notes de suivi). ⏳ À faire = plan ci-dessous, rien en base pour l'instant.
 
 ---
 
@@ -28,12 +28,12 @@ centrale du curriculum.
 | M1 | Bases du langage | 1.1 – 1.3 | ✅ Fait |
 | M2 | Boucles et collections | 2.1 – 2.3 | ✅ Fait |
 | M3 | Fonctions | 3.1 – 3.3 | ✅ Fait |
-| M4 | Chaînes, dates et données textuelles | 4.1 – 4.3 | ⏳ À faire |
-| M5 | Le DOM et les événements | 5.1 – 5.3 | ⏳ À faire |
-| M6 | JavaScript asynchrone | 6.1 – 6.3 | ⏳ À faire |
-| M7 | Programmation orientée objet | 7.1 – 7.3 | ⏳ À faire |
-| M8 | JavaScript moderne et bonnes pratiques | 8.1 – 8.3 | ⏳ À faire |
-| M9 | Projet intégrateur | 9.1 – 9.3 | ⏳ À faire |
+| M4 | Chaînes, dates et données textuelles | 4.1 – 4.3 | ✅ Fait |
+| M5 | Le DOM et les événements | 5.1 – 5.3 | 🟡 Théorie seule |
+| M6 | JavaScript asynchrone | 6.1 – 6.3 | ✅ Fait |
+| M7 | Programmation orientée objet | 7.1 – 7.3 | ✅ Fait |
+| M8 | JavaScript moderne et bonnes pratiques | 8.1 – 8.3 | 🟡 Partiel (8.2 théorie seule) |
+| M9 | Vers les frameworks modernes | 9.1 – 9.3 | 🟡 Partiel (9.1/9.3 théorie seule) |
 
 ---
 
@@ -182,9 +182,11 @@ Découper le code en blocs réutilisables et comprendre la portée.
 
 ---
 
-## M4 — Chaînes, dates et données textuelles ⏳ À faire
+## M4 — Chaînes, dates et données textuelles ✅ Fait
 
 Manipuler du texte et des dates, deux besoins omniprésents.
+
+*Créé en base via `backend/database/seed_module4.php` — 3 théories, 6 exercices, 6 illustrations SVG (`frontend/public/images/module4-chap{1,2,3}/`).*
 
 ### 4.1 Méthodes de chaînes de caractères
 - **Théorie** : template literals, `slice`/`substring`, `split`/`join`, `trim`,
@@ -226,9 +228,11 @@ Manipuler du texte et des dates, deux besoins omniprésents.
 
 ---
 
-## M5 — Le DOM et les événements ⏳ À faire
+## M5 — Le DOM et les événements 🟡 Théorie seule
 
 Le premier module vraiment spécifique au navigateur — sans équivalent PHP.
+
+*Créé en base via `backend/database/seed_module5.php` — 3 théories, 6 illustrations SVG (`frontend/public/images/module5-chap{1,2,3}/`), **sans exercices notés** : voir la note d'architecture ci-dessous (Notes de suivi).*
 
 ### 5.1 Sélectionner et manipuler le DOM
 - **Théorie** : `querySelector`/`querySelectorAll`, lecture/écriture de contenu et
@@ -273,9 +277,11 @@ Le premier module vraiment spécifique au navigateur — sans équivalent PHP.
 
 ---
 
-## M6 — JavaScript asynchrone ⏳ À faire
+## M6 — JavaScript asynchrone ✅ Fait
 
 Deuxième module sans vrai équivalent PHP (le PHP sibling est synchrone par requête).
+
+*Créé en base via `backend/database/seed_module6.php` — 3 théories, 6 exercices, 6 illustrations SVG (`frontend/public/images/module6-chap{1,2,3}/`). A nécessité un correctif préalable du sandbox, voir Notes de suivi.*
 
 ### 6.1 Callbacks et la boucle d'événements
 - **Théorie** : code synchrone vs asynchrone, `setTimeout`, pile d'exécution vs
@@ -321,10 +327,12 @@ Deuxième module sans vrai équivalent PHP (le PHP sibling est synchrone par req
 
 ---
 
-## M7 — Programmation orientée objet ⏳ À faire
+## M7 — Programmation orientée objet ✅ Fait
 
 La POO en JavaScript, un module du curriculum parmi d'autres — pas son organisation
 centrale.
+
+*Créé en base via `backend/database/seed_module7.php` — 3 théories, 6 exercices, 6 illustrations SVG (`frontend/public/images/module7-chap{1,2,3}/`). Aucun changement de sandbox requis (JS synchrone standard).*
 
 ### 7.1 Objets, classes et constructeurs
 - **Théorie** : objets littéraux vs classes, `class`/`constructor`, `new`, `this`,
@@ -364,7 +372,9 @@ centrale.
 
 ---
 
-## M8 — JavaScript moderne et bonnes pratiques ⏳ À faire
+## M8 — JavaScript moderne et bonnes pratiques 🟡 Partiel (8.2 théorie seule)
+
+*Créé en base via `backend/database/seed_module8.php` — 3 théories, 6 illustrations SVG (`frontend/public/images/module8-chap{1,2,3}/`), mais **seulement 4 exercices** (8.1 et 8.3, 2 chacun) : 8.2 (Modules ES6) est théorie seule, voir Notes de suivi.*
 
 ### 8.1 Destructuring, spread/rest et template literals
 - **Théorie** : déstructuration d'objets/tableaux, opérateur spread (`...`),
@@ -409,65 +419,159 @@ centrale.
 
 ---
 
-## M9 — Projet intégrateur ⏳ À faire
+## M9 — Vers les frameworks modernes 🟡 Partiel (9.1/9.3 théorie seule)
 
-Assembler les modules précédents dans une mini-application cohérente.
+**Redéfini entièrement sur demande explicite de l'utilisateur — n'est plus le
+"Projet intégrateur" décrit ci-dessous à l'origine.** L'ancien plan (cahier
+des charges en texte libre, app de tâches avec rendu DOM réel et
+`localStorage`) cumulait trois problèmes structurels à la fois (voir Notes de
+suivi) et, indépendamment de ça, n'intéressait pas l'utilisateur pour la
+conclusion du cursus. Nouveau rôle du module : conclure le cursus vanilla JS
+en expliquant pourquoi les frameworks front-end existent, construire "à la
+main" le modèle par composants qu'ils automatisent tous, puis dresser un
+panorama de l'écosystème actuel (React/Vue/Angular/Svelte, méta-frameworks).
 
-### 9.1 Concevoir une mini-application
-- **Théorie** : découper un besoin en fonctionnalités, choisir une structure de
-  données, esquisser l'architecture avant de coder
-- **Exercices**
-  - *Guidé* — rédiger le cahier des charges simplifié d'un gestionnaire de
-    tâches (fonctionnalités, structure de données)
-  - *Défi* — esquisser l'architecture (fichiers, fonctions/classes prévues) d'une
-    application « liste de courses partagée »
+*Créé en base via `backend/database/seed_module9.php` — 3 théories, 6
+illustrations SVG (`frontend/public/images/module9-chap{1,2,3}/`), 2
+exercices notés (chapitre 9.2 uniquement — 9.1 et 9.3 sont théorie seule, du
+contenu de panorama sans exercice de code à y rattacher naturellement).*
+
+### 9.1 Pourquoi des frameworks ? — théorie seule
+- **Théorie** : les limites du vanilla JS à grande échelle (synchronisation
+  manuelle état → DOM qui devient une source d'erreurs), notion de composant
+  et de réactivité, déclaratif vs impératif
 - **Illustrations**
-  - *Concept* — schéma de planification : besoin → fonctionnalités → structure
-    de données → interface
-  - *Application* — maquette filaire (wireframe) simple de l'interface du
-    gestionnaire de tâches
+  - *Concept* — état relié par des fils enchevêtrés à plusieurs endroits du
+    DOM, chacun à mettre à jour manuellement
+  - *Application* — comparaison avant/après : mise à jour manuelle ciblée du
+    DOM vs une seule expression déclarative
 
-### 9.2 Construire l'application
-- **Théorie** : état de l'application, rendu à partir de l'état, gestion des
-  interactions utilisateur
+### 9.2 Le modèle par composants
+- **Théorie** : un composant comme fonction(props) → rendu, props en lecture
+  seule, état local via closure (rappel du module 3.2), recomposition,
+  composition de composants
 - **Exercices**
-  - *Guidé* — implémenter l'ajout et l'affichage des tâches à partir d'un
-    tableau d'état
-  - *Défi* — implémenter le marquage « terminé » et la suppression, en gardant
-    l'affichage synchronisé avec l'état
+  - *Guidé* — `composantBouton({ texte, couleur })`, une fonction qui prend
+    des props et retourne une chaîne de rendu
+  - *Défi* — `creerCompteur()` (état local via closure) combiné à un
+    `composantCarte()` qui compose son rendu, pour simuler concrètement une
+    recomposition après changement d'état
 - **Illustrations**
-  - *Concept* — cycle état → rendu → interaction → mise à jour de l'état (boucle
-    fermée)
-  - *Application* — une tâche avant/après un clic sur « terminé », du clic
-    jusqu'à la mise à jour visuelle
+  - *Concept* — un composant représenté comme une fonction : props en
+    entrée, rendu en sortie
+  - *Application* — un compteur avant/après un changement d'état, montrant
+    le nouveau rendu produit par la recomposition
 
-### 9.3 Persistance et finitions
-- **Théorie** : `localStorage`, sérialisation JSON, gestion des erreurs
-  réseau/stockage, petites touches UX
-- **Exercices**
-  - *Guidé* — sauvegarder et recharger la liste de tâches via `localStorage` au
-    démarrage
-  - *Défi* — gérer proprement le cas où `localStorage` est indisponible ou
-    corrompu (fallback + message clair)
+### 9.3 Panorama et choisir sa techno — théorie seule
+- **Théorie** : React (librairie, JSX, Virtual DOM — ce que ce projet utilise
+  en frontend), Vue (progressif), Angular (complet, TypeScript), Svelte
+  (compilé) ; les méta-frameworks (Next.js, Nuxt, SvelteKit, Astro) ; comment
+  orienter son choix selon le contexte
 - **Illustrations**
-  - *Concept* — flux tâche → `JSON.stringify` → `localStorage` → `JSON.parse` →
-    tâche à nouveau
-  - *Application* — chemins « cas normal » vs « cas d'erreur » lors du
-    chargement au démarrage
+  - *Concept* — comparatif visuel des 4 frameworks selon deux axes
+    (librairie/complet, virtual DOM/compilé)
+  - *Application* — trois piles verticales : React+Next.js, Vue+Nuxt,
+    Svelte+SvelteKit, chaque méta-framework ajoutant SSR/routing/API routes
 
 ---
 
 ## Notes de suivi
 
-- Avancement : **M1, M2 et M3 créés en base et vérifiés via l'API** (3/9 modules,
-  9/27 chapitres). Prochaine étape : M4 — Chaînes, dates et données textuelles.
+- Avancement : **les 9 modules sont créés en base et vérifiés via l'API — le
+  plan initial est entièrement authored** (27/27 chapitres). M1-M4, M6, M7 et
+  M9.2 ont théorie + exercices + illustrations complets ; M8 a 8.1/8.3
+  complets mais 8.2 théorie seule ; M5 et M9.1/M9.3 sont théorie +
+  illustrations seulement. Ce qui reste, si on y revient : noter M5 (sandbox
+  DOM) et M8.2 (sandbox multi-fichiers) une fois ces chantiers d'architecture
+  faits — voir notes ci-dessous ; ce ne sont pas des priorités immédiates,
+  plutôt des chantiers à part entière.
+- **M9 a été entièrement redéfini sur demande explicite de l'utilisateur : ce
+  n'est plus le "Projet intégrateur" que ce document décrivait à l'origine.**
+  L'ancien plan (rédiger un cahier des charges en texte libre, construire une
+  app de tâches avec rendu DOM réel et persistance `localStorage`) cumulait
+  trois problèmes structurels détectés avant d'écrire le contenu : (a) un
+  cahier des charges en texte libre n'est pas un exercice notable par ce
+  mécanisme de plateforme (comparaison de `console.log` à `expected_output`,
+  pas de correction de texte libre) ; (b) "l'affichage" des tâches retombait
+  dans le même trou que M5 (pas de `document` dans le Worker) ; (c)
+  `localStorage` n'existe pas du tout dans le scope global d'un Worker dédié
+  — spécification navigateur (`Window` uniquement), pas une restriction
+  ajoutée par ce projet comme pour `fetch`. Indépendamment de ces problèmes
+  techniques, l'utilisateur ne voulait de toute façon pas de ce module en
+  conclusion du cursus. Nouveau rôle : expliquer pourquoi les frameworks
+  existent, construire "à la main" (JS pur, sans DOM) le modèle par
+  composants qu'ils automatisent tous — un vrai exercice noté, pont concret
+  vers les closures du module 3 — puis dresser un panorama de l'écosystème
+  actuel. Aucune limitation de sandbox sur le contenu retenu : tout est du JS
+  synchrone standard.
+- **M8.2 (Modules ES6) est théorie seule, même cause structurelle que M5 :
+  `import`/`export` lèvent une SyntaxError immédiate sous `new Function(code)`
+  (vérifié : "Unexpected token 'export'", "Cannot use import statement
+  outside a module") — le sandbox exécute une seule chaîne de code dans un
+  seul scope, pas un vrai module. Contrairement au correctif de M6 (un
+  changement borné dans un seul fichier), bien faire du multi-fichiers
+  demanderait un vrai support de plusieurs fichiers par exercice (schéma +
+  `ExerciceManager.jsx`) et un chargement de modules réel (`import()`
+  dynamique + réécriture des spécificateurs) — un chantier plus large,
+  volontairement pas fait ici. 8.1 (destructuring/spread/rest) et 8.3
+  (try/catch, classes d'erreur) sont du JS synchrone standard, sans ce
+  problème, et ont leurs 2 exercices chacun.**
+- **M6 a nécessité un vrai correctif de `jsSandbox.js` (pas juste un
+  contournement par exercice), fait avec l'accord de l'utilisateur avant
+  d'écrire le contenu.** Le Worker envoyait `postMessage` immédiatement après
+  l'exécution synchrone du code soumis, avant que la file de microtâches
+  (Promise/async-await) ou les `setTimeout` n'aient eu la moindre chance de
+  s'exécuter — tout `console.log` placé dans un callback asynchrone était
+  silencieusement perdu, sans erreur (pire que le trou de M5 : le code
+  semblait correct mais était quand même noté faux). Vérifié concrètement
+  avant correctif via une réplique Node du Worker (setTimeout/Promise.then/
+  async-await ne capturaient que la partie synchrone du log).
+  Correctif : `setTimeout` est remplacé dans le Worker par une version qui
+  compte les minuteurs en attente (`pendingTimers`), et `postMessage` n'est
+  envoyé qu'une fois ce compteur revenu à zéro (+ un tour de microtâches
+  supplémentaire pour laisser une chaîne `.then()`/`await` sans minuteur se
+  vider). `self.onerror`/`unhandledrejection` sont aussi capturés pour que les
+  erreurs asynchrones remontent proprement. `setInterval` n'est volontairement
+  pas suivi (un intervalle oublié ne doit pas bloquer indéfiniment l'envoi du
+  résultat — le timeout global de 5s du thread principal reste le filet de
+  sécurité final). Validé par une simulation Node fidèle (vm avec les mêmes
+  globals que le vrai Worker) sur 9 cas async/erreur/sync, puis par régression
+  sur des `solution_code` réels de M3/M4 déjà en base (sortie identique,
+  aucune régression). `fetch`/`XMLHttpRequest` restent désactivés (politique
+  de non-accès réseau inchangée) : les exercices 6.3 utilisent une fonction
+  async simulée (Promise + `setTimeout`) à la place d'un vrai `fetch`.
+- **M5 n'a aucun exercice noté, décision assumée avec l'utilisateur.** Le
+  sandbox d'exécution (`jsSandbox.js`) tourne dans un Web Worker sans
+  `document`/`window` (isolation délibérée pour permettre `worker.terminate()`
+  sur une boucle infinie — voir CLAUDE.md). Du code utilisant
+  `document.querySelector`/`addEventListener` y lève systématiquement une
+  `ReferenceError`, donc aucun exercice DOM réel ne peut être corrigé avec le
+  mécanisme actuel (comparaison de `console.log` à `expected_output`).
+  Options envisagées : (a) reformuler les exercices sans vrai DOM (string
+  building) — écarté, ça viderait M5 de sa raison d'être, le seul module sans
+  équivalent PHP ; (b) étendre le sandbox avec un mode d'exécution DOM
+  (probablement une iframe avec fixture HTML par exercice + comparaison d'un
+  `innerHTML` normalisé) — retenu en principe, mais volontairement traité
+  comme un chantier d'architecture séparé plutôt qu'improvisé en pleine
+  session de contenu, notamment parce que le choix initial du Worker plutôt
+  qu'une iframe était justifié par une garantie de sécurité (kill fiable d'une
+  boucle infinie) qu'une iframe n'offre pas nativement. En attendant : théorie
+  + illustrations livrées pour M5, exercices à ajouter rétroactivement une
+  fois ce chantier fait.
 - Pour M3.2 Défi, le scénario ROADMAP initial ("bug de closure dans un
   `setTimeout`") a été adapté en un tableau de fonctions appelées après la
   boucle : `jsSandbox.js` envoie sa sortie capturée dès la fin de l'exécution
   synchrone, donc tout `console.log` dans un vrai callback asynchrone
   (`setTimeout`) n'apparaîtrait jamais dans `output` — le même bug de closure
   reste démontré, sans dépendre d'async (M6 le couvrira).
-- Pour M1/M2/M3, les deux exercices par chapitre (Guidé + Défi) ont été implémentés
+- Pour M4.3, le scénario ROADMAP initial ("afficher la date du jour") a été
+  remplacé par une date fixe en UTC (`Date.UTC` + `Intl.DateTimeFormat` avec
+  `timeZone: "UTC"`) : le Worker du sandbox tourne dans le fuseau horaire du
+  navigateur de chaque apprenant, donc "aujourd'hui" ou un formatage sans
+  fuseau explicite produirait une sortie différente d'un apprenant à l'autre —
+  incompatible avec la comparaison stricte à `expected_output`. Même piège à
+  éviter pour tout exercice futur touchant à des dates/fuseaux.
+- Pour M1/M2/M3/M4, les deux exercices par chapitre (Guidé + Défi) ont été implémentés
   d'un coup, avec `expected_output` calculé hors-ligne via Node (réplique exacte
   de la capture `console.log` de `jsSandbox.js`) plutôt que deviné à l'œil — à
   reproduire pour la suite plutôt que la passe « Guidé d'abord » envisagée

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 320" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="480" height="320" fill="#ffffff"/>
+  <text x="240" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Les trois états d'une Promise</text>
+
+  <!-- traffic light housing -->
+  <rect x="190" y="50" width="100" height="220" rx="16" fill="#262b38"/>
+
+  <circle cx="240" cy="90" r="28" fill="#e8a33d"/>
+  <text x="330" y="96" font-size="12" fill="#e8a33d">pending (en attente)</text>
+
+  <circle cx="240" cy="160" r="28" fill="#d3d8e3"/>
+  <text x="330" y="166" font-size="12" fill="#8991a3">fulfilled (résolue)</text>
+
+  <circle cx="240" cy="230" r="28" fill="#d3d8e3"/>
+  <text x="330" y="236" font-size="12" fill="#8991a3">rejected (rejetée)</text>
+
+  <defs>
+    <marker id="ft-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+  <path d="M 240 118 L 240 132" stroke="#8991a3" stroke-width="1.5" stroke-dasharray="3,3" marker-end="url(#ft-ap)"/>
+
+  <text x="240" y="300" text-anchor="middle" font-size="11" fill="#8991a3">resolve() → fulfilled (vert) · reject() → rejected (rouge) · jamais les deux</text>
+</svg>

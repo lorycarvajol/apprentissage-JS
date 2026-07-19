@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 240" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="240" fill="#ffffff"/>
+  <text x="280" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Les trois états d'un champ de formulaire</text>
+
+  <!-- neutre -->
+  <g font-size="11">
+    <text x="110" y="60" text-anchor="middle" fill="#8991a3">neutre</text>
+    <rect x="40" y="70" width="140" height="34" rx="6" fill="#ffffff" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="55" y="92" font-size="10" fill="#8991a3">email@exemple.com</text>
+    <text x="110" y="125" text-anchor="middle" font-size="9" fill="#8991a3">aucune saisie encore</text>
+  </g>
+
+  <!-- erreur -->
+  <g font-size="11">
+    <text x="280" y="60" text-anchor="middle" fill="#c0392b">erreur</text>
+    <rect x="210" y="70" width="140" height="34" rx="6" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+    <text x="225" y="92" font-size="10" fill="#c0392b">pas-un-email</text>
+    <text x="280" y="120" text-anchor="middle" font-size="9" fill="#c0392b">Format d'email invalide</text>
+  </g>
+
+  <!-- valide -->
+  <g font-size="11">
+    <text x="450" y="60" text-anchor="middle" fill="#155724">valide</text>
+    <rect x="380" y="70" width="140" height="34" rx="6" fill="#d4edda" stroke="#155724" stroke-width="2"/>
+    <text x="395" y="92" font-size="10" fill="#155724">ana@exemple.com</text>
+    <text x="450" y="120" text-anchor="middle" font-size="9" fill="#155724">✓ prêt à être envoyé</text>
+  </g>
+
+  <text x="280" y="190" text-anchor="middle" font-size="12" fill="#8991a3">classList.add/remove bascule entre ces trois styles selon le résultat de la validation</text>
+</svg>

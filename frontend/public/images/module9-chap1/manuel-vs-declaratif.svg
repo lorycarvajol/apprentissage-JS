@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 260" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="640" height="260" fill="#ffffff"/>
+  <text x="320" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Décrire les étapes vs décrire le résultat voulu</text>
+
+  <g font-size="10.5">
+    <text x="165" y="55" text-anchor="middle" font-weight="600" fill="#c0392b">impératif (vanilla JS)</text>
+    <rect x="30" y="65" width="270" height="130" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="45" y="90" fill="#c0392b">const el = document</text>
+    <text x="55" y="106" fill="#c0392b">.querySelector("#badge");</text>
+    <text x="45" y="128" fill="#c0392b">el.textContent =</text>
+    <text x="55" y="144" fill="#c0392b">panier.length;</text>
+    <text x="45" y="166" fill="#c0392b">// répété à chaque endroit</text>
+    <text x="45" y="180" fill="#c0392b">// concerné par ce changement</text>
+  </g>
+
+  <g font-size="10.5">
+    <text x="475" y="55" text-anchor="middle" font-weight="600" fill="#155724">déclaratif (framework)</text>
+    <rect x="340" y="65" width="270" height="130" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="355" y="100" fill="#155724">&lt;span&gt;</text>
+    <text x="365" y="120" fill="#155724">{panier.length}</text>
+    <text x="355" y="140" fill="#155724">&lt;/span&gt;</text>
+    <text x="355" y="165" font-size="9" fill="#155724">le framework se charge lui-même</text>
+    <text x="355" y="178" font-size="9" fill="#155724">de mettre à jour le DOM</text>
+  </g>
+
+  <text x="320" y="230" text-anchor="middle" font-size="12" fill="#8991a3">le même résultat final, une seule expression à écrire côté déclaratif</text>
+</svg>

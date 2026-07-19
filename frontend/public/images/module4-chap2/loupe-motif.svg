@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 260" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="260" fill="#ffffff"/>
+  <text x="280" y="28" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="16" font-weight="600" fill="#262b38">Une regex cherche un motif dans le texte</text>
+
+  <g font-size="13">
+    <text x="30" y="100" fill="#262b38">Superbe journée</text>
+    <rect x="182" y="82" width="62" height="24" rx="5" fill="#f0f7ff" stroke="#2e7daf" stroke-width="2"/>
+    <text x="213" y="100" text-anchor="middle" fill="#2e7daf">#soleil</text>
+    <text x="252" y="100" fill="#262b38">au</text>
+    <rect x="278" y="82" width="52" height="24" rx="5" fill="#f0f7ff" stroke="#2e7daf" stroke-width="2"/>
+    <text x="304" y="100" text-anchor="middle" fill="#2e7daf">#parc</text>
+    <text x="30" y="130" fill="#262b38">avec des amis</text>
+    <rect x="168" y="112" width="78" height="24" rx="5" fill="#f0f7ff" stroke="#2e7daf" stroke-width="2"/>
+    <text x="207" y="130" text-anchor="middle" fill="#2e7daf">#weekend</text>
+    <text x="252" y="130" fill="#262b38">!</text>
+  </g>
+
+  <!-- magnifying glass -->
+  <g transform="translate(213,94)">
+    <circle r="34" fill="none" stroke="#c0392b" stroke-width="4" opacity="0.85"/>
+    <line x1="24" y1="24" x2="55" y2="55" stroke="#c0392b" stroke-width="6" stroke-linecap="round" opacity="0.85"/>
+  </g>
+
+  <text x="280" y="185" text-anchor="middle" font-size="12" fill="#262b38">/#[a-zA-Z0-9_]+/g</text>
+  <text x="280" y="225" text-anchor="middle" font-size="12" fill="#8991a3">le flag g fait chercher toutes les occurrences, pas seulement la première</text>
+</svg>

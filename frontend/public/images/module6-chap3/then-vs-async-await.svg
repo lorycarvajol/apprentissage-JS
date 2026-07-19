@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="640" height="280" fill="#ffffff"/>
+  <text x="320" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Le même appel, deux écritures</text>
+
+  <g font-size="10.5">
+    <text x="170" y="55" text-anchor="middle" font-weight="600" fill="#2e7daf">.then()</text>
+    <rect x="30" y="65" width="280" height="130" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="45" y="90" fill="#262b38">chargerDonnees()</text>
+    <text x="55" y="108" fill="#262b38">.then(msg =&gt; {</text>
+    <text x="65" y="126" fill="#262b38">console.log(msg);</text>
+    <text x="55" y="144" fill="#262b38">})</text>
+    <text x="55" y="162" fill="#262b38">.catch(e =&gt; ...);</text>
+  </g>
+
+  <g font-size="10.5">
+    <text x="480" y="55" text-anchor="middle" font-weight="600" fill="#2e7daf">async/await</text>
+    <rect x="340" y="65" width="280" height="130" rx="8" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <text x="355" y="90" fill="#262b38">async function f() {</text>
+    <text x="365" y="108" fill="#262b38">try {</text>
+    <rect x="375" y="115" width="220" height="20" rx="4" fill="#d4edda"/>
+    <text x="380" y="130" fill="#155724">const msg = await chargerDonnees();</text>
+    <text x="375" y="152" fill="#262b38">console.log(msg);</text>
+    <text x="365" y="170" fill="#262b38">} catch (e) { ... }</text>
+    <text x="355" y="188" fill="#262b38">}</text>
+  </g>
+
+  <text x="320" y="225" text-anchor="middle" font-size="12" fill="#155724">la ligne surlignée fait exactement ce que fait .then() — juste écrite à plat</text>
+  <text x="320" y="250" text-anchor="middle" font-size="12" fill="#8991a3">même comportement, structure plus proche du code synchrone habituel</text>
+</svg>

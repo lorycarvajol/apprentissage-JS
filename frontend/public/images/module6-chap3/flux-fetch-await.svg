@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 260" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="680" height="260" fill="#ffffff"/>
+  <text x="340" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">await marque une pause visuelle dans le flux</text>
+
+  <defs>
+    <marker id="fa-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <g font-size="10">
+    <rect x="20" y="80" width="110" height="50" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="75" y="109" text-anchor="middle" fill="#262b38">navigateur</text>
+
+    <line x1="130" y1="105" x2="185" y2="105" stroke="#8991a3" stroke-width="1.5" marker-end="url(#fa-ap)"/>
+    <text x="157" y="95" text-anchor="middle" font-size="9" fill="#8991a3">fetch(url)</text>
+
+    <rect x="190" y="80" width="110" height="50" rx="8" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <text x="245" y="109" text-anchor="middle" fill="#2e7daf">requête réseau</text>
+
+    <line x1="300" y1="105" x2="355" y2="105" stroke="#8991a3" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#fa-ap)"/>
+
+    <rect x="360" y="70" width="110" height="70" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+    <text x="415" y="98" text-anchor="middle" fill="#c0392b" font-weight="600">await</text>
+    <text x="415" y="114" text-anchor="middle" fill="#c0392b" font-size="9">fonction en pause</text>
+    <text x="415" y="128" text-anchor="middle" fill="#c0392b" font-size="9">jusqu'à la réponse</text>
+
+    <line x1="470" y1="105" x2="525" y2="105" stroke="#8991a3" stroke-width="1.5" marker-end="url(#fa-ap)"/>
+    <text x="497" y="95" text-anchor="middle" font-size="9" fill="#8991a3">réponse</text>
+
+    <rect x="530" y="80" width="110" height="50" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="585" y="102" text-anchor="middle" fill="#155724">JSON reçu</text>
+    <text x="585" y="118" text-anchor="middle" fill="#155724" font-size="9">page mise à jour</text>
+  </g>
+
+  <text x="340" y="200" text-anchor="middle" font-size="12" fill="#8991a3">seule la fonction async est en pause — le reste de la page reste réactif pendant ce temps</text>
+</svg>

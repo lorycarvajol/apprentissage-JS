@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="300" fill="#ffffff"/>
+  <text x="280" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">{ ...defaut, ...utilisateur, ...session }</text>
+
+  <defs>
+    <marker id="fc-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <!-- three stacked config boxes -->
+  <g font-size="10.5">
+    <rect x="30" y="50" width="150" height="60" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="105" y="70" text-anchor="middle" fill="#8991a3">defaut</text>
+    <text x="105" y="88" text-anchor="middle" fill="#262b38">theme: clair, langue: fr</text>
+
+    <rect x="30" y="120" width="150" height="60" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="105" y="140" text-anchor="middle" fill="#8991a3">utilisateur</text>
+    <text x="105" y="158" text-anchor="middle" fill="#262b38">langue: en</text>
+
+    <rect x="30" y="190" width="150" height="60" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="105" y="210" text-anchor="middle" fill="#8991a3">session</text>
+    <text x="105" y="228" text-anchor="middle" fill="#262b38">theme: sombre</text>
+  </g>
+
+  <line x1="180" y1="150" x2="330" y2="150" stroke="#8991a3" stroke-width="1.5" marker-end="url(#fc-ap)"/>
+
+  <!-- final merged config -->
+  <g font-size="11">
+    <rect x="335" y="105" width="180" height="90" rx="10" fill="#d4edda" stroke="#155724" stroke-width="2"/>
+    <text x="425" y="130" text-anchor="middle" font-size="10" fill="#155724">config finale</text>
+    <text x="425" y="152" text-anchor="middle" fill="#155724">theme: sombre</text>
+    <text x="425" y="172" text-anchor="middle" fill="#155724">langue: en</text>
+  </g>
+
+  <text x="280" y="270" text-anchor="middle" font-size="12" fill="#8991a3">session écrase theme, utilisateur écrase langue — le dernier objet gagne toujours</text>
+</svg>

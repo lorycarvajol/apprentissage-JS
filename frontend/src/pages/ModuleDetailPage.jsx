@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getModuleWithChapitres } from '../services/contentService';
+import { getModuleWithChapitres, getModules } from '../services/contentService';
 import ChapitreCard from '../components/content/ChapitreCard';
 import SidebarNavigation from '../components/content/SidebarNavigation';
 import MainLayout from '../components/layout/MainLayout';
@@ -10,6 +10,7 @@ const ModuleDetailPage = () => {
   const { id } = useParams();
   const [module, setModule] = useState(null);
   const [chapitres, setChapitres] = useState([]);
+  const [allModules, setAllModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -20,12 +21,16 @@ const ModuleDetailPage = () => {
   const fetchModule = async () => {
     try {
       setLoading(true);
-      const response = await getModuleWithChapitres(id);
+      const [moduleRes, modulesRes] = await Promise.all([
+        getModuleWithChapitres(id),
+        getModules(),
+      ]);
 
-      if (response.success) {
-        setModule(response.module);
-        setChapitres(response.chapitres || []);
+      if (moduleRes.success) {
+        setModule(moduleRes.module);
+        setChapitres(moduleRes.chapitres || []);
       }
+      setAllModules(modulesRes.success ? modulesRes.modules || [] : []);
     } catch (err) {
       console.error('Erreur lors du chargement du module:', err);
       setError('Impossible de charger le module');
@@ -33,6 +38,13 @@ const ModuleDetailPage = () => {
       setLoading(false);
     }
   };
+
+  const prevModule = module
+    ? allModules.find((m) => m.order_index === module.order_index - 1)
+    : null;
+  const nextModule = module
+    ? allModules.find((m) => m.order_index === module.order_index + 1)
+    : null;
 
   if (loading) {
     return (
@@ -117,11 +129,37 @@ const ModuleDetailPage = () => {
             )}
           </div>
 
-          {/* Back button */}
-          <div className="page-actions">
-            <Link to="/modules" className="btn btn-secondary">
-              ← Retour à tous les modules
-            </Link>
+          {/* Navigation Buttons */}
+          <div className="chapter-navigation">
+            <div className="nav-slot nav-prev">
+              {prevModule ? (
+                <Link to={`/modules/${prevModule.id}`} className="btn btn-secondary nav-btn">
+                  <span className="nav-btn-arrow">←</span>
+                  <span className="nav-btn-text">
+                    <span className="nav-btn-label">Module précédent</span>
+                    <span className="nav-btn-title">{prevModule.title}</span>
+                  </span>
+                </Link>
+              ) : (
+                <Link to="/modules" className="btn btn-secondary nav-btn">
+                  ← Tous les modules
+                </Link>
+              )}
+            </div>
+
+            <div className="nav-slot nav-next">
+              {nextModule ? (
+                <Link to={`/modules/${nextModule.id}`} className="btn btn-primary nav-btn">
+                  <span className="nav-btn-text">
+                    <span className="nav-btn-label">Module suivant</span>
+                    <span className="nav-btn-title">{nextModule.title}</span>
+                  </span>
+                  <span className="nav-btn-arrow">→</span>
+                </Link>
+              ) : (
+                <span className="nav-end-badge">🎉 Dernier module du parcours</span>
+              )}
+            </div>
           </div>
         </div>
       </div>

@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 280" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="620" height="280" fill="#ffffff"/>
+  <text x="310" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">liste.appendChild(item)</text>
+
+  <!-- avant -->
+  <g>
+    <text x="150" y="55" text-anchor="middle" font-size="11" fill="#8991a3">avant</text>
+    <rect x="60" y="65" width="180" height="150" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="150" y="88" text-anchor="middle" font-size="10" fill="#8991a3">&lt;ul&gt;</text>
+    <rect x="75" y="98" width="150" height="26" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="150" y="115" text-anchor="middle" font-size="10" fill="#262b38">&lt;li&gt;Pain&lt;/li&gt;</text>
+    <rect x="75" y="130" width="150" height="26" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="150" y="147" text-anchor="middle" font-size="10" fill="#262b38">&lt;li&gt;Lait&lt;/li&gt;</text>
+    <rect x="75" y="162" width="150" height="26" rx="4" fill="#fdecea" stroke="#c0392b" stroke-dasharray="3,3"/>
+    <text x="150" y="179" text-anchor="middle" font-size="10" fill="#c0392b">(pas encore là)</text>
+  </g>
+
+  <defs>
+    <marker id="ai-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+  <line x1="245" y1="140" x2="300" y2="140" stroke="#8991a3" stroke-width="1.5" marker-end="url(#ai-ap)"/>
+
+  <!-- item created separately -->
+  <g>
+    <text x="440" y="55" text-anchor="middle" font-size="11" fill="#8991a3">createElement("li") — isolé</text>
+    <rect x="380" y="65" width="120" height="30" rx="6" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="440" y="85" text-anchor="middle" font-size="10" fill="#2e7daf">&lt;li&gt;Beurre&lt;/li&gt;</text>
+  </g>
+  <line x1="440" y1="95" x2="440" y2="230" stroke="#2e7daf" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#ai-ap)"/>
+
+  <!-- apres -->
+  <g>
+    <text x="470" y="145" text-anchor="middle" font-size="11" fill="#8991a3">après</text>
+    <rect x="380" y="155" width="180" height="90" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="470" y="175" text-anchor="middle" font-size="10" fill="#8991a3">&lt;ul&gt;</text>
+    <rect x="395" y="182" width="150" height="24" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="470" y="198" text-anchor="middle" font-size="9" fill="#262b38">&lt;li&gt;Pain&lt;/li&gt;</text>
+    <rect x="395" y="208" width="150" height="24" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="470" y="224" text-anchor="middle" font-size="9" fill="#262b38">&lt;li&gt;Lait&lt;/li&gt;</text>
+    <rect x="395" y="234" width="150" height="24" fill="#d4edda" stroke="#155724"/>
+    <text x="470" y="250" text-anchor="middle" font-size="9" fill="#155724">&lt;li&gt;Beurre&lt;/li&gt;</text>
+  </g>
+
+  <text x="310" y="270" text-anchor="middle" font-size="12" fill="#8991a3">createElement fabrique un nœud isolé ; appendChild l'insère réellement dans l'arbre</text>
+</svg>

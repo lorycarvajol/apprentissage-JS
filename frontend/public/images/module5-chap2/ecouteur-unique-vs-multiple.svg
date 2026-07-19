@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="620" height="300" fill="#ffffff"/>
+  <text x="310" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Un écouteur par élément vs un seul écouteur délégué</text>
+
+  <defs>
+    <marker id="ev-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#c0392b"/>
+    </marker>
+    <marker id="ev-ap2" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#155724"/>
+    </marker>
+  </defs>
+
+  <!-- left: multiple listeners -->
+  <g font-size="10">
+    <text x="150" y="55" text-anchor="middle" fill="#c0392b">3 écouteurs (un par li)</text>
+    <rect x="70" y="65" width="160" height="150" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <rect x="85" y="80" width="130" height="30" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="150" y="99" text-anchor="middle" fill="#262b38">Tâche 1</text>
+    <rect x="85" y="118" width="130" height="30" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="150" y="137" text-anchor="middle" fill="#262b38">Tâche 2</text>
+    <rect x="85" y="156" width="130" height="30" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="150" y="175" text-anchor="middle" fill="#262b38">Tâche 3</text>
+
+    <path d="M 20 95 C -5 95, -5 95, 20 95" fill="none"/>
+    <line x1="20" y1="95" x2="82" y2="95" stroke="#c0392b" stroke-width="1.5" marker-end="url(#ev-ap)"/>
+    <line x1="20" y1="133" x2="82" y2="133" stroke="#c0392b" stroke-width="1.5" marker-end="url(#ev-ap)"/>
+    <line x1="20" y1="171" x2="82" y2="171" stroke="#c0392b" stroke-width="1.5" marker-end="url(#ev-ap)"/>
+    <text x="18" y="230" text-anchor="middle" fill="#c0392b">3 listeners à gérer,</text>
+    <text x="18" y="243" text-anchor="middle" fill="#c0392b">ne couvrent pas une</text>
+    <text x="18" y="256" text-anchor="middle" fill="#c0392b">4e tâche ajoutée après</text>
+  </g>
+
+  <!-- right: delegated listener -->
+  <g font-size="10">
+    <text x="470" y="55" text-anchor="middle" fill="#155724">1 écouteur délégué (sur ul)</text>
+    <rect x="390" y="65" width="160" height="150" rx="8" fill="#f5f7fb" stroke="#155724" stroke-width="2"/>
+    <rect x="405" y="80" width="130" height="30" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="470" y="99" text-anchor="middle" fill="#262b38">Tâche 1</text>
+    <rect x="405" y="118" width="130" height="30" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="470" y="137" text-anchor="middle" fill="#262b38">Tâche 2</text>
+    <rect x="405" y="156" width="130" height="30" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="470" y="175" text-anchor="middle" fill="#262b38">Tâche 3</text>
+
+    <line x1="340" y1="140" x2="382" y2="140" stroke="#155724" stroke-width="2" marker-end="url(#ev-ap2)"/>
+    <text x="340" y="230" text-anchor="middle" fill="#155724">1 seul listener sur &lt;ul&gt;,</text>
+    <text x="340" y="243" text-anchor="middle" fill="#155724">event.target identifie le li</text>
+    <text x="340" y="256" text-anchor="middle" fill="#155724">cliqué, marche pour le futur</text>
+  </g>
+</svg>

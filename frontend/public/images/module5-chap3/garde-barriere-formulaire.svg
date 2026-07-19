@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 260" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="620" height="260" fill="#ffffff"/>
+  <text x="310" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">La validation agit comme un garde-barrière</text>
+
+  <defs>
+    <marker id="gb-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <!-- form -->
+  <g font-size="11">
+    <rect x="30" y="60" width="160" height="120" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="110" y="80" text-anchor="middle" font-size="10" fill="#8991a3">&lt;form&gt;</text>
+    <rect x="45" y="90" width="130" height="26" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="110" y="107" text-anchor="middle" font-size="9" fill="#262b38">email</text>
+    <rect x="45" y="124" width="130" height="26" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="110" y="141" text-anchor="middle" font-size="9" fill="#262b38">mot de passe</text>
+    <rect x="70" y="156" width="80" height="20" rx="4" fill="#2e7daf"/>
+    <text x="110" y="170" text-anchor="middle" font-size="9" fill="#ffffff">Envoyer</text>
+  </g>
+
+  <line x1="190" y1="128" x2="240" y2="128" stroke="#8991a3" stroke-width="1.5" marker-end="url(#gb-ap)"/>
+
+  <!-- gate -->
+  <g>
+    <rect x="245" y="70" width="70" height="120" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+    <line x1="255" y1="70" x2="255" y2="190" stroke="#c0392b" stroke-width="4"/>
+    <line x1="280" y1="70" x2="280" y2="190" stroke="#c0392b" stroke-width="4"/>
+    <line x1="305" y1="70" x2="305" y2="190" stroke="#c0392b" stroke-width="4"/>
+    <text x="280" y="210" text-anchor="middle" font-size="10" fill="#c0392b">validation</text>
+  </g>
+
+  <line x1="315" y1="128" x2="365" y2="128" stroke="#8991a3" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#gb-ap)"/>
+  <text x="340" y="115" text-anchor="middle" font-size="9" fill="#c0392b">bloqué si invalide</text>
+
+  <!-- envoyé -->
+  <g font-size="11">
+    <rect x="370" y="98" width="120" height="60" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="430" y="132" text-anchor="middle" fill="#155724">Envoyé ✓</text>
+  </g>
+
+  <text x="310" y="240" text-anchor="middle" font-size="12" fill="#8991a3">preventDefault() retient l'envoi le temps que la validation s'exécute</text>
+</svg>

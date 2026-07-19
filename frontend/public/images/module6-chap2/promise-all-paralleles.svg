@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="600" height="300" fill="#ffffff"/>
+  <text x="300" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Promise.all : trois promesses, un seul résultat (ou une seule erreur)</text>
+
+  <defs>
+    <marker id="pa-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <g font-size="11">
+    <rect x="30" y="60" width="150" height="34" rx="6" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="105" y="82" text-anchor="middle" fill="#155724">styles.css ✓</text>
+
+    <rect x="30" y="130" width="150" height="34" rx="6" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="105" y="152" text-anchor="middle" fill="#c0392b">app.js ✗</text>
+
+    <rect x="30" y="200" width="150" height="34" rx="6" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="105" y="222" text-anchor="middle" fill="#155724">data.json ✓</text>
+  </g>
+
+  <line x1="180" y1="77" x2="380" y2="140" stroke="#155724" stroke-width="1.5" marker-end="url(#pa-ap)"/>
+  <line x1="180" y1="147" x2="380" y2="147" stroke="#c0392b" stroke-width="2.5" marker-end="url(#pa-ap)"/>
+  <line x1="180" y1="217" x2="380" y2="155" stroke="#155724" stroke-width="1.5" marker-end="url(#pa-ap)"/>
+
+  <circle cx="430" cy="150" r="45" fill="#fdecea" stroke="#c0392b" stroke-width="2"/>
+  <text x="430" y="146" text-anchor="middle" font-size="10" fill="#c0392b">.catch()</text>
+  <text x="430" y="162" text-anchor="middle" font-size="9" fill="#c0392b">app.js a échoué</text>
+
+  <text x="300" y="270" text-anchor="middle" font-size="12" fill="#8991a3">une seule promesse rejetée suffit à faire échouer tout Promise.all</text>
+</svg>

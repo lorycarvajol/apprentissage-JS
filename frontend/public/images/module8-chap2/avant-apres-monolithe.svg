@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="620" height="300" fill="#ffffff"/>
+  <text x="310" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">Un fichier monolithique vs plusieurs modules ciblés</text>
+
+  <!-- before: one big file -->
+  <g font-size="10">
+    <text x="150" y="55" text-anchor="middle" fill="#c0392b">avant</text>
+    <rect x="60" y="65" width="180" height="180" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="150" y="90" text-anchor="middle" font-weight="600" fill="#c0392b">app.js</text>
+    <text x="150" y="112" text-anchor="middle" fill="#c0392b">formatage des prix</text>
+    <text x="150" y="132" text-anchor="middle" fill="#c0392b">gestion du panier</text>
+    <text x="150" y="152" text-anchor="middle" fill="#c0392b">appels réseau</text>
+    <text x="150" y="172" text-anchor="middle" fill="#c0392b">affichage DOM</text>
+    <text x="150" y="192" text-anchor="middle" fill="#c0392b">validation formulaire</text>
+    <text x="150" y="215" text-anchor="middle" font-size="9" fill="#c0392b">— tout mélangé —</text>
+  </g>
+
+  <defs>
+    <marker id="am-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+  <line x1="245" y1="155" x2="295" y2="155" stroke="#8991a3" stroke-width="1.5" marker-end="url(#am-ap)"/>
+
+  <!-- after: several modules -->
+  <g font-size="9.5">
+    <text x="460" y="55" text-anchor="middle" fill="#155724">après</text>
+
+    <rect x="305" y="65" width="140" height="40" rx="6" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="375" y="89" text-anchor="middle" fill="#155724">prix.js</text>
+
+    <rect x="460" y="65" width="140" height="40" rx="6" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="530" y="89" text-anchor="middle" fill="#155724">panier.js</text>
+
+    <rect x="305" y="120" width="140" height="40" rx="6" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="375" y="144" text-anchor="middle" fill="#155724">reseau.js</text>
+
+    <rect x="460" y="120" width="140" height="40" rx="6" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="530" y="144" text-anchor="middle" fill="#155724">affichage.js</text>
+
+    <rect x="305" y="175" width="140" height="40" rx="6" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="375" y="199" text-anchor="middle" fill="#155724">validation.js</text>
+
+    <rect x="460" y="175" width="140" height="40" rx="6" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <text x="530" y="199" text-anchor="middle" fill="#2e7daf">app.js (assemble)</text>
+  </g>
+
+  <text x="310" y="270" text-anchor="middle" font-size="12" fill="#8991a3">même code, une responsabilité par fichier plutôt qu'un seul gros fichier</text>
+</svg>
