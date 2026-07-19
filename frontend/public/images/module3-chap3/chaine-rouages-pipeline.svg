@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="680" height="300" fill="#ffffff"/>
+  <text x="340" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">composer(normaliser, trier)</text>
+
+  <defs>
+    <marker id="cr-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <!-- input list -->
+  <g font-size="10">
+    <text x="70" y="60" text-anchor="middle" fill="#8991a3">liste brute</text>
+    <rect x="10" y="70" width="120" height="110" rx="8" fill="#fdecea" stroke="#c0392b" stroke-width="1.5"/>
+    <text x="70" y="92" text-anchor="middle" fill="#c0392b">"  bruno"</text>
+    <text x="70" y="112" text-anchor="middle" fill="#c0392b">"ALICE "</text>
+    <text x="70" y="132" text-anchor="middle" fill="#c0392b">"Chloé  "</text>
+    <text x="70" y="152" text-anchor="middle" fill="#c0392b">" diego"</text>
+  </g>
+
+  <line x1="130" y1="125" x2="175" y2="125" stroke="#8991a3" stroke-width="1.5" marker-end="url(#cr-ap)"/>
+
+  <!-- gear 1: normaliser -->
+  <g transform="translate(240,125)">
+    <circle r="60" fill="#f5f7fb" stroke="#2e7daf" stroke-width="1.5"/>
+    <g fill="#e4e7ee">
+      <rect x="-6" y="-65" width="12" height="12"/>
+      <rect x="-6" y="53" width="12" height="12"/>
+      <rect x="-65" y="-6" width="12" height="12"/>
+      <rect x="53" y="-6" width="12" height="12"/>
+    </g>
+    <text y="-4" text-anchor="middle" font-size="10" font-weight="600" fill="#2e7daf">normaliser</text>
+    <text y="12" text-anchor="middle" font-size="9" fill="#262b38">trim + minuscule</text>
+  </g>
+
+  <line x1="300" y1="125" x2="345" y2="125" stroke="#8991a3" stroke-width="1.5" marker-end="url(#cr-ap)"/>
+
+  <!-- gear 2: trier -->
+  <g transform="translate(410,125)">
+    <circle r="60" fill="#f5f7fb" stroke="#2e7daf" stroke-width="1.5"/>
+    <g fill="#e4e7ee">
+      <rect x="-6" y="-65" width="12" height="12"/>
+      <rect x="-6" y="53" width="12" height="12"/>
+      <rect x="-65" y="-6" width="12" height="12"/>
+      <rect x="53" y="-6" width="12" height="12"/>
+    </g>
+    <text y="-4" text-anchor="middle" font-size="10" font-weight="600" fill="#2e7daf">trier</text>
+    <text y="12" text-anchor="middle" font-size="9" fill="#262b38">ordre alpha.</text>
+  </g>
+
+  <line x1="470" y1="125" x2="515" y2="125" stroke="#8991a3" stroke-width="1.5" marker-end="url(#cr-ap)"/>
+
+  <!-- output list -->
+  <g font-size="10">
+    <text x="600" y="60" text-anchor="middle" fill="#155724">liste propre</text>
+    <rect x="540" y="70" width="120" height="110" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="600" y="92" text-anchor="middle" fill="#155724">"alice"</text>
+    <text x="600" y="112" text-anchor="middle" fill="#155724">"bruno"</text>
+    <text x="600" y="132" text-anchor="middle" fill="#155724">"chloé"</text>
+    <text x="600" y="152" text-anchor="middle" fill="#155724">"diego"</text>
+  </g>
+
+  <text x="340" y="230" text-anchor="middle" font-size="12" fill="#8991a3">chaque rouage engrène le suivant : la sortie de normaliser() devient l'entrée de trier()</text>
+</svg>

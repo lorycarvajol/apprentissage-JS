@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 280" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="280" fill="#ffffff"/>
+  <text x="280" y="28" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="16" font-weight="600" fill="#262b38">Une fonction : entrées → traitement → sortie</text>
+
+  <defs>
+    <marker id="bn-ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <!-- inputs -->
+  <g font-size="11">
+    <text x="90" y="80" text-anchor="middle" font-size="10" fill="#8991a3">paramètre</text>
+    <rect x="30" y="90" width="120" height="40" rx="8" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+    <text x="90" y="115" text-anchor="middle" fill="#2e7daf">prenom = "Ana"</text>
+  </g>
+
+  <line x1="150" y1="110" x2="205" y2="110" stroke="#8991a3" stroke-width="1.5" marker-end="url(#bn-ap)"/>
+
+  <!-- black box -->
+  <g>
+    <rect x="210" y="60" width="140" height="100" rx="10" fill="#262b38"/>
+    <text x="280" y="105" text-anchor="middle" font-size="12" fill="#ffffff">saluer(prenom)</text>
+    <text x="280" y="123" text-anchor="middle" font-size="10" fill="#c7cbd6">traitement</text>
+  </g>
+
+  <line x1="350" y1="110" x2="405" y2="110" stroke="#8991a3" stroke-width="1.5" marker-end="url(#bn-ap)"/>
+
+  <!-- output -->
+  <g font-size="11">
+    <text x="470" y="80" text-anchor="middle" font-size="10" fill="#8991a3">valeur de retour</text>
+    <rect x="410" y="90" width="120" height="40" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="470" y="115" text-anchor="middle" fill="#155724">"Bonjour Ana !"</text>
+  </g>
+
+  <text x="280" y="210" text-anchor="middle" font-size="12" fill="#8991a3">function saluer(prenom) { return `Bonjour ${prenom} !`; }</text>
+  <text x="280" y="245" text-anchor="middle" font-size="12" fill="#8991a3">la fonction ne change jamais — seule l'entrée fait varier la sortie</text>
+</svg>

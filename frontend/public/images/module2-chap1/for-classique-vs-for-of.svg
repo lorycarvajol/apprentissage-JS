@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 320" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="600" height="320" fill="#ffffff"/>
+  <text x="300" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">const fruits = ["pomme", "banane", "kiwi"]</text>
+
+  <!-- array boxes shared reference at top -->
+  <g>
+    <rect x="220" y="42" width="160" height="34" fill="#2e7daf" rx="6"/>
+    <rect x="220" y="42" width="53" height="34" fill="none" stroke="#ffffff" stroke-width="1"/>
+    <rect x="273" y="42" width="53" height="34" fill="none" stroke="#ffffff" stroke-width="1"/>
+    <rect x="326" y="42" width="54" height="34" fill="none" stroke="#ffffff" stroke-width="1"/>
+    <text x="246" y="64" text-anchor="middle" font-size="10" fill="#ffffff">pomme</text>
+    <text x="299" y="64" text-anchor="middle" font-size="10" fill="#ffffff">banane</text>
+    <text x="353" y="64" text-anchor="middle" font-size="10" fill="#ffffff">kiwi</text>
+    <text x="246" y="36" text-anchor="middle" font-size="9" fill="#8991a3">[0]</text>
+    <text x="299" y="36" text-anchor="middle" font-size="9" fill="#8991a3">[1]</text>
+    <text x="353" y="36" text-anchor="middle" font-size="9" fill="#8991a3">[2]</text>
+  </g>
+
+  <line x1="150" y1="90" x2="150" y2="105" stroke="#d3d8e3" stroke-width="1.5"/>
+  <line x1="450" y1="90" x2="450" y2="105" stroke="#d3d8e3" stroke-width="1.5"/>
+
+  <!-- LEFT: for classique -->
+  <text x="150" y="125" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2e7daf">for (let i = 0; i &lt; 3; i++)</text>
+
+  <g font-size="11">
+    <rect x="45" y="140" width="210" height="30" fill="#f5f7fb" stroke="#d3d8e3"/>
+    <text x="55" y="160" fill="#63697b">i = 0</text>
+    <text x="150" y="160" fill="#262b38">fruits[i] =</text>
+    <text x="230" y="160" fill="#155724">"pomme"</text>
+
+    <rect x="45" y="170" width="210" height="30" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="55" y="190" fill="#63697b">i = 1</text>
+    <text x="150" y="190" fill="#262b38">fruits[i] =</text>
+    <text x="230" y="190" fill="#155724">"banane"</text>
+
+    <rect x="45" y="200" width="210" height="30" fill="#f5f7fb" stroke="#d3d8e3"/>
+    <text x="55" y="220" fill="#63697b">i = 2</text>
+    <text x="150" y="220" fill="#262b38">fruits[i] =</text>
+    <text x="230" y="220" fill="#155724">"kiwi"</text>
+  </g>
+  <text x="150" y="250" text-anchor="middle" font-size="10" fill="#8991a3">l'index i est explicite</text>
+
+  <!-- divider -->
+  <line x1="300" y1="105" x2="300" y2="270" stroke="#e4e7ee" stroke-width="1.5"/>
+
+  <!-- RIGHT: for...of -->
+  <text x="450" y="125" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2e7daf">for (const fruit of fruits)</text>
+
+  <g font-size="11">
+    <rect x="345" y="140" width="210" height="30" fill="#f5f7fb" stroke="#d3d8e3"/>
+    <text x="355" y="160" fill="#262b38">fruit =</text>
+    <text x="430" y="160" fill="#155724">"pomme"</text>
+
+    <rect x="345" y="170" width="210" height="30" fill="#ffffff" stroke="#d3d8e3"/>
+    <text x="355" y="190" fill="#262b38">fruit =</text>
+    <text x="430" y="190" fill="#155724">"banane"</text>
+
+    <rect x="345" y="200" width="210" height="30" fill="#f5f7fb" stroke="#d3d8e3"/>
+    <text x="355" y="220" fill="#262b38">fruit =</text>
+    <text x="430" y="220" fill="#155724">"kiwi"</text>
+  </g>
+  <text x="450" y="250" text-anchor="middle" font-size="10" fill="#8991a3">la valeur arrive directement</text>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="680" height="300" fill="#ffffff"/>
+  <text x="340" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">.filter(payee).map(prix).reduce(somme)</text>
+
+  <defs>
+    <marker id="ap" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#8991a3"/>
+    </marker>
+  </defs>
+
+  <!-- stage 1: commandes -->
+  <g font-size="10">
+    <rect x="10" y="60" width="120" height="130" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="70" y="50" text-anchor="middle" font-size="10" fill="#8991a3">commandes</text>
+    <rect x="20" y="70" width="100" height="34" fill="#d4edda" stroke="#155724"/>
+    <text x="70" y="84" text-anchor="middle" fill="#155724">clavier · 50</text>
+    <text x="70" y="97" text-anchor="middle" fill="#155724">payée</text>
+    <rect x="20" y="108" width="100" height="34" fill="#fdecea" stroke="#c0392b"/>
+    <text x="70" y="122" text-anchor="middle" fill="#c0392b">souris · 20</text>
+    <text x="70" y="135" text-anchor="middle" fill="#c0392b">non payée</text>
+    <rect x="20" y="146" width="100" height="34" fill="#d4edda" stroke="#155724"/>
+    <text x="70" y="160" text-anchor="middle" fill="#155724">ecran · 150</text>
+    <text x="70" y="173" text-anchor="middle" fill="#155724">payée</text>
+  </g>
+
+  <line x1="130" y1="125" x2="165" y2="125" stroke="#8991a3" stroke-width="1.5" marker-end="url(#ap)"/>
+
+  <!-- stage 2: filter -->
+  <g font-size="10">
+    <text x="215" y="50" text-anchor="middle" font-weight="600" fill="#2e7daf">filter(payee)</text>
+    <rect x="170" y="60" width="90" height="130" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <rect x="180" y="80" width="70" height="30" fill="#d4edda" stroke="#155724"/>
+    <text x="215" y="99" text-anchor="middle" fill="#155724">clavier·50</text>
+    <rect x="180" y="120" width="70" height="30" fill="#d4edda" stroke="#155724"/>
+    <text x="215" y="139" text-anchor="middle" fill="#155724">ecran·150</text>
+  </g>
+
+  <line x1="260" y1="125" x2="295" y2="125" stroke="#8991a3" stroke-width="1.5" marker-end="url(#ap)"/>
+
+  <!-- stage 3: map -->
+  <g font-size="10">
+    <text x="345" y="50" text-anchor="middle" font-weight="600" fill="#2e7daf">map(prix)</text>
+    <rect x="300" y="60" width="90" height="130" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <rect x="315" y="80" width="60" height="30" fill="#f0f7ff" stroke="#2e7daf"/>
+    <text x="345" y="99" text-anchor="middle" fill="#2e7daf">50</text>
+    <rect x="315" y="120" width="60" height="30" fill="#f0f7ff" stroke="#2e7daf"/>
+    <text x="345" y="139" text-anchor="middle" fill="#2e7daf">150</text>
+  </g>
+
+  <line x1="390" y1="125" x2="425" y2="125" stroke="#8991a3" stroke-width="1.5" marker-end="url(#ap)"/>
+
+  <!-- stage 4: reduce -->
+  <g font-size="10">
+    <text x="490" y="50" text-anchor="middle" font-weight="600" fill="#2e7daf">reduce(+, 0)</text>
+    <rect x="430" y="60" width="120" height="130" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="490" y="105" text-anchor="middle" font-size="11" fill="#262b38">0 + 50 = 50</text>
+    <text x="490" y="130" text-anchor="middle" font-size="11" fill="#262b38">50 + 150 = 200</text>
+  </g>
+
+  <line x1="550" y1="125" x2="585" y2="125" stroke="#8991a3" stroke-width="1.5" marker-end="url(#ap)"/>
+
+  <!-- final -->
+  <circle cx="625" cy="125" r="35" fill="#2e7daf"/>
+  <text x="625" y="130" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">200</text>
+
+  <text x="340" y="230" text-anchor="middle" font-size="12" fill="#8991a3">chaque étape reçoit le tableau produit par la précédente</text>
+</svg>

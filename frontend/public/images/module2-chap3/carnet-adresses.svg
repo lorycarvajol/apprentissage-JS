@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 300" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="520" height="300" fill="#ffffff"/>
+  <text x="260" y="26" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="15" font-weight="600" fill="#262b38">carnet = { proprietaire, contacts: [...] }</text>
+
+  <!-- outer object: carnet -->
+  <rect x="30" y="50" width="460" height="220" rx="10" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+  <rect x="30" y="50" width="460" height="28" rx="10" fill="#2e7daf"/>
+  <rect x="30" y="64" width="460" height="14" fill="#2e7daf"/>
+  <text x="50" y="69" font-size="12" font-weight="600" fill="#ffffff">carnet</text>
+
+  <text x="50" y="100" font-size="11" fill="#262b38">proprietaire: "Ana"</text>
+
+  <text x="50" y="128" font-size="11" fill="#262b38">contacts: [</text>
+
+  <!-- contact 1 -->
+  <rect x="70" y="140" width="190" height="55" rx="8" fill="#ffffff" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="80" y="158" font-size="10" fill="#8991a3">contacts[0]</text>
+  <text x="80" y="175" font-size="11" fill="#262b38">nom: "Leo"</text>
+  <text x="80" y="190" font-size="11" fill="#262b38">telephone: "0601..."</text>
+
+  <!-- contact 2 -->
+  <rect x="270" y="140" width="190" height="55" rx="8" fill="#ffffff" stroke="#d3d8e3" stroke-width="1.5"/>
+  <text x="280" y="158" font-size="10" fill="#8991a3">contacts[1]</text>
+  <text x="280" y="175" font-size="11" fill="#262b38">nom: "Mia"</text>
+  <text x="280" y="190" font-size="11" fill="#262b38">telephone: "0605..."</text>
+
+  <text x="50" y="220" font-size="11" fill="#262b38">]</text>
+
+  <text x="260" y="250" text-anchor="middle" font-size="11" fill="#8991a3">carnet.contacts[0].nom → "Leo"</text>
+</svg>

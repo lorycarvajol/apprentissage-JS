@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 320" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="680" height="320" fill="#ffffff"/>
+  <text x="340" y="28" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="16" font-weight="600" fill="#262b38">Trois syntaxes, le même comportement</text>
+
+  <!-- column 1: déclaration -->
+  <g font-size="10.5">
+    <text x="130" y="58" text-anchor="middle" font-weight="600" fill="#2e7daf">Déclaration</text>
+    <rect x="20" y="70" width="220" height="150" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="35" y="92" fill="#262b38">function saluer(prenom) {</text>
+    <rect x="35" y="100" width="190" height="20" rx="4" fill="#d4edda"/>
+    <text x="40" y="114" fill="#155724">return `Bonjour ${prenom} !`;</text>
+    <text x="35" y="138" fill="#262b38">}</text>
+  </g>
+
+  <!-- column 2: expression -->
+  <g font-size="10.5">
+    <text x="365" y="58" text-anchor="middle" font-weight="600" fill="#2e7daf">Expression</text>
+    <rect x="245" y="70" width="240" height="150" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="260" y="92" fill="#262b38">const saluer = function (prenom) {</text>
+    <rect x="260" y="100" width="190" height="20" rx="4" fill="#d4edda"/>
+    <text x="265" y="114" fill="#155724">return `Bonjour ${prenom} !`;</text>
+    <text x="260" y="138" fill="#262b38">};</text>
+  </g>
+
+  <!-- column 3: arrow -->
+  <g font-size="10.5">
+    <text x="590" y="58" text-anchor="middle" font-weight="600" fill="#2e7daf">Arrow</text>
+    <rect x="500" y="70" width="160" height="150" rx="8" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5"/>
+    <text x="515" y="92" fill="#262b38">const saluer =</text>
+    <text x="515" y="108" fill="#262b38">(prenom) =&gt; {</text>
+    <rect x="515" y="116" width="130" height="20" rx="4" fill="#d4edda"/>
+    <text x="520" y="130" fill="#155724">return `Bonjour</text>
+    <text x="520" y="150" fill="#155724">${prenom} !`;</text>
+    <text x="515" y="172" fill="#262b38">};</text>
+  </g>
+
+  <text x="340" y="255" text-anchor="middle" font-size="12" fill="#155724">le corps surligné est identique dans les trois cas</text>
+  <text x="340" y="280" text-anchor="middle" font-size="12" fill="#8991a3">saluer("Ana") renvoie toujours "Bonjour Ana !", quelle que soit la syntaxe choisie</text>
+</svg>

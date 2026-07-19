@@ -17,27 +17,31 @@ centrale du curriculum.
 
 **9 modules · 27 chapitres · 54 exercices suggérés · 54 illustrations suggérées**
 
+**Statut** : ✅ Fait = créé en base (`apprentissage_js`) via un script `backend/database/seed_moduleN.php`, théories + exercices + illustrations SVG réels, vérifié via l'API. ⏳ À faire = plan ci-dessous, rien en base pour l'instant.
+
 ---
 
 ## Sommaire
 
-| Module | Titre | Chapitres |
-|---|---|---|
-| M1 | Bases du langage | 1.1 – 1.3 |
-| M2 | Boucles et collections | 2.1 – 2.3 |
-| M3 | Fonctions | 3.1 – 3.3 |
-| M4 | Chaînes, dates et données textuelles | 4.1 – 4.3 |
-| M5 | Le DOM et les événements | 5.1 – 5.3 |
-| M6 | JavaScript asynchrone | 6.1 – 6.3 |
-| M7 | Programmation orientée objet | 7.1 – 7.3 |
-| M8 | JavaScript moderne et bonnes pratiques | 8.1 – 8.3 |
-| M9 | Projet intégrateur | 9.1 – 9.3 |
+| Module | Titre | Chapitres | Statut |
+|---|---|---|---|
+| M1 | Bases du langage | 1.1 – 1.3 | ✅ Fait |
+| M2 | Boucles et collections | 2.1 – 2.3 | ✅ Fait |
+| M3 | Fonctions | 3.1 – 3.3 | ✅ Fait |
+| M4 | Chaînes, dates et données textuelles | 4.1 – 4.3 | ⏳ À faire |
+| M5 | Le DOM et les événements | 5.1 – 5.3 | ⏳ À faire |
+| M6 | JavaScript asynchrone | 6.1 – 6.3 | ⏳ À faire |
+| M7 | Programmation orientée objet | 7.1 – 7.3 | ⏳ À faire |
+| M8 | JavaScript moderne et bonnes pratiques | 8.1 – 8.3 | ⏳ À faire |
+| M9 | Projet intégrateur | 9.1 – 9.3 | ⏳ À faire |
 
 ---
 
-## M1 — Bases du langage
+## M1 — Bases du langage ✅ Fait
 
 Poser le vocabulaire et la syntaxe de base avant toute logique plus complexe.
+
+*Créé en base via `backend/database/seed_module1.php` — 3 théories, 6 exercices, 6 illustrations SVG (`frontend/public/images/module1-chap{1,2,3}/`).*
 
 ### 1.1 Variables, types et syntaxe
 - **Théorie** : `let`/`const`/`var` et leurs portées, types primitifs (string, number,
@@ -82,9 +86,11 @@ Poser le vocabulaire et la syntaxe de base avant toute logique plus complexe.
 
 ---
 
-## M2 — Boucles et collections
+## M2 — Boucles et collections ✅ Fait
 
 Répéter des traitements et manipuler des ensembles de données.
+
+*Créé en base via `backend/database/seed_module2.php` — 3 théories, 6 exercices, 6 illustrations SVG (`frontend/public/images/module2-chap{1,2,3}/`).*
 
 ### 2.1 Boucles
 - **Théorie** : `for`, `while`, `do...while`, `for...of` (itérables), `for...in`
@@ -127,9 +133,11 @@ Répéter des traitements et manipuler des ensembles de données.
 
 ---
 
-## M3 — Fonctions
+## M3 — Fonctions ✅ Fait
 
 Découper le code en blocs réutilisables et comprendre la portée.
+
+*Créé en base via `backend/database/seed_module3.php` — 3 théories, 6 exercices, 6 illustrations SVG (`frontend/public/images/module3-chap{1,2,3}/`).*
 
 ### 3.1 Déclarer et utiliser des fonctions
 - **Théorie** : déclaration de fonction, expression de fonction, arrow function,
@@ -174,7 +182,7 @@ Découper le code en blocs réutilisables et comprendre la portée.
 
 ---
 
-## M4 — Chaînes, dates et données textuelles
+## M4 — Chaînes, dates et données textuelles ⏳ À faire
 
 Manipuler du texte et des dates, deux besoins omniprésents.
 
@@ -218,7 +226,7 @@ Manipuler du texte et des dates, deux besoins omniprésents.
 
 ---
 
-## M5 — Le DOM et les événements
+## M5 — Le DOM et les événements ⏳ À faire
 
 Le premier module vraiment spécifique au navigateur — sans équivalent PHP.
 
@@ -265,7 +273,7 @@ Le premier module vraiment spécifique au navigateur — sans équivalent PHP.
 
 ---
 
-## M6 — JavaScript asynchrone
+## M6 — JavaScript asynchrone ⏳ À faire
 
 Deuxième module sans vrai équivalent PHP (le PHP sibling est synchrone par requête).
 
@@ -313,7 +321,7 @@ Deuxième module sans vrai équivalent PHP (le PHP sibling est synchrone par req
 
 ---
 
-## M7 — Programmation orientée objet
+## M7 — Programmation orientée objet ⏳ À faire
 
 La POO en JavaScript, un module du curriculum parmi d'autres — pas son organisation
 centrale.
@@ -356,7 +364,7 @@ centrale.
 
 ---
 
-## M8 — JavaScript moderne et bonnes pratiques
+## M8 — JavaScript moderne et bonnes pratiques ⏳ À faire
 
 ### 8.1 Destructuring, spread/rest et template literals
 - **Théorie** : déstructuration d'objets/tableaux, opérateur spread (`...`),
@@ -401,7 +409,7 @@ centrale.
 
 ---
 
-## M9 — Projet intégrateur
+## M9 — Projet intégrateur ⏳ À faire
 
 Assembler les modules précédents dans une mini-application cohérente.
 
@@ -451,11 +459,20 @@ Assembler les modules précédents dans une mini-application cohérente.
 
 ## Notes de suivi
 
-- Première passe d'authoring recommandée : tous les exercices *Guidé* d'abord,
-  pour rendre chaque module publiable rapidement ; les *Défi* dans une deuxième
-  passe.
-- `CLAUDE.md` décrit encore ce projet comme centré sur la POO (« a learning
-  platform for teaching Object-Oriented Programming (OOP) in JavaScript »), ce
-  qui ne correspond plus à la portée définie ici. À mettre à jour si cette
-  nouvelle portée (curriculum JS complet, POO = un module parmi d'autres) est
-  définitive.
+- Avancement : **M1, M2 et M3 créés en base et vérifiés via l'API** (3/9 modules,
+  9/27 chapitres). Prochaine étape : M4 — Chaînes, dates et données textuelles.
+- Pour M3.2 Défi, le scénario ROADMAP initial ("bug de closure dans un
+  `setTimeout`") a été adapté en un tableau de fonctions appelées après la
+  boucle : `jsSandbox.js` envoie sa sortie capturée dès la fin de l'exécution
+  synchrone, donc tout `console.log` dans un vrai callback asynchrone
+  (`setTimeout`) n'apparaîtrait jamais dans `output` — le même bug de closure
+  reste démontré, sans dépendre d'async (M6 le couvrira).
+- Pour M1/M2/M3, les deux exercices par chapitre (Guidé + Défi) ont été implémentés
+  d'un coup, avec `expected_output` calculé hors-ligne via Node (réplique exacte
+  de la capture `console.log` de `jsSandbox.js`) plutôt que deviné à l'œil — à
+  reproduire pour la suite plutôt que la passe « Guidé d'abord » envisagée
+  initialement ci-dessous.
+- Chaque module fait est rejouable sans risque : les scripts `seed_moduleN.php`
+  ont un garde-fou qui les arrête si le module existe déjà en base.
+- `CLAUDE.md` a été mis à jour pour refléter la portée définie ici (curriculum
+  JS complet, POO = un module parmi d'autres).

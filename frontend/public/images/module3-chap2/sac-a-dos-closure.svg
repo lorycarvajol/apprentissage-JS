@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 320" font-family="'IBM Plex Mono', ui-monospace, monospace">
+  <rect x="0" y="0" width="560" height="320" fill="#ffffff"/>
+  <text x="280" y="28" text-anchor="middle" font-family="'Space Grotesk', system-ui, sans-serif" font-size="16" font-weight="600" fill="#262b38">Une closure emporte son environnement</text>
+
+  <!-- outer function (fading, "finished") -->
+  <rect x="40" y="60" width="220" height="130" rx="10" fill="#f5f7fb" stroke="#d3d8e3" stroke-width="1.5" stroke-dasharray="5,4"/>
+  <text x="150" y="82" text-anchor="middle" font-size="11" fill="#8991a3">creerCompteur() — terminée</text>
+  <rect x="60" y="95" width="180" height="30" rx="6" fill="#f0f7ff" stroke="#2e7daf" stroke-width="1.5"/>
+  <text x="150" y="115" text-anchor="middle" font-size="11" fill="#2e7daf">let compte = 0</text>
+
+  <!-- backpack straps -->
+  <path d="M 240 110 C 300 90, 340 90, 380 110" fill="none" stroke="#8991a3" stroke-width="2" stroke-dasharray="4,3"/>
+
+  <!-- inner function with backpack -->
+  <g>
+    <rect x="330" y="150" width="180" height="110" rx="10" fill="#ffffff" stroke="#2e7daf" stroke-width="2"/>
+    <text x="420" y="172" text-anchor="middle" font-size="11" font-weight="600" fill="#2e7daf">incrementer()</text>
+    <text x="420" y="192" text-anchor="middle" font-size="10" fill="#262b38">compte++;</text>
+    <text x="420" y="208" text-anchor="middle" font-size="10" fill="#262b38">return compte;</text>
+
+    <!-- backpack -->
+    <rect x="345" y="222" width="150" height="28" rx="8" fill="#d4edda" stroke="#155724" stroke-width="1.5"/>
+    <text x="420" y="241" text-anchor="middle" font-size="10" fill="#155724">🎒 compte = 0</text>
+  </g>
+
+  <text x="280" y="290" text-anchor="middle" font-size="12" fill="#8991a3">incrementer() continue d'accéder à "compte", même après la fin de creerCompteur()</text>
+</svg>
