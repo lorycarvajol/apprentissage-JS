@@ -86,6 +86,21 @@ npm install
 npm run dev
 ```
 
+## 🌍 Déploiement
+
+La mise en ligne se fait en conteneurs (PHP-FPM + nginx) derrière Traefik, sur une instance MySQL
+mutualisée avec le projet PHP jumeau — voir **[DEPLOIEMENT.md](DEPLOIEMENT.md)** pour la procédure
+complète.
+
+```bash
+cp .env.docker.example .env.docker    # puis remplir les secrets
+docker compose --env-file .env.docker up -d --build
+```
+
+En production, nginx sert le SPA **et** transmet `/api` à php-fpm : front et API partagent une
+seule origine. `scripts/start-dev.ps1` ne concerne que le développement local et n'est pas
+embarqué dans les images.
+
 ## 🔐 Authentification
 
 JWT access token (courte durée, en mémoire côté client) + refresh token rotatif dans un cookie httpOnly —

@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { getModules, getChapitres, getTheories } from '../../services/contentService';
 import { createTheorie, updateTheorie, deleteTheorie } from '../../services/adminService';
-import Editor from '@monaco-editor/react';
+import Editor from '../common/CodeEditor';
 import '../../styles/Editor.css';
 
 const TheorieManager = () => {

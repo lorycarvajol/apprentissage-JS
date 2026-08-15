@@ -1,6 +1,9 @@
 # Secrets et config locale - ne doit jamais être commit
 .env
 .env.local
+# Secrets de production (VPS) : contient JWT_SECRET, DB_PASS, MAIL_PASSWORD.
+# Seul .env.docker.example, sans valeurs, est versionné.
+.env.docker
 .claude/settings.local.json
 
 # Dependencies

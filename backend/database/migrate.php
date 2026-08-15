@@ -11,8 +11,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
+// safeLoad() : ce script est aussi lancé au démarrage du conteneur backend,
+// où la configuration vient de Docker et où aucun fichier .env n'existe.
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+$dotenv->safeLoad();
 
 class Color {
     const GREEN = "\033[32m";

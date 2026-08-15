@@ -21,10 +21,41 @@
 
 const TIMEOUT_MS = 5000;
 
+// APIs neutralisées dans les deux bacs à sable (Worker et iframe). L'objectif
+// est le même que le open_basedir/allow_url_fopen=0 du sandbox PHP jumeau : le
+// code d'un apprenant ne doit avoir aucun moyen de joindre le réseau ni de
+// persister quoi que ce soit.
+//
+// Point important : `Worker` figure dans la liste. Sans lui, du code soumis
+// pourrait créer un worker imbriqué à partir d'un Blob — ce worker naîtrait
+// dans un scope global tout neuf, avec fetch/XMLHttpRequest intacts, et
+// annulerait d'un coup tout le reste de cette liste.
+const BLOCKED_GLOBALS = [
+  'fetch',
+  'XMLHttpRequest',
+  'importScripts',
+  'WebSocket',
+  'EventSource',
+  'BroadcastChannel',
+  'indexedDB',
+  'caches',
+  'Worker',
+  'SharedWorker',
+];
+
+// Généré comme une chaîne : ce code est injecté à l'identique dans la source du
+// Worker et dans celle de l'iframe. try/catch parce que certaines de ces
+// propriétés sont définies en lecture seule selon le navigateur — l'échec d'une
+// affectation ne doit pas interrompre la neutralisation des suivantes.
+const BLOCK_GLOBALS_SOURCE = `
+${JSON.stringify(BLOCKED_GLOBALS)}.forEach(function (name) {
+  try { self[name] = undefined; } catch (e) { /* propriété non inscriptible */ }
+});
+try { self.navigator.sendBeacon = undefined; } catch (e) { /* idem */ }
+`;
+
 const WORKER_SOURCE = `
-self.fetch = undefined;
-self.XMLHttpRequest = undefined;
-self.importScripts = undefined;
+${BLOCK_GLOBALS_SOURCE}
 
 function stringifyArg(arg) {
   if (typeof arg === 'string') return arg;
@@ -206,9 +237,7 @@ function buildIframeSrcdoc(htmlFixture, code) {
 ${htmlFixture || ''}
 <script>
 (function () {
-  self.fetch = undefined;
-  self.XMLHttpRequest = undefined;
-
+${BLOCK_GLOBALS_SOURCE}
   function stringifyArg(arg) {
     if (typeof arg === 'string') return arg;
     if (arg === undefined) return 'undefined';

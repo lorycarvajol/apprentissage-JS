@@ -1,0 +1,111 @@
+# Déploiement de apprentissage-JS sur le VPS mutualisé.
+# Voir DEPLOIEMENT.md pour la procédure complète.
+#
+#   docker compose --env-file .env.docker up -d --build
+#
+# Le `--env-file` est obligatoire : il alimente à la fois l'interpolation des
+# ${VARIABLES} de ce fichier et l'environnement injecté dans les conteneurs.
+#
+# Deux ressources vivent HORS de ce compose et sont partagées avec les autres
+# projets du VPS (voir DEPLOIEMENT.md § Prérequis) :
+#   - le réseau Traefik (`proxy` par défaut), qui termine le TLS et route par
+#     sous-domaine ;
+#   - l'instance MySQL mutualisée, jointe via le réseau `shared-db`. Ce projet
+#     n'y possède que sa base `apprentissage_js` et son utilisateur dédié :
+#     même instance que apprentissage-POO-PHP, permissions cloisonnées.
+
+name: apprentissage-js
+
+services:
+  # ---------------------------------------------------------------------
+  # API PHP 8.2 (php-fpm). Jamais exposée à Traefik ni au VPS : seul le
+  # conteneur `web` lui parle, sur le réseau `app`.
+  # ---------------------------------------------------------------------
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    image: apprentissage-js-backend:latest
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    environment:
+      # Forcés ici plutôt que laissés au .env.docker : ce fichier compose ne
+      # sert qu'à la production, et une mise en ligne accidentelle avec
+      # APP_DEBUG=true divulguerait chemins de fichiers et messages d'erreur
+      # internes dans les réponses de l'API.
+      APP_ENV: production
+      APP_DEBUG: "false"
+    networks:
+      - app
+      - shared-db
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # ---------------------------------------------------------------------
+  # nginx : sert le SPA React et transmet /api à php-fpm.
+  # Front et API sur une seule et même origine — c'est ce qui règle le point
+  # « CORS » de la fiche de migration, et ce qui permet au cookie httpOnly du
+  # refresh token de rester en SameSite=Lax.
+  # ---------------------------------------------------------------------
+  web:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+      args:
+        # URL relative : le bundle fonctionne quel que soit le domaine final,
+        # et l'appel part vers la même origine que la page.
+        VITE_API_URL: /api
+    image: apprentissage-js-web:latest
+    restart: unless-stopped
+    depends_on:
+      - backend
+    networks:
+      - app
+      - proxy
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    labels:
+      - "traefik.enable=true"
+      # Un conteneur branché sur plusieurs réseaux : sans cette ligne, Traefik
+      # peut choisir l'IP du réseau `app`, qu'il ne sait pas joindre.
+      - "traefik.docker.network=${TRAEFIK_NETWORK:-proxy}"
+
+      - "traefik.http.routers.apprentissage-js.rule=Host(`${APP_DOMAIN}`)"
+      - "traefik.http.routers.apprentissage-js.entrypoints=${TRAEFIK_ENTRYPOINT:-websecure}"
+      - "traefik.http.routers.apprentissage-js.tls=true"
+      - "traefik.http.routers.apprentissage-js.tls.certresolver=${TRAEFIK_CERTRESOLVER:-letsencrypt}"
+      - "traefik.http.routers.apprentissage-js.middlewares=apprentissage-js-hsts@docker,apprentissage-js-compress@docker"
+      - "traefik.http.services.apprentissage-js.loadbalancer.server.port=80"
+
+      # HSTS : à n'activer qu'une fois le certificat confirmé fonctionnel, un
+      # max-age d'un an étant difficile à révoquer côté navigateurs.
+      - "traefik.http.middlewares.apprentissage-js-hsts.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.apprentissage-js-hsts.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.apprentissage-js-hsts.headers.stsPreload=false"
+      - "traefik.http.middlewares.apprentissage-js-hsts.headers.forceSTSHeader=true"
+
+      - "traefik.http.middlewares.apprentissage-js-compress.compress=true"
+
+networks:
+  # Réseau privé du projet : nginx ↔ php-fpm, rien d'autre.
+  app:
+    driver: bridge
+
+  # Réseau de Traefik, créé une seule fois pour tout le VPS :
+  #   docker network create proxy
+  proxy:
+    external: true
+    name: ${TRAEFIK_NETWORK:-proxy}
+
+  # Réseau de l'instance MySQL mutualisée, créé une seule fois pour tout le VPS :
+  #   docker network create shared-db
+  shared-db:
+    external: true
+    name: ${DB_NETWORK:-shared-db}

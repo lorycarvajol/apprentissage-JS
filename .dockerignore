@@ -1,0 +1,28 @@
+# Dépendances : réinstallées dans l'image (composer install / npm ci) plutôt que
+# copiées depuis la machine de build — les binaires natifs compilés sous Windows
+# ne sont pas utilisables dans une image Linux.
+backend/vendor/
+frontend/node_modules/
+
+# Secrets et config locale — injectés au runtime via .env.docker / secrets Docker
+.env
+.env.local
+.env.docker
+backend/.env
+frontend/.env
+
+# Artefacts de build et logs locaux
+frontend/dist/
+backend/.phpunit.cache/
+*.log
+
+# Outils de dev spécifiques à la machine Windows/WAMP (voir DEPLOIEMENT.md)
+scripts/
+
+# Métadonnées
+.git/
+.github/
+.claude/
+.vscode/
+.idea/
+*.md

@@ -4,46 +4,90 @@ namespace App\Config;
 
 class Cors
 {
+    /**
+     * Origines toujours acceptées HORS production : les ports Vite utilisés en
+     * développement. En production, cette souplesse disparaît complètement —
+     * seule CORS_ORIGIN fait foi (voir isDevelopment()).
+     */
+    private const DEV_ORIGIN_PATTERN = '/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/';
+
     public static function handle(): void
     {
-        // Obtenir l'origine de la requête
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 
-        // Liste des origins autorisées
-        $allowedOrigins = [
-            'http://localhost:5173',
-            'http://localhost:5174',
-        ];
-
-        // Si l'origine est dans la liste ou si c'est en développement local
-        if (in_array($origin, $allowedOrigins) || self::isLocalhost($origin)) {
-            $allowedOrigin = $origin;
-        } else {
-            $allowedOrigin = $_ENV['CORS_ORIGIN'] ?? 'http://localhost:5173';
+        // Une requête same-origin n'envoie pas d'en-tête Origin. C'est le cas
+        // nominal en production : nginx sert le SPA et l'API sous le même
+        // domaine (voir docker/nginx/default.conf), donc le navigateur ne fait
+        // ni requête préliminaire ni contrôle CORS. Rien à émettre.
+        if ($origin === '') {
+            if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                http_response_code(204);
+                exit;
+            }
+            return;
         }
 
-        // Handle preflight requests
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-            header("Access-Control-Allow-Origin: $allowedOrigin");
-            header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-            header('Access-Control-Allow-Headers: Content-Type, Authorization');
-            header('Access-Control-Allow-Credentials: true');
-            header('Access-Control-Max-Age: 86400');
-            http_response_code(200);
-            exit;
+        // Vary: Origin — sans lui, un cache intermédiaire pourrait resservir à
+        // une origine la réponse mise en cache pour une autre.
+        header('Vary: Origin');
+
+        if (!self::isAllowed($origin)) {
+            // Origine inconnue : on n'émet AUCUN en-tête Access-Control-*. Le
+            // navigateur bloquera l'appel de lui-même. Renvoyer une origine de
+            // repli (l'ancien comportement) donnait une réponse trompeuse, et
+            // aurait masqué une CORS_ORIGIN mal configurée en production.
+            if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+                http_response_code(403);
+                exit;
+            }
+            return;
         }
 
-        // Set CORS headers for all requests
-        header("Access-Control-Allow-Origin: $allowedOrigin");
+        header("Access-Control-Allow-Origin: $origin");
         header('Access-Control-Allow-Credentials: true');
         header('Access-Control-Allow-Headers: Content-Type, Authorization');
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+            header('Access-Control-Max-Age: 86400');
+            http_response_code(204);
+            exit;
+        }
     }
 
     /**
-     * Vérifie si l'origine est localhost (pour le développement)
+     * Une origine est acceptée si elle figure dans CORS_ORIGIN (liste séparée
+     * par des virgules), ou — hors production seulement — s'il s'agit d'un
+     * localhost.
      */
-    private static function isLocalhost(string $origin): bool
+    private static function isAllowed(string $origin): bool
     {
-        return preg_match('/^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/', $origin) === 1;
+        if (in_array($origin, self::allowedOrigins(), true)) {
+            return true;
+        }
+
+        return self::isDevelopment() && preg_match(self::DEV_ORIGIN_PATTERN, $origin) === 1;
+    }
+
+    /**
+     * @return string[]
+     */
+    private static function allowedOrigins(): array
+    {
+        $configured = trim((string) ($_ENV['CORS_ORIGIN'] ?? ''));
+
+        if ($configured === '') {
+            return [];
+        }
+
+        return array_values(array_filter(
+            array_map('trim', explode(',', $configured)),
+            fn(string $value): bool => $value !== ''
+        ));
+    }
+
+    private static function isDevelopment(): bool
+    {
+        return ($_ENV['APP_ENV'] ?? 'development') !== 'production';
     }
 }

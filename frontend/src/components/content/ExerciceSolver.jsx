@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import Editor from '@monaco-editor/react';
+import Editor from '../common/CodeEditor';
 import api from '../../services/api';
 import JsCheatSheet from './JsCheatSheet';
 import { runJs, runJsWithDom } from '../../utils/jsSandbox';

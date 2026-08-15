@@ -40,6 +40,35 @@ Same gotchas as the PHP sibling project (same machine, same caveats):
 - Frontend: `http://localhost:5200` (PHP project uses 5173–5190)
 - MySQL: `3306`, shared with the PHP project — `apprentissage_js` and `apprentissage_poo` are two separate databases in the same MySQL instance.
 
+`start-dev.ps1` is **local development only**. It is excluded from the Docker build via
+`.dockerignore`, and the WAMP/PHP-7.4 workaround it exists for is moot in a container where PHP 8.2
+is the default binary.
+
+## Deploying (production)
+
+Production runs in containers, not via `start-dev.ps1` — see `DEPLOIEMENT.md` for the full
+procedure. `docker-compose.yml` builds two services from `docker/`:
+
+- `backend` — PHP 8.2-FPM. `docker/backend-entrypoint.sh` waits for MySQL then runs
+  `database/migrate.php` before starting php-fpm, so the schema is applied on deploy.
+- `web` — nginx. Serves the built SPA on `/` **and** proxies `/api` to `backend:9000` over FastCGI.
+
+Two non-obvious consequences of that layout, worth knowing before changing anything:
+
+- **Front and API are same-origin in production.** No preflight, no `Access-Control-*` in the
+  normal path, and the refresh-token cookie stays `SameSite=Lax`. `Cors.php` still enforces a
+  strict `CORS_ORIGIN` allowlist, and its `localhost` tolerance is disabled when
+  `APP_ENV=production`.
+- **`$_ENV` only works in the container because of two settings.** `clear_env = no`
+  (`docker/php/zz-pool.conf`) and `variables_order = "EGPCS"` (`docker/php/production.ini`).
+  Drop either and the app boots silently on its development defaults. `index.php` and
+  `migrate.php` use `safeLoad()` rather than `load()` for the same reason — there is no `.env`
+  file in the image.
+
+Traefik (external network `proxy`) terminates TLS and routes by subdomain; MySQL is the VPS's
+shared instance (external network `shared-db`), with a database and user dedicated to this
+project — see `docker/mysql/init-apprentissage-js.sql`.
+
 ## Project Structure
 
 ### Backend (`/backend`)
@@ -74,6 +103,16 @@ Identical layout to the PHP sibling project, with these JS-specific additions/re
     jsErrorTranslator.js - Friendly French explanations for common JS errors
                             (ReferenceError, TypeError, SyntaxError, RangeError...).
                             Renamed/rewritten from the PHP project's phpErrorTranslator.js.
+    monacoSetup.js       - Side-effect module: loader.config({ monaco }) so Monaco is
+                            bundled and served by us, never fetched from jsDelivr at
+                            runtime. Imported ONLY by common/MonacoEditor.jsx — its
+                            Vite `?worker` imports break under Vitest, and importing it
+                            from main.jsx would pull Monaco into the entry chunk.
+  /components/common
+    CodeEditor.jsx       - Drop-in replacement for `@monaco-editor/react`'s <Editor>,
+                            lazy-loaded so Monaco's ~4 MB stays out of the entry bundle.
+                            Use this, not @monaco-editor/react directly.
+    MonacoEditor.jsx     - The lazily-imported real Monaco entry point.
   /components/content
     JsCheatSheet.jsx     - JS syntax reference overlay, organized by section (Bases,
                             Classe, Héritage, Fonctions & modules...). Renamed/rewritten

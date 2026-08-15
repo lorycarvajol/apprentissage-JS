@@ -12,7 +12,11 @@ export const setAccessToken = (token) => {
 export const getAccessToken = () => accessToken;
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000/api',
+  // Le repli est relatif : en production, nginx sert le SPA et transmet /api à
+  // php-fpm sur la même origine (voir docker/nginx/default.conf), donc aucun
+  // domaine n'a besoin d'être codé en dur dans le bundle. En dev, VITE_API_URL
+  // pointe sur http://localhost:8010/api (voir frontend/.env.example).
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   headers: {
     'Content-Type': 'application/json',
   },

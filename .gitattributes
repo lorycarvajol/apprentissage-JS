@@ -1,0 +1,9 @@
+# Les scripts embarqués dans les images Docker (Linux) doivent garder des fins
+# de ligne LF même clonés sous Windows : un CRLF dans un shebang casse le
+# démarrage du conteneur avec un "no such file or directory" trompeur.
+*.sh text eol=lf
+docker/**/*.conf text eol=lf
+docker/**/*.ini text eol=lf
+docker/**/*.sql text eol=lf
+docker/*.Dockerfile text eol=lf
+docker-compose*.yml text eol=lf

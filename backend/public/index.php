@@ -14,9 +14,15 @@ use App\Controllers\GamificationController;
 use App\Middleware\AuthMiddleware;
 use Dotenv\Dotenv;
 
-// Charger les variables d'environnement
+// Charger les variables d'environnement.
+// safeLoad() (et non load()) : en conteneur il n'y a pas de fichier .env — la
+// configuration est injectée par Docker via env_file, et php-fpm la transmet à
+// $_ENV grâce à clear_env=no (docker/php/zz-pool.conf). load() lèverait une
+// exception sur l'absence du fichier et empêcherait tout démarrage.
+// createImmutable garantit au passage que l'environnement du conteneur reste
+// prioritaire sur un éventuel .env résiduel.
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+$dotenv->safeLoad();
 
 // Gérer CORS
 Cors::handle();
@@ -32,7 +38,10 @@ set_error_handler(function($errno, $errstr, $errfile, $errline) {
 
     error_log("Error [$errno]: $errstr in $errfile on line $errline");
 
-    if ($_ENV['APP_DEBUG'] === 'true') {
+    // ?? 'false' : APP_DEBUG peut légitimement être absent (déploiement
+    // conteneurisé sans .env). En cas d'oubli, on retombe sur le comportement
+    // le plus sûr — pas de détail d'erreur renvoyé au client.
+    if (($_ENV['APP_DEBUG'] ?? 'false') === 'true') {
         http_response_code(500);
         echo json_encode([
             'error' => 'Internal Server Error',
@@ -244,6 +253,6 @@ try {
     http_response_code(500);
     echo json_encode([
         'error' => 'Internal Server Error',
-        'message' => $_ENV['APP_DEBUG'] === 'true' ? $e->getMessage() : 'Une erreur est survenue'
+        'message' => ($_ENV['APP_DEBUG'] ?? 'false') === 'true' ? $e->getMessage() : 'Une erreur est survenue'
     ]);
 }
