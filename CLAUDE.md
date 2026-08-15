@@ -69,6 +69,12 @@ Traefik (external network `proxy`) terminates TLS and routes by subdomain; MySQL
 shared instance (external network `shared-db`), with a database and user dedicated to this
 project — see `docker/mysql/init-apprentissage-js.sql`.
 
+**No third-party CDNs.** `docker/nginx/security-headers.conf` ships an active CSP with
+`connect-src 'self'` and no external-host exceptions — the second barrier (after `jsSandbox.js`)
+stopping submitted learner code from reaching the network. It only works because Monaco and the
+fonts are bundled rather than fetched at runtime. If you add a third-party resource, self-host it;
+whitelisting a CDN here defeats the whole mechanism. Revalidation steps are in `DEPLOIEMENT.md`.
+
 ## Project Structure
 
 ### Backend (`/backend`)
@@ -113,6 +119,12 @@ Identical layout to the PHP sibling project, with these JS-specific additions/re
                             lazy-loaded so Monaco's ~4 MB stays out of the entry bundle.
                             Use this, not @monaco-editor/react directly.
     MonacoEditor.jsx     - The lazily-imported real Monaco entry point.
+  /styles
+    fonts.css            - Self-hosted @fontsource imports (Cinzel, Cormorant Garamond,
+                            Space Grotesk, IBM Plex Mono). index.html used to <link>
+                            these from fonts.googleapis.com; bundling them is what lets
+                            the production CSP stay strictly 'self'. Imported at the top
+                            of index.css (@import must precede all other rules).
   /components/content
     JsCheatSheet.jsx     - JS syntax reference overlay, organized by section (Bases,
                             Classe, Héritage, Fonctions & modules...). Renamed/rewritten

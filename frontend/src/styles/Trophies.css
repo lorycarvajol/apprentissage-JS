@@ -276,6 +276,10 @@
   height: 10px;
   border-radius: 50%;
   display: inline-block;
+  /* Cerne discret : sans lui, la pastille de cire vierge se confond presque
+     avec le fond de la page, dans les deux thèmes. Les teintures saturées, elles,
+     ne changent pas d'aspect. */
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tr-ink), transparent 75%);
 }
 
 /* ===========================================

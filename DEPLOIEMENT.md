@@ -202,24 +202,48 @@ docker tag apprentissage-js-web:latest     apprentissage-js-web:$(date +%Y%m%d)
 
 ---
 
-## Activer la CSP
+## La CSP
 
-Une `Content-Security-Policy` complète est déjà rédigée, **commentée**, en bas de
-`docker/nginx/security-headers.conf`. Son intérêt : `connect-src 'self'` empêche le code soumis
-par un apprenant d'émettre la moindre requête vers un domaine tiers, en complément des APIs déjà
-neutralisées dans le bac à sable.
+Une `Content-Security-Policy` est **active** (`docker/nginx/security-headers.conf`). Sa directive
+essentielle est `connect-src 'self'` : le code JS soumis par un apprenant ne peut émettre aucune
+requête vers un domaine tiers. C'est une barrière indépendante de la neutralisation des APIs
+réseau faite dans le bac à sable — si l'une était contournée, l'autre tiendrait.
 
-Elle est livrée inactive parce qu'elle n'a pas pu être testée dans un vrai navigateur : une
-directive manquante ne casse pas le déploiement, elle casse l'éditeur ou l'exécution des
-exercices, silencieusement. Procédure :
+Elle n'accorde **aucune exception à un domaine externe**, ce qui n'a été possible qu'après avoir
+auto-hébergé les deux ressources tierces que l'application chargeait à l'exécution : Monaco et les
+polices Google. Toute nouvelle ressource tierce doit être empaquetée plutôt qu'ajoutée à la liste
+blanche : un CDN de plus dans `connect-src`/`script-src`, et le verrou saute.
 
-1. Décommenter la ligne `add_header Content-Security-Policy ...`.
-2. `docker compose --env-file .env.docker up -d --build web`.
-3. Console du navigateur ouverte, exercer les trois chemins qui utilisent `eval`/`blob`/`srcdoc` :
+### Ce qui a été vérifié
+
+Sur un build identique à celui de production, servi avec cet en-tête exact et un `report-uri`
+collectant les violations, dans Chrome :
+
+| Test | Résultat |
+|---|---|
+| Chargement de l'application | 0 violation |
+| Worker créé depuis un Blob + `new Function` (`runJs`) | exécution OK |
+| iframe `srcdoc` sandboxée, `<script>` inline, accès DOM (`runJsWithDom`) | OK |
+| Chunk Monaco chargé à la demande + démarrage de ses workers | OK |
+| `fetch(..., {mode:'no-cors'})` vers un tiers, depuis la page | bloqué |
+| idem depuis le Worker du bac à sable | bloqué |
+| WebSocket et image vers un tiers | bloqués |
+
+Le `mode:'no-cors'` est important : un `fetch` classique vers un domaine tiers échoue de toute
+façon pour cause de CORS, ce qui masquerait une CSP inopérante. En `no-cors`, la requête
+aboutirait normalement — son échec prouve donc bien que c'est la CSP qui bloque.
+
+### Revalider la CSP
+
+À refaire si une ressource externe est ajoutée, ou après une montée de version de Monaco :
+
+1. `docker compose --env-file .env.docker up -d --build web`.
+2. Console du navigateur ouverte, exercer les trois chemins qui utilisent `eval`/`blob`/`srcdoc` :
    - un exercice **sans** `html_fixture` (bac à sable Web Worker) ;
    - un exercice **avec** `html_fixture` (iframe `srcdoc`) ;
    - l'éditeur Monaco dans `/admin` et dans un exercice.
-4. Zéro message `Refused to ...` ⇒ garder. Sinon, ajuster la directive concernée ou recommenter.
+3. Zéro message `Refused to ...` ⇒ c'est bon. Sinon, corriger la cause (auto-héberger la
+   ressource) de préférence à l'ajout d'une exception dans la CSP.
 
 ---
 
@@ -237,12 +261,18 @@ exercices, silencieusement. Procédure :
 
 ### Traité en plus, non listé dans la fiche
 
+- **Content-Security-Policy active et vérifiée** — voir la section « La CSP » ci-dessus.
 - **Monaco n'est plus chargé depuis un CDN tiers.** `@monaco-editor/react` le téléchargeait
   depuis `cdn.jsdelivr.net` à l'exécution : script tiers avec les pleins droits sur la page
   (dont l'accès au JWT gardé en mémoire), éditeur en panne si le CDN tombe, et IP de chaque
   visiteur transmise à un tiers — à savoir si des mentions RGPD sont publiées. Monaco est
   maintenant empaqueté (`frontend/src/utils/monacoSetup.js`) et chargé à la demande
   (`components/common/CodeEditor.jsx`), pour que la page de connexion n'en paie pas les ~4 Mo.
+- **Les polices non plus.** `index.html` chargeait quatre familles depuis `fonts.googleapis.com`
+  (Cinzel, Cormorant Garamond, Space Grotesk, IBM Plex Mono) — découvert en testant la CSP, qui
+  les bloquait. Mêmes objections que pour Monaco, et même correctif : elles sont empaquetées via
+  `@fontsource` (`frontend/src/styles/fonts.css`, poids identiques à ceux que demandait l'ancienne
+  URL Google). C'est ce qui permet à la CSP de rester strictement en `'self'`.
 - **IP réelle du client.** `set_real_ip_from` dans la conf nginx. Sans cela, `REMOTE_ADDR` aurait
   valu l'IP de Traefik pour tout le monde : la limitation de débit et l'historique de connexion
   auraient traité l'ensemble des visiteurs comme un seul client, et quelques échecs de connexion

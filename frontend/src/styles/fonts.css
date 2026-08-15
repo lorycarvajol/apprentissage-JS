@@ -1,0 +1,48 @@
+/* Polices auto-hébergées.
+   ============================================
+   Ces quatre familles venaient de fonts.googleapis.com via un <link> dans
+   index.html. Elles sont désormais empaquetées avec l'application, pour les
+   mêmes raisons que Monaco (voir utils/monacoSetup.js) :
+
+   - l'adresse IP de chaque visiteur n'est plus transmise à Google, ce qui
+     compte dès lors que des mentions légales / RGPD sont publiées ;
+   - la typographie ne dépend plus de la disponibilité d'un service tiers ;
+   - la Content-Security-Policy peut rester strictement en 'self', sans
+     exception style-src/font-src pour un domaine externe.
+
+   Les poids importés reproduisent exactement ceux que demandait l'ancienne URL
+   Google (`Cinzel:wght@600;700`, `Cormorant+Garamond:ital,wght@0,500;0,600;1,500`,
+   `Space+Grotesk:wght@500;600;700`, `IBM+Plex+Mono:wght@400;500`). N'importer
+   que les poids réellement utilisés : chaque import ajoute un fichier woff2 au
+   bundle.
+
+   Sous-ensembles latin + latin-ext : le latin suffit au français, latin-ext
+   couvre les emprunts et noms propres européens sans coût notable. */
+
+/* --- Cinzel (titres) --- */
+@import '@fontsource/cinzel/latin-600.css';
+@import '@fontsource/cinzel/latin-700.css';
+@import '@fontsource/cinzel/latin-ext-600.css';
+@import '@fontsource/cinzel/latin-ext-700.css';
+
+/* --- Cormorant Garamond (texte de lecture) --- */
+@import '@fontsource/cormorant-garamond/latin-500.css';
+@import '@fontsource/cormorant-garamond/latin-600.css';
+@import '@fontsource/cormorant-garamond/latin-500-italic.css';
+@import '@fontsource/cormorant-garamond/latin-ext-500.css';
+@import '@fontsource/cormorant-garamond/latin-ext-600.css';
+@import '@fontsource/cormorant-garamond/latin-ext-500-italic.css';
+
+/* --- Space Grotesk (--font-display) --- */
+@import '@fontsource/space-grotesk/latin-500.css';
+@import '@fontsource/space-grotesk/latin-600.css';
+@import '@fontsource/space-grotesk/latin-700.css';
+@import '@fontsource/space-grotesk/latin-ext-500.css';
+@import '@fontsource/space-grotesk/latin-ext-600.css';
+@import '@fontsource/space-grotesk/latin-ext-700.css';
+
+/* --- IBM Plex Mono (--font-mono, code et chiffres) --- */
+@import '@fontsource/ibm-plex-mono/latin-400.css';
+@import '@fontsource/ibm-plex-mono/latin-500.css';
+@import '@fontsource/ibm-plex-mono/latin-ext-400.css';
+@import '@fontsource/ibm-plex-mono/latin-ext-500.css';

@@ -1,3 +1,7 @@
+/* Polices auto-hébergées — doit rester en tête du fichier : la règle CSS
+   @import n'est valide qu'avant toute autre règle. */
+@import './styles/fonts.css';
+
 /* ============================================
    THEME TOKENS (light / dark)
    ============================================
