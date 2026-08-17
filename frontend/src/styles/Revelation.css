@@ -98,7 +98,11 @@
 
 .revelation-scene {
   position: relative;
-  height: 128px;
+  /* 152px et non 128 : les ornements extérieurs du degré souverain — les rais —
+     débordent du médaillon de moitié de leur longueur, et venaient toucher la
+     ligne d'annonce. La scène est dimensionnée pour le sceau le plus chargé,
+     sinon la carte se réorganise selon la rareté du titre. */
+  height: 152px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -212,7 +216,7 @@
 .revelation-ligne {
   display: grid;
   /* 124px : « Sa sertissure » se coupait en deux lignes à 108px. */
-  grid-template-columns: 124px minmax(0, 1fr);
+  grid-template-columns: 136px minmax(0, 1fr);
   align-items: start;
   gap: 12px;
 }
@@ -252,9 +256,12 @@
 }
 
 /* Les deux vignettes reprennent exactement celles des légendes de la salle :
-   c'est ce qui permet de faire le lien entre la carte et la figure. */
+   c'est ce qui permet de faire le lien entre la carte et la figure.
+   La marge tient compte des ornements qui débordent du disque — sans elle, les
+   rais de la bulle d'or passaient par-dessus le mot « sertissure ». */
 .revelation-vignette {
   flex: none;
+  margin-right: 7px;
 }
 
 /* ===========================================

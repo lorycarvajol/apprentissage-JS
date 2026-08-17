@@ -416,42 +416,133 @@
   --e: 1px;
 }
 
-/* Commun — cire nue. L'absence est ici un signal : c'est le degré le plus bas,
-   il se distingue par le dépouillement. */
+/* Les sertissures ne sont pas de simples anneaux concentriques : un vrai sceau
+   se borde d'un GRÈNETIS (rang de perles), d'un CÂBLÉ (torsade de cordage), de
+   DENTICULES, et les bulles solennelles portent une légende et des rais. C'est
+   ce vocabulaire-là qui est repris ici, du plus humble au plus solennel.
+
+   Le motif est porté par ::after, masqué en anneau par un radial-gradient dont
+   l'épaisseur est exprimée en pourcentage du rayon : la figure reste juste que
+   le médaillon fasse 44 px en salle ou 112 px sur la carte de révélation.
+   ::before sert aux ornements EXTÉRIEURS (denticules, rais), qui débordent du
+   disque. Les bandes pleines, elles, restent en box-shadow — c'est encore le
+   moyen le plus court de cercler un disque. */
+
+.seal-medallion::before,
+.seal-medallion::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.seal-medallion::after {
+  inset: var(--anneau-inset, 0);
+  background: var(--anneau-motif, none);
+  -webkit-mask: radial-gradient(closest-side, #0000 calc(100% - var(--anneau-ep, 0%)), #000 calc(100% - var(--anneau-ep, 0%)));
+  mask: radial-gradient(closest-side, #0000 calc(100% - var(--anneau-ep, 0%)), #000 calc(100% - var(--anneau-ep, 0%)));
+}
+
+.seal-medallion::before {
+  inset: var(--dents-inset, 0);
+  background: var(--dents-motif, none);
+  -webkit-mask: radial-gradient(closest-side, #0000 calc(100% - var(--dents-ep, 0%)), #000 calc(100% - var(--dents-ep, 0%)));
+  mask: radial-gradient(closest-side, #0000 calc(100% - var(--dents-ep, 0%)), #000 calc(100% - var(--dents-ep, 0%)));
+}
+
+/* Commun — cire nue, sans bordure. L'absence est ici un signal : c'est le degré
+   le plus bas, il se distingue par le dépouillement. */
 .seal-rarity-commun {
   --sertissure: 0 0 0 0 transparent;
 }
 
-/* Peu commun — un filet gravé. */
+/* Peu commun — GRÈNETIS. Le rang de perles serti au bord du coin, bordure la
+   plus répandue des sceaux comme des monnaies. Les perles sont obtenues en
+   découpant un dégradé conique par un masque annulaire mince : à cette échelle
+   elles se lisent comme un chapelet, sans avoir à poser vingt-quatre nœuds. */
 .seal-rarity-peu-commun {
-  --sertissure: 0 0 0 calc(2 * var(--e)) var(--m-etain);
+  --sertissure: 0 0 0 calc(1 * var(--e)) color-mix(in srgb, var(--m-etain), transparent 40%);
+  --anneau-inset: calc(-2 * var(--e));
+  --anneau-ep: 15%;
+  --anneau-motif: repeating-conic-gradient(
+    from 0deg,
+    var(--m-etain) 0deg 4deg,
+    transparent 4deg 9deg
+  );
 }
 
-/* Rare — double filet : deux anneaux séparés par un vide de la couleur du
-   fond, qui creuse la gorge entre les deux. */
+/* Rare — TRANCHE CANNELÉE. Les stries radiales de la tranche d'une monnaie
+   frappée, cerclées d'un filet. Nommée cannelure et non « câblé » : un dégradé
+   conique produit des rayons, pas une torsade, et il vaut mieux appeler
+   l'ornement par ce qu'il dessine réellement.
+
+   Contraste volontairement doux et anneau mince : c'est le degré du milieu, il
+   doit se voir sans rivaliser avec les deux au-dessus. La charge visuelle
+   croît avec la rareté, sinon l'échelle ne se lit plus. */
 .seal-rarity-rare {
   --sertissure:
-    0 0 0 calc(2 * var(--e)) var(--m-etain),
-    0 0 0 calc(4 * var(--e)) var(--tr-bg),
-    0 0 0 calc(6 * var(--e)) var(--m-etain);
+    0 0 0 calc(1.5 * var(--e)) var(--m-etain),
+    0 0 0 calc(4 * var(--e)) color-mix(in srgb, var(--tr-ink), transparent 80%);
+  --anneau-inset: calc(-3.5 * var(--e));
+  --anneau-ep: 19%;
+  --anneau-motif: repeating-conic-gradient(
+    from 0deg,
+    color-mix(in srgb, var(--m-etain), #000 18%) 0deg 6deg,
+    color-mix(in srgb, var(--m-etain), #fff 18%) 6deg 12deg
+  );
 }
 
-/* Très rare — sertissure d'argent, large, cerclée d'un trait sombre qui lui
-   donne son épaisseur de métal plutôt que de peinture. */
+/* Très rare — DENTICULES sur bande d'argent. La bande pleine porte la valeur,
+   les dents qui débordent portent l'apparat : c'est la sertissure d'un sceau
+   monté sur métal, pas une cire libre. */
 .seal-rarity-tres-rare {
   --sertissure:
-    0 0 0 calc(4 * var(--e)) var(--m-argent),
-    0 0 0 calc(6 * var(--e)) color-mix(in srgb, var(--tr-ink), transparent 55%);
+    0 0 0 calc(3 * var(--e)) var(--m-argent),
+    0 0 0 calc(4 * var(--e)) color-mix(in srgb, var(--tr-ink), transparent 45%);
+  --anneau-inset: calc(-3 * var(--e));
+  --anneau-ep: 20%;
+  --anneau-motif: repeating-conic-gradient(
+    from 0deg,
+    color-mix(in srgb, var(--m-argent), #fff 35%) 0deg 9deg,
+    color-mix(in srgb, var(--m-argent), #000 30%) 9deg 18deg
+  );
+  /* Dents courtes et larges : à 5deg d'espacement elles faisaient roue dentée.
+     Une sertissure tient le sceau, elle n'entraîne rien. */
+  --dents-inset: calc(-6 * var(--e));
+  --dents-ep: 17%;
+  --dents-motif: repeating-conic-gradient(
+    from 6deg,
+    var(--m-argent) 0deg 8deg,
+    transparent 8deg 20deg
+  );
 }
 
-/* Souverain — bulle d'or. Le seul degré à porter un rayonnement, et le seul
-   sceau du losange à occuper la pointe : un titre sur vingt-cinq. */
+/* Souverain — BULLE D'OR. Le seul degré à porter les trois ornements à la fois :
+   la légende perlée qui court sur la bande, les rais qui rayonnent au-delà, et
+   le halo. Un titre sur vingt-cinq, et l'unique sceau de la pointe du losange :
+   c'est la pièce sur laquelle toute la page mise, elle a le droit d'être
+   chargée là où tout le reste reste sobre. */
 .seal-rarity-souverain {
   --sertissure:
-    0 0 0 calc(3 * var(--e)) var(--m-or),
-    0 0 0 calc(5 * var(--e)) var(--tr-bg),
-    0 0 0 calc(8 * var(--e)) var(--m-or),
-    0 0 calc(22 * var(--e)) calc(3 * var(--e)) var(--m-halo);
+    0 0 0 calc(2 * var(--e)) var(--m-or),
+    0 0 0 calc(6.5 * var(--e)) color-mix(in srgb, var(--tr-ink), transparent 70%),
+    0 0 calc(24 * var(--e)) calc(3 * var(--e)) var(--m-halo);
+  --anneau-inset: calc(-6.5 * var(--e));
+  --anneau-ep: 30%;
+  --anneau-motif: repeating-conic-gradient(
+    from 0deg,
+    color-mix(in srgb, var(--m-or), #000 30%) 0deg 3deg,
+    color-mix(in srgb, var(--m-or), #fff 45%) 3deg 6deg
+  );
+  /* Rais raccourcis : à -13px ils mordaient la rangée du dessous, dont la
+     gouttière ne fait que 16 px au maximum. */
+  --dents-inset: calc(-10 * var(--e));
+  --dents-ep: 16%;
+  --dents-motif: repeating-conic-gradient(
+    from 0deg,
+    var(--m-or) 0deg 2.5deg,
+    transparent 2.5deg 18deg
+  );
 }
 
 /* ===========================================
@@ -540,7 +631,7 @@
   display: grid;
   /* Colonne de vignettes à largeur fixe : les sertissures n'ont pas toutes le
      même diamètre, sans elle les libellés ne s'aligneraient pas. */
-  grid-template-columns: 22px minmax(0, 1fr);
+  grid-template-columns: 34px minmax(0, 1fr);
   align-items: center;
   gap: 10px;
 }
@@ -581,17 +672,45 @@
    règles `--sertissure` — d'où `--e` réduit plutôt qu'un second jeu de
    bordures à maintenir en parallèle. */
 .trophy-legend-bezel {
-  --e: 0.8px;
+  /* 0.55px et 26px de diamètre : les motifs de sertissure — grènetis, câblé,
+     denticules — ne se lisent pas en dessous. Une vignette qui montre du bruit
+     au lieu du motif ne sert à rien, autant l'agrandir. */
+  --e: 0.55px;
   --m-etain: var(--tr-etain);
   --m-argent: var(--tr-argent);
   --m-or: var(--tr-orfevre);
-  --m-halo: color-mix(in srgb, var(--tr-orfevre), transparent 65%);
-  width: 14px;
-  height: 14px;
+  --m-halo: color-mix(in srgb, var(--tr-orfevre), transparent 70%);
+  position: relative;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   justify-self: center;
   background: radial-gradient(circle at 34% 26%, var(--tr-wax-blank), var(--tr-wax-blank-deep) 85%);
   box-shadow: var(--sertissure, 0 0 0 0 transparent);
+}
+
+/* Les mêmes ornements que sur les sceaux : la vignette doit montrer ce qu'on
+   verra dans la figure, pas une approximation. */
+.trophy-legend-bezel::before,
+.trophy-legend-bezel::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.trophy-legend-bezel::after {
+  inset: var(--anneau-inset, 0);
+  background: var(--anneau-motif, none);
+  -webkit-mask: radial-gradient(closest-side, #0000 calc(100% - var(--anneau-ep, 0%)), #000 calc(100% - var(--anneau-ep, 0%)));
+  mask: radial-gradient(closest-side, #0000 calc(100% - var(--anneau-ep, 0%)), #000 calc(100% - var(--anneau-ep, 0%)));
+}
+
+.trophy-legend-bezel::before {
+  inset: var(--dents-inset, 0);
+  background: var(--dents-motif, none);
+  -webkit-mask: radial-gradient(closest-side, #0000 calc(100% - var(--dents-ep, 0%)), #000 calc(100% - var(--dents-ep, 0%)));
+  mask: radial-gradient(closest-side, #0000 calc(100% - var(--dents-ep, 0%)), #000 calc(100% - var(--dents-ep, 0%)));
 }
 
 /* La cire nue n'a pas de sertissure : sans ce cerne, la vignette du degré
