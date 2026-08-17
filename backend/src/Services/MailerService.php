@@ -21,19 +21,23 @@ class MailerService
             $mail->Port = (int)($_ENV['MAIL_PORT'] ?? 587);
             $mail->CharSet = 'UTF-8';
 
-            // Encodage de transfert explicite. PHPMailer est à `8bit` par défaut :
-            // le corps part alors tel quel, `=` compris. Un relais qui reconvertit
-            // ensuite le message pour un transport 7 bits, en l'étiquetant
-            // quoted-printable sans échapper les `=` déjà présents, casse toutes
-            // les URL de ce fichier — un lien `?token=30a2d…` est arrivé chez le
-            // destinataire en `?token0a2d…`, parce que `=30` est une séquence
-            // quoted-printable valant le caractère `0`. Constaté en production le
-            // 17/08/2026 : aucun compte ne pouvait être vérifié, aucun mot de
-            // passe réinitialisé, les deux liens étant bâtis sur ce modèle.
+            // Encodage de transfert déclaré explicitement plutôt que laissé au
+            // `8bit` par défaut de PHPMailer. C'est un durcissement, pas la
+            // correction d'une panne : `8bit` suppose un chemin SMTP acceptant
+            // 8BITMIME de bout en bout, et un relais qui reconvertit le message
+            // pour un transport 7 bits doit alors échapper lui-même les `=` du
+            // corps. En quoted-printable explicite, PHPMailer les écrit en `=3D`
+            // et l'en-tête annonce l'encodage réellement appliqué : le contenu et
+            // son étiquette ne peuvent plus diverger.
             //
-            // En quoted-printable explicite, PHPMailer échappe lui-même les `=`
-            // en `=3D` et l'en-tête déclare l'encodage réellement appliqué : plus
-            // de désaccord possible entre le contenu et son étiquette.
+            // Contexte, parce qu'il a coûté cher le 17/08/2026 : les liens
+            // `?token=…` semblaient arriver amputés de leur `=`. C'était un
+            // artefact de l'outil qui servait à lire la boîte de réception, lequel
+            // appliquait un décodage quoted-printable de trop. Les mails reçus par
+            // le vrai client étaient intacts, vérification de compte et
+            // réinitialisation de mot de passe comprises. Leçon : un corps de mail
+            // lu à travers une API n'est pas une preuve de ce qui a été livré —
+            // seul le client de messagerie du destinataire fait foi.
             $mail->Encoding = PHPMailer::ENCODING_QUOTED_PRINTABLE;
 
             $mail->setFrom(
