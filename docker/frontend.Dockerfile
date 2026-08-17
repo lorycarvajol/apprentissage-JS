@@ -3,7 +3,7 @@
 # Ce même nginx est aussi la porte d'entrée de l'API : il sert le SPA sur `/`
 # et transmet `/api` à php-fpm (conteneur `backend`) en FastCGI. Conséquence
 # volontaire : le front et l'API partagent une seule origine
-# (https://js.tondomaine.fr), ce qui règle d'un coup le point « CORS » de la
+# (https://js.lorycarvajol.dev), ce qui règle d'un coup le point « CORS » de la
 # fiche de migration — un appel same-origin n'envoie pas d'en-tête Origin, donc
 # aucune requête préliminaire (preflight) — et fait fonctionner le cookie
 # httpOnly du refresh token sans avoir à passer en SameSite=None.
