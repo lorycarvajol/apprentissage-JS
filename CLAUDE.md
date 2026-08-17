@@ -9,7 +9,7 @@ This is a learning platform for teaching **JavaScript** relatively comprehensive
 - A **frontend** built with React 19 + Vite
 - A **MySQL database** (`apprentissage_js`) for storing course content, user progress, and gamification data — shares the same MySQL server instance as the PHP sibling project, just a different database name
 
-**Course content is currently empty.** Unlike the PHP sibling project (which has 70 theories / 51 exercises already written), no modules/chapitres/theories/exercices are seeded here — the whole JavaScript curriculum is meant to be authored from scratch via the `/admin` panel, exactly the way the PHP project's own content was originally authored.
+**Course content lives in versioned seed scripts, not in the database dump.** The nine-module JavaScript curriculum is written as `backend/database/seed_module1.php` … `seed_module9.php` (plus `seed_module5_exercices.php`). They are *not* run by `migrate.php` nor by the container entrypoint — a fresh deployment therefore comes up with an empty curriculum until they are played once, by hand. See "Seeding the curriculum" below.
 
 ## The one architectural difference that matters: code execution
 
@@ -97,7 +97,14 @@ Identical layout to the PHP sibling project:
   schema.sql     - Full schema (consolidated — includes what, in the PHP sibling
                    project, was added later via add_password_reset.sql and
                    add_auth_hardening.sql) + badges seed data only (no course content)
-  migrate.php    - Runs schema.sql (single file, no content seed to layer on top)
+  migrate.php    - Runs schema.sql. Played automatically by the container
+                   entrypoint; creates tables only, never course content.
+  seed_moduleN.php - The curriculum itself, one script per module (1..9), plus
+                   seed_module5_exercices.php. NOT run automatically — see
+                   "Seeding the curriculum" below.
+  migrate_add_html_fixture.php - One-shot: adds exercices.html_fixture to an
+                   already-seeded dev database. schema.sql already has the
+                   column, so a fresh install never needs this.
 ```
 
 ### Frontend (`/frontend`)
@@ -140,7 +147,27 @@ Identical layout to the PHP sibling project, with these JS-specific additions/re
 
 ## Course Content Structure
 
-**Empty by design.** No modules/chapitres/theories/exercices are seeded. The intended curriculum shape — **not** a copy of the PHP sibling's OOP-centric one — is planned in `ROADMAP.md` at the repo root: 9 modules / 27 chapters covering language basics, loops/collections, functions, strings/dates, the DOM and events, asynchronous JS, OOP (module 7 of 9 — one topic among several, not the spine of the curriculum), modern JS/ES6+, and a capstone project. `ROADMAP.md` also proposes, per chapter, a *Guidé*/*Défi* exercise pair and a *Concept*/*Application* illustration pair. It's a working plan, not fixed content — modules/chapitres are still created and ordered entirely through `/admin`, and the plan can be freely reshaped during authoring.
+**Written, versioned, but not auto-applied** (see "Seeding the curriculum" below). The curriculum shape — **not** a copy of the PHP sibling's OOP-centric one — is planned in `ROADMAP.md` at the repo root: 9 modules / 27 chapters covering language basics, loops/collections, functions, strings/dates, the DOM and events, asynchronous JS, OOP (module 7 of 9 — one topic among several, not the spine of the curriculum), modern JS/ES6+, and a capstone project. `ROADMAP.md` also proposes, per chapter, a *Guidé*/*Défi* exercise pair and a *Concept*/*Application* illustration pair. It's a working plan, not fixed content — modules/chapitres can still be created and reordered through `/admin`, and the plan can be freely reshaped during authoring.
+
+### Seeding the curriculum
+
+```bash
+# In the deployed backend container, once per fresh database:
+for n in 1 2 3 4 5 6 7 8 9; do
+    docker compose --env-file .env.docker exec -T backend php database/seed_module$n.php
+done
+docker compose --env-file .env.docker exec -T backend php database/seed_module5_exercices.php
+```
+
+Two constraints these scripts have to respect, both learned the hard way:
+
+- **`safeLoad()`, never `load()`.** There is no `.env` file in the image; configuration
+  arrives through the environment. `load()` throws before the first query. Same reason
+  `migrate.php` and `public/index.php` use `safeLoad()`.
+- **They are deliberately kept out of the entrypoint.** Each script guards on
+  `SELECT id FROM modules WHERE title = ...` and exits if the module exists — which means a
+  module *intentionally deleted* through `/admin` would be silently recreated on the next
+  deploy. Automatic schema migration is safe; automatic content seeding is not.
 
 ## Database Schema
 

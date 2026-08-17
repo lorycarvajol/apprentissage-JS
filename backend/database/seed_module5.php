@@ -30,8 +30,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 use App\Config\Database;
 use Dotenv\Dotenv;
 
+// safeLoad() (et non load()) : ces scripts sont aussi lancés dans le conteneur
+// backend, où il n'y a pas de fichier .env — la configuration arrive par
+// l'environnement (env_file + clear_env=no). load() lèverait une exception avant
+// la première requête. Même choix que migrate.php et public/index.php.
 $dotenv = Dotenv::createImmutable(__DIR__ . '/..');
-$dotenv->load();
+$dotenv->safeLoad();
 
 $pdo = Database::getConnection();
 
