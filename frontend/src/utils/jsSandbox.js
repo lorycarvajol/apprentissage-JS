@@ -44,14 +44,33 @@ const BLOCKED_GLOBALS = [
 ];
 
 // Généré comme une chaîne : ce code est injecté à l'identique dans la source du
-// Worker et dans celle de l'iframe. try/catch parce que certaines de ces
-// propriétés sont définies en lecture seule selon le navigateur — l'échec d'une
-// affectation ne doit pas interrompre la neutralisation des suivantes.
+// Worker et dans celle de l'iframe.
+//
+// defineProperty et non une simple affectation : `indexedDB` et `caches` ne sont
+// pas des propriétés de données mais des accesseurs en lecture seule (getter sans
+// setter) portés par le prototype du scope global. Leur affecter `undefined` ne
+// lève rien en mode non strict et ne change rien — la neutralisation paraissait
+// donc effective alors que `self.caches` restait un CacheStorage bien réel, dont
+// `Cache.add()` déclenche une requête réseau. defineProperty installe une
+// propriété propre sur `self`, qui masque l'accesseur hérité.
+//
+// Vérifié en production le 17/08/2026 : avant correctif, un exercice affichant
+// `typeof self.indexedDB` renvoyait `object` ; après, `undefined`.
 const BLOCK_GLOBALS_SOURCE = `
 ${JSON.stringify(BLOCKED_GLOBALS)}.forEach(function (name) {
-  try { self[name] = undefined; } catch (e) { /* propriété non inscriptible */ }
+  try {
+    Object.defineProperty(self, name, { value: undefined, configurable: true, writable: true });
+  } catch (e) {
+    // Propriété non configurable : on retombe sur l'affectation, qui suffit pour
+    // les propriétés de données (fetch, XMLHttpRequest, Worker...).
+    try { self[name] = undefined; } catch (e2) { /* rien de plus à tenter */ }
+  }
 });
-try { self.navigator.sendBeacon = undefined; } catch (e) { /* idem */ }
+try {
+  Object.defineProperty(self.navigator, 'sendBeacon', { value: undefined, configurable: true, writable: true });
+} catch (e) {
+  try { self.navigator.sendBeacon = undefined; } catch (e2) { /* idem */ }
+}
 `;
 
 const WORKER_SOURCE = `

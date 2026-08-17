@@ -238,6 +238,32 @@ Le `mode:'no-cors'` est important : un `fetch` classique vers un domaine tiers �
 façon pour cause de CORS, ce qui masquerait une CSP inopérante. En `no-cors`, la requête
 aboutirait normalement — son échec prouve donc bien que c'est la CSP qui bloque.
 
+### Le piège des accesseurs, dans le bac à sable
+
+Constaté en vérifiant la mise en ligne du 17/08/2026, en soumettant depuis un exercice réel un
+code affichant `typeof self[api]` pour chaque global censé être neutralisé :
+
+```
+fetch=undefined | XMLHttpRequest=undefined | WebSocket=undefined | EventSource=undefined |
+importScripts=undefined | Worker=undefined | indexedDB=object | BroadcastChannel=undefined |
+caches=object | document=undefined | window=undefined
+```
+
+`indexedDB` et `caches` **n'étaient pas neutralisés**. La neutralisation se faisait par
+affectation (`self[name] = undefined`) ; or ces deux-là ne sont pas des propriétés de données
+mais des accesseurs en lecture seule portés par le prototype du scope global. Une affectation sur
+un accesseur sans setter ne lève rien en mode non strict et ne change rien — et le `try/catch`
+qui l'entourait, prévu pour ce cas, masquait l'échec au lieu de le traiter.
+
+L'enjeu n'est pas théorique : `caches.open(…).then(c => c.add(url))` déclenche une vraie requête
+réseau. La CSP `connect-src 'self'` restait en seconde barrière, mais la première ne tenait pas.
+
+Le correctif installe une propriété propre sur `self` via `Object.defineProperty`, qui masque
+l'accesseur hérité, avec repli sur l'affectation si la propriété n'est pas configurable. La
+morale vaut pour toute extension de `BLOCKED_GLOBALS` : **vérifier la neutralisation depuis
+l'intérieur du bac à sable**, ne jamais la déduire du fait que le code de neutralisation ne
+plante pas.
+
 ### Revalider la CSP
 
 À refaire si une ressource externe est ajoutée, ou après une montée de version de Monaco :
@@ -261,7 +287,7 @@ aboutirait normalement — son échec prouve donc bien que c'est la CSP qui bloq
 | `.env` externalisé, jamais commité | ✅ `.env.docker` (ignoré par git) + `.env.docker.example` |
 | Chemin PHP codé en dur (WAMP / PHP 7.4) | ✅ disparaît : PHP 8.2 est le PHP par défaut de l'image, et `scripts/` est exclu du build via `.dockerignore` |
 | CORS restreint à `https://js.lorycarvajol.dev` | ✅ `Cors.php` réécrit — `CORS_ORIGIN` fait autorité, la tolérance `localhost` ne survit pas à `APP_ENV=production`. Et de toute façon sans objet : front et API sont same-origin |
-| Sandbox Web Worker : timeout + APIs sensibles | ✅ timeout 5 s déjà en place ; `jsSandbox.js` neutralise désormais aussi `WebSocket`, `EventSource`, `BroadcastChannel`, `indexedDB`, `caches`, `sendBeacon` et **`Worker`** (un worker imbriqué repartait avec un `fetch` intact) |
+| Sandbox Web Worker : timeout + APIs sensibles | ✅ timeout 5 s déjà en place ; `jsSandbox.js` neutralise aussi `WebSocket`, `EventSource`, `BroadcastChannel`, `indexedDB`, `caches`, `sendBeacon` et **`Worker`** (un worker imbriqué repartait avec un `fetch` intact). Neutralisation par `Object.defineProperty` — voir « Le piège des accesseurs » ci-dessous |
 | `migrate.php` joué au démarrage du conteneur | ✅ `docker/backend-entrypoint.sh` |
 
 ### Traité en plus, non listé dans la fiche
