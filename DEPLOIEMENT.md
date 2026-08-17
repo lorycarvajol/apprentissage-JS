@@ -3,7 +3,7 @@
 Mise en ligne du projet sur le VPS mutualisé, conformément au **chapitre 3** de
 `fiches-migration-hebergement.md`.
 
-**Sous-domaine cible** : `js.tondomaine.fr`
+**Sous-domaine cible** : `js.lorycarvajol.dev`
 **Stack déployée** : deux conteneurs — `backend` (PHP 8.2-FPM) et `web` (nginx : SPA React + passerelle `/api`).
 
 ---
@@ -14,7 +14,7 @@ Mise en ligne du projet sur le VPS mutualisé, conformément au **chapitre 3** d
                     ┌──────────────────────────────────────────────┐
    Internet ──TLS──▶│ Traefik  (réseau `proxy`, partagé, hors repo)│
                     └───────────────────┬──────────────────────────┘
-                                        │ HTTP, Host: js.tondomaine.fr
+                                        │ HTTP, Host: js.lorycarvajol.dev
                     ┌───────────────────▼──────────────────────────┐
                     │ web  — nginx                                 │
                     │   /       → SPA React (fichiers statiques)   │
@@ -24,11 +24,12 @@ Mise en ligne du projet sur le VPS mutualisé, conformément au **chapitre 3** d
                     ┌───────────────────▼──────────────────────────┐
                     │ backend — php-fpm 8.2                        │
                     └───────────────────┬──────────────────────────┘
-                                        │ réseau `shared-db`
+                                        │ réseau `mysql-shared`
                     ┌───────────────────▼──────────────────────────┐
                     │ MySQL mutualisée (hors repo)                 │
+                    │   conteneur `mysql-shared-mysql-1`           │
                     │   base `apprentissage_js` + user dédié       │
-                    │   (voisine de `apprentissage_poo`)           │
+                    │   (voisine de `tapistyle`)                   │
                     └──────────────────────────────────────────────┘
 ```
 
@@ -39,7 +40,7 @@ conséquences directes :
   same-origin : le navigateur n'envoie pas d'en-tête `Origin` et ne fait aucune requête
   préliminaire. `CORS_ORIGIN` ne sert plus que de garde-fou pour d'éventuels appels externes.
 - Le cookie httpOnly du refresh token reste en `SameSite=Lax`. S'il avait fallu séparer
-  `api.tondomaine.fr` de `js.tondomaine.fr`, il aurait fallu passer en `SameSite=None`, donc
+  `api.lorycarvajol.dev` de `js.lorycarvajol.dev`, il aurait fallu passer en `SameSite=None`, donc
   accepter un cookie envoyé en contexte tiers.
 
 Le code des apprenants, lui, ne s'exécute nulle part sur le serveur : il tourne dans le
@@ -51,30 +52,33 @@ nettement moins risqué que le sien.
 
 ## Prérequis sur le VPS
 
-À faire **une fois pour toutes**, partagé avec les autres projets hébergés :
+**Tout est déjà en place sur le VPS** — vérifié le 17/08/2026. Rien à créer ; ce qui suit
+documente l'existant, et sert à revalider après une réinstallation.
 
-```bash
-# Les deux réseaux Docker mutualisés
-docker network create proxy
-docker network create shared-db
+| Ressource | Valeur réelle | Vérification |
+|---|---|---|
+| Réseau Traefik | `proxy` | `docker network inspect proxy --format '{{range .Containers}}{{.Name}} {{end}}'` |
+| Réseau MySQL | `mysql-shared` (**pas** `shared-db`) | `docker network ls` |
+| Conteneur MySQL | `mysql-shared-mysql-1`, MySQL 8.0.46 | `docker exec mysql-shared-mysql-1 mysql --version` |
+| Entrypoint TLS | `websecure` (443), avec redirection depuis `web` (80) | `docker inspect traefik-traefik-1` |
+| Resolver ACME | `myresolver` (**pas** `letsencrypt`), challenge HTTP-01 | idem |
+| DNS | `js.lorycarvajol.dev` → `51.75.194.109` | `dig +short js.lorycarvajol.dev` |
 
-# Vérifier que Traefik tourne et est bien branché sur `proxy`
-docker network inspect proxy --format '{{range .Containers}}{{.Name}} {{end}}'
-```
+Deux de ces valeurs diffèrent des noms « canoniques » de la fiche de migration et sont la cause
+d'échec la plus probable d'un premier déploiement : le réseau MySQL s'appelle `mysql-shared`, et
+le resolver ACME `myresolver`. Les deux sont renseignés dans `.env.docker.example`, et les valeurs
+par défaut de `docker-compose.yml` ont été alignées dessus.
 
-Traefik doit avoir un entrypoint `websecure` (443) et un resolver ACME nommé `letsencrypt` ; si
-tes noms diffèrent, ajuste `TRAEFIK_ENTRYPOINT` / `TRAEFIK_CERTRESOLVER` dans `.env.docker`.
-
-Enfin, un enregistrement DNS **A** `js.tondomaine.fr` → IP du VPS, propagé avant le premier
-démarrage (sinon la demande de certificat Let's Encrypt échoue et Traefik la met en quarantaine
-quelques minutes).
+L'enregistrement DNS **A** doit être propagé **avant** le premier démarrage, sinon la demande de
+certificat Let's Encrypt échoue et Traefik la met en quarantaine quelques minutes.
 
 ---
 
 ## 1. Créer la base et l'utilisateur MySQL
 
-L'instance MySQL est mutualisée avec `apprentissage-POO-PHP`, mais **pas les permissions** :
-chaque projet a son utilisateur, sans aucun droit sur la base de l'autre.
+L'instance MySQL (`mysql-shared-mysql-1`) est mutualisée avec les autres projets du VPS —
+`tapistyle` aujourd'hui, `apprentissage-POO-PHP` le jour où il sera déployé — mais **pas les
+permissions** : chaque projet a son utilisateur, sans aucun droit sur la base des autres.
 
 Ouvre `docker/mysql/init-apprentissage-js.sql`, remplace le mot de passe d'exemple par un mot de
 passe fort, puis :
@@ -99,7 +103,7 @@ automatiquement à l'étape 3 par `database/migrate.php`.
 ## 2. Renseigner les secrets
 
 ```bash
-cd /srv/apprentissage-JS          # ou l'emplacement de ton clone
+cd ~/apps/apprentissage-JS       # les projets du VPS vivent dans ~/apps
 cp .env.docker.example .env.docker
 chmod 600 .env.docker
 ```
@@ -108,11 +112,12 @@ Puis remplis `.env.docker`. Les valeurs à ne pas bâcler :
 
 | Variable | Remarque |
 |---|---|
-| `APP_DOMAIN` | `js.tondomaine.fr` — sert à la règle de routage Traefik |
-| `DB_HOST` | nom du conteneur MySQL **sur le réseau `shared-db`** |
+| `APP_DOMAIN` | `js.lorycarvajol.dev` — sert à la règle de routage Traefik |
+| `TRAEFIK_CERTRESOLVER` | `myresolver` — le nom réel du resolver ACME de ce VPS |
+| `DB_HOST` | `mysql-shared-mysql-1` — le conteneur MySQL sur le réseau `mysql-shared` |
 | `DB_PASS` | celui défini à l'étape 1 |
 | `JWT_SECRET` | **à générer**, jamais celui du dev ni celui du projet PHP jumeau |
-| `API_URL` / `FRONTEND_URL` | `https://js.tondomaine.fr` — utilisés dans les liens des e-mails |
+| `API_URL` / `FRONTEND_URL` | `https://js.lorycarvajol.dev` — utilisés dans les liens des e-mails |
 | `MAIL_*` | un vrai relais SMTP : Mailtrap ne délivre rien aux vrais destinataires |
 
 ```bash
@@ -153,14 +158,14 @@ docker compose --env-file .env.docker logs backend | head -30
 #   ✓ Migration terminée avec succès !
 
 # L'API répond à travers Traefik
-curl https://js.tondomaine.fr/api/health
+curl https://js.lorycarvajol.dev/api/health
 #   {"status":"ok","timestamp":"...","version":"1.0.0"}
 
 # Le certificat est bien émis
-curl -sI https://js.tondomaine.fr | head -1
+curl -sI https://js.lorycarvajol.dev | head -1
 
 # CORS : une origine non listée ne doit recevoir AUCUN en-tête Access-Control-*
-curl -sI -H "Origin: http://localhost:5200" https://js.tondomaine.fr/api/health \
+curl -sI -H "Origin: http://localhost:5200" https://js.lorycarvajol.dev/api/health \
     | grep -i access-control
 #   (aucune sortie attendue)
 
@@ -252,10 +257,10 @@ aboutirait normalement — son échec prouve donc bien que c'est la CSP qui bloq
 | Point de la fiche | État |
 |---|---|
 | Créer un `Dockerfile` backend PHP-FPM | ✅ `docker/backend.Dockerfile` |
-| MySQL partagé, base + utilisateur dédiés | ✅ `docker/mysql/init-apprentissage-js.sql`, réseau `shared-db` |
+| MySQL partagé, base + utilisateur dédiés | ✅ `docker/mysql/init-apprentissage-js.sql`, réseau `mysql-shared` |
 | `.env` externalisé, jamais commité | ✅ `.env.docker` (ignoré par git) + `.env.docker.example` |
 | Chemin PHP codé en dur (WAMP / PHP 7.4) | ✅ disparaît : PHP 8.2 est le PHP par défaut de l'image, et `scripts/` est exclu du build via `.dockerignore` |
-| CORS restreint à `https://js.tondomaine.fr` | ✅ `Cors.php` réécrit — `CORS_ORIGIN` fait autorité, la tolérance `localhost` ne survit pas à `APP_ENV=production`. Et de toute façon sans objet : front et API sont same-origin |
+| CORS restreint à `https://js.lorycarvajol.dev` | ✅ `Cors.php` réécrit — `CORS_ORIGIN` fait autorité, la tolérance `localhost` ne survit pas à `APP_ENV=production`. Et de toute façon sans objet : front et API sont same-origin |
 | Sandbox Web Worker : timeout + APIs sensibles | ✅ timeout 5 s déjà en place ; `jsSandbox.js` neutralise désormais aussi `WebSocket`, `EventSource`, `BroadcastChannel`, `indexedDB`, `caches`, `sendBeacon` et **`Worker`** (un worker imbriqué repartait avec un `fetch` intact) |
 | `migrate.php` joué au démarrage du conteneur | ✅ `docker/backend-entrypoint.sh` |
 
@@ -288,9 +293,9 @@ aboutirait normalement — son échec prouve donc bien que c'est la CSP qui bloq
 | Symptôme | Cause probable |
 |---|---|
 | `502 Bad Gateway` sur `/api` | conteneur `backend` arrêté — `docker compose logs backend` |
-| `MySQL injoignable après 60s` | `DB_HOST` incorrect, ou MySQL absent du réseau `shared-db` |
+| `MySQL injoignable après 60s` | `DB_HOST` incorrect, ou `DB_NETWORK` ≠ `mysql-shared` |
 | `404 page not found` de Traefik | `APP_DOMAIN` ≠ DNS, ou service absent du réseau `proxy` |
 | Erreur de connexion à la base alors que MySQL tourne | `clear_env`/`variables_order` : `docker compose exec backend php -r 'var_dump($_ENV["DB_HOST"]);'` |
 | `Access denied for user` à la migration | droits manquants — rejouer l'étape 1 |
-| Certificat non émis | DNS non propagé au premier démarrage ; attendre puis `docker compose restart web` |
+| Certificat non émis | `TRAEFIK_CERTRESOLVER` ≠ `myresolver`, ou DNS non propagé au premier démarrage ; corriger puis `docker compose up -d --force-recreate web` |
 | Éditeur de code vide, page blanche dans `/admin` | chunk Monaco non chargé — regarder l'onglet Réseau ; si une CSP a été activée, vérifier les violations en console |

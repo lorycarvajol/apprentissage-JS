@@ -66,7 +66,8 @@ Two non-obvious consequences of that layout, worth knowing before changing anyth
   file in the image.
 
 Traefik (external network `proxy`) terminates TLS and routes by subdomain; MySQL is the VPS's
-shared instance (external network `shared-db`), with a database and user dedicated to this
+shared instance (external network `mysql-shared`, container `mysql-shared-mysql-1`), with a
+database and user dedicated to this
 project — see `docker/mysql/init-apprentissage-js.sql`.
 
 **No third-party CDNs.** `docker/nginx/security-headers.conf` ships an active CSP with

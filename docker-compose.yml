@@ -10,7 +10,7 @@
 # projets du VPS (voir DEPLOIEMENT.md § Prérequis) :
 #   - le réseau Traefik (`proxy` par défaut), qui termine le TLS et route par
 #     sous-domaine ;
-#   - l'instance MySQL mutualisée, jointe via le réseau `shared-db`. Ce projet
+#   - l'instance MySQL mutualisée, jointe via le réseau `mysql-shared`. Ce projet
 #     n'y possède que sa base `apprentissage_js` et son utilisateur dédié :
 #     même instance que apprentissage-POO-PHP, permissions cloisonnées.
 
@@ -80,7 +80,7 @@ services:
       - "traefik.http.routers.apprentissage-js.rule=Host(`${APP_DOMAIN}`)"
       - "traefik.http.routers.apprentissage-js.entrypoints=${TRAEFIK_ENTRYPOINT:-websecure}"
       - "traefik.http.routers.apprentissage-js.tls=true"
-      - "traefik.http.routers.apprentissage-js.tls.certresolver=${TRAEFIK_CERTRESOLVER:-letsencrypt}"
+      - "traefik.http.routers.apprentissage-js.tls.certresolver=${TRAEFIK_CERTRESOLVER:-myresolver}"
       - "traefik.http.routers.apprentissage-js.middlewares=apprentissage-js-hsts@docker,apprentissage-js-compress@docker"
       - "traefik.http.services.apprentissage-js.loadbalancer.server.port=80"
 
@@ -104,8 +104,8 @@ networks:
     external: true
     name: ${TRAEFIK_NETWORK:-proxy}
 
-  # Réseau de l'instance MySQL mutualisée, créé une seule fois pour tout le VPS :
-  #   docker network create shared-db
+  # Réseau de l'instance MySQL mutualisée du VPS. Il existe déjà (créé par la
+  # stack `mysql-shared`) : rien à créer ici, juste à le rejoindre.
   shared-db:
     external: true
-    name: ${DB_NETWORK:-shared-db}
+    name: ${DB_NETWORK:-mysql-shared}
