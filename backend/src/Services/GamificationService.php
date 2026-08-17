@@ -95,7 +95,33 @@ class GamificationService
                 return ((int) $stmt->fetchColumn()) >= ($conditionValue['count'] ?? 1);
 
             case 'complete_module':
+                // `module_order` désigne le rang affiché du module (« Module 2 »),
+                // et non son id technique. Les badges sont semés par schema.sql
+                // avant qu'aucun module n'existe : y écrire un auto-incrément
+                // revient à parier sur l'ordre de création du contenu. Le pari a
+                // été perdu — « Débutant » visait module_id 1, or les modules du
+                // curriculum ont reçu les id 2 à 10, l'id 1 ayant été consommé
+                // puis libéré par un module de test. Le badge était devenu
+                // inobtenable, silencieusement : la condition retourne false
+                // quand le module n'a aucun chapitre, ce qui est aussi le cas
+                // quand il n'existe pas.
+                //
+                // `module_id` reste accepté pour tout badge existant qui s'en
+                // sert encore.
                 $moduleId = $conditionValue['module_id'] ?? null;
+
+                if (isset($conditionValue['module_order'])) {
+                    $stmt = $pdo->prepare(
+                        "SELECT id FROM modules WHERE order_index = :ordre ORDER BY id ASC LIMIT 1"
+                    );
+                    $stmt->execute(['ordre' => (int) $conditionValue['module_order']]);
+                    $moduleId = $stmt->fetchColumn();
+
+                    if ($moduleId === false) {
+                        return false;
+                    }
+                }
+
                 if ($moduleId === null) {
                     return false;
                 }

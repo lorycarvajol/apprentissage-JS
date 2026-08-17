@@ -359,7 +359,7 @@ CREATE TABLE refresh_tokens (
 -- tel. Ne pas remettre un INSERT nu ici.
 INSERT IGNORE INTO badges (name, description, icon, category, condition_type, condition_value, points_reward) VALUES
 ('Premier Pas', 'Complétez votre premier chapitre', 'first-step.png', 'progression', 'complete_chapter', '{"count": 1}', 50),
-('Débutant', 'Complétez le Module 1', 'beginner.png', 'progression', 'complete_module', '{"module_id": 1}', 100),
+('Débutant', 'Complétez le Module 1', 'beginner.png', 'progression', 'complete_module', '{"module_order": 1}', 100),
 ('Marathonien', 'Série de 7 jours consécutifs', 'streak-7.png', 'streak', 'streak_days', '{"days": 7}', 150),
 ('Perfectionniste', 'Réussissez 10 exercices du premier coup', 'perfectionist.png', 'achievement', 'first_try_success', '{"count": 10}', 200),
 ('Expert', 'Complétez tous les modules', 'expert.png', 'progression', 'complete_all_modules', '{}', 500),
@@ -376,4 +376,21 @@ INSERT IGNORE INTO badges (name, description, icon, category, condition_type, co
 ('Chevalier', 'Adoubé ! Vous portez fièrement les couleurs du royaume JavaScript (1000 points cumulés).', 'grade-chevalier.png', 'grade', 'points_total', '{"count": 1000}', 100),
 ('Baron', 'Un fief vous est confié : la noblesse du code vous reconnaît comme l''un des siens (2000 points cumulés).', 'grade-baron.png', 'grade', 'points_total', '{"count": 2000}', 200),
 ('Roi', 'Vous régnez sans partage sur le royaume du développement JavaScript. Longue vie au Roi ! (3200 points cumulés)', 'grade-roi.png', 'grade', 'points_total', '{"count": 3200}', 400),
-('Tenace', 'Cinq échecs, six tentatives, une victoire. La persévérance a fini par payer.', 'stubborn.png', 'special', 'late_success', '{"min_attempt": 6}', 75);
+('Tenace', 'Cinq échecs, six tentatives, une victoire. La persévérance a fini par payer.', 'stubborn.png', 'special', 'late_success', '{"min_attempt": 6}', 75),
+
+-- Les six titres qui suivent portent la collection de 19 à 25. Ce n'est pas un
+-- nombre rond arbitraire : la salle des trophées dispose les sceaux en losange,
+-- trié par rareté, et 25 se décompose en rangées 1/3/5/7/5/3/1. Les cinq degrés
+-- de rareté y occupent 1, 3, 5, 7 et 9 sceaux — le losange EST la pyramide de
+-- rareté. Ajouter ou retirer un titre suppose de revoir cette répartition,
+-- documentée dans frontend/src/pages/TrophyRoomPage.jsx.
+--
+-- Chaque condition ci-dessous est de l'un des huit types que
+-- GamificationService::isConditionMet() sait évaluer. Un badge dont la condition
+-- n'est pas gérée ne serait jamais décerné, sans que rien ne le signale.
+('Le Novice', 'Complétez 3 chapitres', 'novice.png', 'progression', 'complete_chapter', '{"count": 3}', 50),
+('Main sûre', 'Réussissez 3 exercices du premier coup', 'steady-hand.png', 'achievement', 'first_try_success', '{"count": 3}', 50),
+('Compagnon', 'Complétez le Module 2', 'companion.png', 'progression', 'complete_module', '{"module_order": 2}', 50),
+('Bourse garnie', 'Cumulez 500 points', 'purse.png', 'achievement', 'points_total', '{"count": 500}', 75),
+('Copiste', 'Complétez 15 chapitres', 'copyist.png', 'progression', 'complete_chapter', '{"count": 15}', 100),
+('Veilleur', 'Série de 14 jours consécutifs', 'watchman.png', 'streak', 'streak_days', '{"days": 14}', 200);

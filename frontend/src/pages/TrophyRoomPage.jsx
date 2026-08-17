@@ -1,11 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import MainLayout from '../components/layout/MainLayout';
 import { getGamificationSummary } from '../services/gamificationService';
 import '../styles/Trophies.css';
 
+/**
+ * Glyphes gravés dans la cire. Tous monochromes, volontairement : « 🔥 » avait
+ * beau dire « série » plus clairement, il s'affiche en émoji couleur et cassait
+ * l'illusion du sceau frappé au milieu de quatre glyphes noirs. La catégorie
+ * est de toute façon portée par la teinture, le glyphe ne fait que la redire.
+ */
 const CATEGORY_GLYPH = {
   progression: '⚜',
-  streak: '🔥',
+  streak: '✶',
   achievement: '✦',
   special: '✧',
   grade: '♛',
@@ -21,40 +27,59 @@ const CATEGORY_GLYPH = {
  * connaît pas, et la légende doit d'abord se lire.
  */
 const TEINTURES = [
-  { category: 'progression', swatch: 'var(--tr-vert)', label: 'Vert (sinople)', sens: 'Progression' },
-  { category: 'streak', swatch: 'var(--tr-tenne)', label: 'Orangé (tenné)', sens: 'Séries' },
-  { category: 'achievement', swatch: 'var(--tr-or)', label: 'Or', sens: 'Accomplissements' },
-  { category: 'special', swatch: 'var(--tr-purpure)', label: 'Violet (pourpre)', sens: 'Titres spéciaux' },
-  { category: 'grade', swatch: 'var(--tr-gules)', label: 'Rouge (gueules)', sens: 'Grades' },
+  { category: 'progression', label: 'Vert (sinople)', sens: 'Progression' },
+  { category: 'streak', label: 'Orangé (tenné)', sens: 'Séries' },
+  { category: 'achievement', label: 'Or', sens: 'Accomplissements' },
+  { category: 'special', label: 'Violet (pourpre)', sens: 'Titres spéciaux' },
+  { category: 'grade', label: 'Rouge (gueules)', sens: 'Grades' },
 ];
 
 /**
  * La rareté est déduite de `points_reward`, déjà renvoyé par l'API pour tous les
  * badges, obtenus ou non — rien à changer côté serveur. Ce champ est la seule
- * mesure de difficulté que le modèle porte déjà : un badge qui rapporte 500
- * points est, par construction, plus dur qu'un badge à 25.
+ * mesure de difficulté que le modèle porte déjà : un titre qui rapporte 500
+ * points est, par construction, plus dur qu'un titre à 25.
  *
  * L'échelle des sertissures reprend celle d'une chancellerie médiévale, où
- * l'importance d'un acte se lisait à la matière du sceau bien plus qu'à sa
+ * l'importance d'un acte se lisait à la matière de son sceau bien avant sa
  * couleur : cire nue pour l'ordinaire, filet gravé, double filet, sertissure de
  * métal, et bulle d'or pendante pour les actes solennels.
+ *
+ * `part` est le nombre de sceaux du degré, et il n'est pas décoratif : c'est lui
+ * qui donne les rangées du losange (voir RANGEES). Les seuils sont calés sur les
+ * 25 badges semés par schema.sql pour produire exactement 1/3/5/7/9. Ajouter un
+ * badge sans revoir ces deux tableaux casserait la figure.
  *
  * Ordre décroissant : le premier seuil atteint gagne.
  */
 const RARETES = [
-  { id: 'souverain', seuil: 400, label: 'Souverain', matiere: "bulle d'or" },
-  { id: 'tres-rare', seuil: 250, label: 'Très rare', matiere: "sertissure d'argent" },
-  { id: 'rare', seuil: 125, label: 'Rare', matiere: 'double filet' },
-  { id: 'peu-commun', seuil: 60, label: 'Peu commun', matiere: 'filet gravé' },
-  { id: 'commun', seuil: 0, label: 'Commun', matiere: 'cire simple' },
+  { id: 'souverain', seuil: 500, part: 1, label: 'Souverain', matiere: "bulle d'or" },
+  { id: 'tres-rare', seuil: 250, part: 3, label: 'Très rare', matiere: "sertissure d'argent" },
+  { id: 'rare', seuil: 125, part: 5, label: 'Rare', matiere: 'double filet' },
+  { id: 'peu-commun', seuil: 60, part: 7, label: 'Peu commun', matiere: 'filet gravé' },
+  { id: 'commun', seuil: 0, part: 9, label: 'Commun', matiere: 'cire simple' },
 ];
+
+/**
+ * Le losange, de la pointe haute à la pointe basse. Somme = 25.
+ *
+ * Les sceaux étant triés par rareté décroissante, chaque rangée du haut est
+ * exactement un degré : 1 souverain à la pointe, puis 3 très rares, 5 rares,
+ * 7 peu communs, et les 9 communs qui remplissent les trois dernières rangées.
+ * La figure n'est donc pas un habillage posé sur la grille — elle EST la
+ * pyramide de rareté : plus on monte, plus c'est rare, et plus c'est étroit.
+ */
+const RANGEES = [1, 3, 5, 7, 5, 3, 1];
 
 const rareteDe = (points) =>
   RARETES.find((r) => (points ?? 0) >= r.seuil) || RARETES[RARETES.length - 1];
 
+const rangDe = (points) => RARETES.findIndex((r) => r.id === rareteDe(points).id);
+
 const TrophyRoomPage = () => {
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [apercu, setApercu] = useState(null);
 
   useEffect(() => {
     fetchGamification();
@@ -71,7 +96,49 @@ const TrophyRoomPage = () => {
     }
   };
 
+  /**
+   * Tri par rareté, et surtout PAS par « obtenu d'abord » comme le renvoie
+   * l'API : la position d'un sceau doit être stable. Une salle des trophées
+   * dont les sceaux changent de place à chaque titre décroché ne se mémorise
+   * pas, et le losange perdrait sa lecture par rangée. `id` départage, pour que
+   * l'ordre soit le même d'une visite à l'autre.
+   */
+  const ordonnes = useMemo(
+    () =>
+      [...badges].sort(
+        (a, b) =>
+          rangDe(a.points_reward) - rangDe(b.points_reward) ||
+          (b.points_reward ?? 0) - (a.points_reward ?? 0) ||
+          a.id - b.id
+      ),
+    [badges]
+  );
+
+  // Découpe en rangées. Une collection qui ne ferait pas exactement 25 ne casse
+  // rien : les rangées se remplissent dans l'ordre et le reliquat forme une
+  // dernière rangée libre.
+  const rangees = useMemo(() => {
+    const out = [];
+    let i = 0;
+    for (const taille of RANGEES) {
+      if (i >= ordonnes.length) break;
+      out.push(ordonnes.slice(i, i + taille));
+      i += taille;
+    }
+    if (i < ordonnes.length) out.push(ordonnes.slice(i));
+    return out;
+  }, [ordonnes]);
+
   const earnedCount = badges.filter((badge) => badge.earned).length;
+
+  const detail = apercu
+    ? {
+        titre: apercu.earned ? apercu.name : 'Sceau vierge',
+        rarete: rareteDe(apercu.points_reward),
+        texte: apercu.earned ? apercu.description : "Ce sceau n'a pas encore été frappé.",
+        earned: apercu.earned,
+      }
+    : null;
 
   return (
     <MainLayout>
@@ -82,9 +149,9 @@ const TrophyRoomPage = () => {
           {!loading && (
             <p className="trophy-room-subtitle">
               {/* « frappés », et non « scellés » : c'est le mot déjà employé sur
-                  les sceaux non obtenus (« Ce sceau n'a pas encore été frappé »),
-                  et « scellé » se lit spontanément comme « verrouillé » — soit
-                  l'inverse de ce que ce compteur mesure. */}
+                  les sceaux non obtenus, et « scellé » se lit spontanément
+                  comme « verrouillé » — soit l'inverse de ce que ce compteur
+                  mesure. */}
               {earnedCount} titres frappés sur {badges.length}
             </p>
           )}
@@ -98,36 +165,96 @@ const TrophyRoomPage = () => {
         ) : badges.length > 0 ? (
           <>
             {/*
-              La légende est placée AVANT la grille, et complète.
-
-              Elle était auparavant en fin de page et limitée aux catégories déjà
-              obtenues, pour ne pas donner la clé de couleurs absentes de l'écran.
-              L'intention se défendait, l'effet non : on traversait toute la
-              grille avant de rencontrer la clé, et les couleurs qu'on ne
-              comprenait pas étaient précisément celles qui n'étaient pas
-              légendées. Rien n'est divulgué au passage — le nom et la condition
-              d'un sceau non obtenu restent masqués côté API.
+              Les deux légendes encadrent le losange, une par dimension. Elles
+              étaient auparavant en fin de page et limitées aux catégories déjà
+              obtenues : on traversait toute la grille avant de rencontrer la
+              clé, et les couleurs qu'on ne comprenait pas étaient précisément
+              celles qui n'étaient pas légendées. Rien n'est divulgué au
+              passage — le nom et la condition d'un sceau non obtenu ne quittent
+              pas le serveur.
             */}
-            <div className="trophy-legend">
-              <div className="trophy-legend-group">
-                <h2 className="trophy-legend-title">Teinture — ce que le sceau récompense</h2>
+            <div className="trophy-hall">
+              <aside className="trophy-legend trophy-legend-left">
+                <h2 className="trophy-legend-title">Teinture</h2>
+                <p className="trophy-legend-intro">ce que le sceau récompense</p>
                 <ul className="trophy-legend-list">
                   {TEINTURES.map((item) => (
                     <li className="trophy-legend-item" key={item.category}>
                       <span
-                        className="trophy-legend-swatch"
-                        style={{ background: item.swatch }}
+                        className={`trophy-legend-swatch seal-category-${item.category}`}
                         aria-hidden="true"
                       ></span>
-                      <span className="trophy-legend-label">{item.label}</span>
-                      <span className="trophy-legend-sense">{item.sens}</span>
+                      <span className="trophy-legend-text">
+                        <span className="trophy-legend-label">{item.label}</span>
+                        <span className="trophy-legend-sense">{item.sens}</span>
+                      </span>
                     </li>
                   ))}
                 </ul>
+              </aside>
+
+              <div className="trophy-lozenge-wrap">
+                <div className="seal-lozenge">
+                  {rangees.map((rangee, r) => (
+                    <div className="seal-row" key={r}>
+                      {rangee.map((badge, index) => {
+                        const rarete = rareteDe(badge.points_reward);
+                        const nom = badge.earned ? badge.name : 'Sceau vierge';
+
+                        return (
+                          <button
+                            type="button"
+                            key={badge.id}
+                            className={`seal seal-category-${badge.category} seal-rarity-${rarete.id} ${
+                              badge.earned ? 'seal-earned' : 'seal-locked'
+                            }`}
+                            style={{ '--seal-delay': `${(r * 5 + index) * 0.035}s` }}
+                            onMouseEnter={() => setApercu(badge)}
+                            onMouseLeave={() => setApercu(null)}
+                            onFocus={() => setApercu(badge)}
+                            onBlur={() => setApercu(null)}
+                            aria-label={`${nom}, ${rarete.label}. ${
+                              badge.earned ? badge.description : "Ce sceau n'a pas encore été frappé."
+                            }`}
+                          >
+                            <span className="seal-medallion" aria-hidden="true">
+                              {badge.earned ? CATEGORY_GLYPH[badge.category] || '✦' : ''}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+
+                {/*
+                  Un losange de 25 sceaux ne laisse pas la place d'écrire nom et
+                  description sous chaque médaillon — à sept de large, les
+                  libellés se chevaucheraient. Le détail est donc reporté dans ce
+                  panneau, alimenté par le survol ET par le focus clavier, et sa
+                  hauteur est réservée en permanence pour que la figure ne se
+                  déplace pas quand il se remplit.
+                */}
+                <div className="seal-detail" aria-live="polite">
+                  {detail ? (
+                    <>
+                      <p className="seal-detail-title">
+                        {detail.titre}
+                        <span className="seal-detail-rarity">{detail.rarete.label}</span>
+                      </p>
+                      <p className="seal-detail-text">{detail.texte}</p>
+                    </>
+                  ) : (
+                    <p className="seal-detail-hint">
+                      Survolez un sceau pour lire son titre.
+                    </p>
+                  )}
+                </div>
               </div>
 
-              <div className="trophy-legend-group">
-                <h2 className="trophy-legend-title">Sertissure — rareté du titre</h2>
+              <aside className="trophy-legend trophy-legend-right">
+                <h2 className="trophy-legend-title">Sertissure</h2>
+                <p className="trophy-legend-intro">ce qu'il a coûté</p>
                 <ul className="trophy-legend-list">
                   {RARETES.slice().reverse().map((item) => (
                     <li className="trophy-legend-item" key={item.id}>
@@ -135,52 +262,14 @@ const TrophyRoomPage = () => {
                         className={`trophy-legend-bezel seal-rarity-${item.id}`}
                         aria-hidden="true"
                       ></span>
-                      <span className="trophy-legend-label">{item.label}</span>
-                      <span className="trophy-legend-sense">{item.matiere}</span>
+                      <span className="trophy-legend-text">
+                        <span className="trophy-legend-label">{item.label}</span>
+                        <span className="trophy-legend-sense">{item.matiere}</span>
+                      </span>
                     </li>
                   ))}
                 </ul>
-              </div>
-            </div>
-
-            <div className="seal-grid">
-              {badges.map((badge, index) => {
-                const rarete = rareteDe(badge.points_reward);
-
-                return (
-                  <div
-                    key={badge.id}
-                    className={`seal seal-category-${badge.category} seal-rarity-${rarete.id} ${
-                      badge.earned ? 'seal-earned' : 'seal-locked'
-                    }`}
-                    style={{ '--seal-delay': `${index * 0.04}s` }}
-                  >
-                    <div className="seal-medallion">
-                      {badge.earned ? CATEGORY_GLYPH[badge.category] || '✦' : ''}
-                    </div>
-
-                    {badge.category === 'grade' ? (
-                      <h3 className="seal-ribbon">
-                        {badge.earned ? badge.name : 'Rang scellé'}
-                      </h3>
-                    ) : (
-                      <h3 className="seal-name">
-                        {badge.earned ? badge.name : 'Sceau vierge'}
-                      </h3>
-                    )}
-
-                    {/* La rareté s'affiche même sur un sceau non obtenu : elle ne
-                        révèle ni le nom ni la condition, mais elle donne à la
-                        grille la variété qui lui manquait — sans elle, tout ce
-                        qui reste à conquérir est un mur de disques identiques. */}
-                    <p className="seal-rarity-label">{rarete.label}</p>
-
-                    <p className="seal-description">
-                      {badge.earned ? badge.description : "Ce sceau n'a pas encore été frappé."}
-                    </p>
-                  </div>
-                );
-              })}
+              </aside>
             </div>
           </>
         ) : (
