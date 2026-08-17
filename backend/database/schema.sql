@@ -207,6 +207,13 @@ CREATE TABLE badges (
     condition_value JSON COMMENT 'Valeur de la condition',
     points_reward INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- Le nom identifie le badge : c'est lui qui rend le seed rejouable.
+    -- Sans cette contrainte, l'INSERT ci-dessous ne lève jamais « Duplicate
+    -- entry », migrate.php n'a donc rien à ignorer et réinsère les 19 badges
+    -- à chaque démarrage du conteneur. Constaté en production le 17/08/2026 :
+    -- 95 badges en base après cinq déploiements, titres obtenus en double,
+    -- et une salle des trophées annonçant « 7 / 95 ».
+    UNIQUE KEY uq_badges_name (name),
     INDEX idx_category (category)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -346,7 +353,11 @@ CREATE TABLE refresh_tokens (
 -- repris du projet PHP jumeau, avec les mentions PHP/POO reformulées.
 -- ================================================================
 
-INSERT INTO badges (name, description, icon, category, condition_type, condition_value, points_reward) VALUES
+-- INSERT IGNORE, et non INSERT : migrate.php est rejoué à chaque démarrage du
+-- conteneur backend. Combiné à la contrainte d'unicité sur `name` ci-dessus,
+-- c'est ce qui rend ce seed réellement idempotent plutôt que seulement réputé
+-- tel. Ne pas remettre un INSERT nu ici.
+INSERT IGNORE INTO badges (name, description, icon, category, condition_type, condition_value, points_reward) VALUES
 ('Premier Pas', 'Complétez votre premier chapitre', 'first-step.png', 'progression', 'complete_chapter', '{"count": 1}', 50),
 ('Débutant', 'Complétez le Module 1', 'beginner.png', 'progression', 'complete_module', '{"module_id": 1}', 100),
 ('Marathonien', 'Série de 7 jours consécutifs', 'streak-7.png', 'streak', 'streak_days', '{"days": 7}', 150),

@@ -25,6 +25,14 @@
   --tr-purpure: #5b3a73;
   --tr-gules: #8c2f1b;
 
+  /* Métaux des sertissures. Ils encodent la rareté, indépendamment de la
+     teinture qui encode la catégorie : un sceau vert peut être serti d'étain
+     comme d'or. Trois métaux seulement, dans l'ordre de valeur d'une
+     chancellerie — étain, argent, or. */
+  --tr-etain: #8a7a5f;
+  --tr-argent: #8f959b;
+  --tr-orfevre: #c9a227;
+
   background: var(--tr-bg);
   border-radius: 16px;
   padding: 40px clamp(16px, 4vw, 56px) 32px;
@@ -48,6 +56,10 @@
   --tr-or: #d4af5a;
   --tr-purpure: #8b63a8;
   --tr-gules: #c1503a;
+
+  --tr-etain: #9d8c6d;
+  --tr-argent: #b8bfc6;
+  --tr-orfevre: #e0bb5f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -65,6 +77,10 @@
     --tr-or: #d4af5a;
     --tr-purpure: #8b63a8;
     --tr-gules: #c1503a;
+
+    --tr-etain: #9d8c6d;
+    --tr-argent: #b8bfc6;
+    --tr-orfevre: #e0bb5f;
   }
 }
 
@@ -159,9 +175,14 @@
   font-size: 34px;
   position: relative;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  /* Le relief de la cire, puis la sertissure de rareté, puis l'ombre portée.
+     L'ordre compte : les ombres suivantes sont peintes derrière les
+     précédentes, la sertissure doit donc venir après les reliefs internes et
+     avant l'ombre portée. */
   box-shadow:
     inset 0 -6px 10px rgba(0, 0, 0, 0.18),
     inset 0 4px 6px rgba(255, 255, 255, 0.12),
+    var(--sertissure, 0 0 0 0 transparent),
     0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -203,6 +224,106 @@
 .seal-locked {
   opacity: 0.85;
 }
+
+/* ===========================================
+   SERTISSURES — la rareté du titre
+   ===========================================
+   Seconde dimension, indépendante de la teinture : celle-ci dit ce que le
+   sceau récompense, la sertissure dit ce qu'il a coûté. Dans une chancellerie,
+   l'importance d'un acte se lisait d'abord à la matière de son sceau — cire
+   nue pour l'ordinaire, filet gravé, double filet, sertissure de métal, et
+   bulle d'or pendante pour les actes solennels. L'échelle est reprise telle
+   quelle ; les seuils de points sont dans TrophyRoomPage.jsx.
+
+   La sertissure est visible AUSSI sur les sceaux non obtenus. Elle ne dévoile
+   ni le nom ni la condition — ceux-ci ne quittent pas le serveur tant que le
+   badge n'est pas acquis — mais elle donne à la grille le relief qui lui
+   manquait : sans elle, tout ce qui reste à conquérir est un mur de disques
+   bruns identiques. C'est le défaut que ce fichier avait, et la raison
+   première de cette échelle.
+
+   Deux jeux de métaux : vifs pour un titre acquis, éteints pour un titre qui
+   attend encore. Ce sont les mêmes variables, redéfinies par état — les règles
+   de sertissure ci-dessous n'ont donc pas à connaître l'état du sceau. */
+
+.seal-earned {
+  --m-etain: var(--tr-etain);
+  --m-argent: var(--tr-argent);
+  --m-or: var(--tr-orfevre);
+  --m-halo: color-mix(in srgb, var(--tr-orfevre), transparent 55%);
+}
+
+.seal-locked {
+  /* 25 % de cire, et non 60 % : au-delà, le filet se confondait avec le
+     médaillon et la grille redevenait le mur uniforme qu'on cherchait à
+     rompre. Le métal reste éteint, mais lisible. */
+  --m-etain: color-mix(in srgb, var(--tr-etain), var(--tr-wax-blank) 25%);
+  --m-argent: color-mix(in srgb, var(--tr-argent), var(--tr-wax-blank) 30%);
+  --m-or: color-mix(in srgb, var(--tr-orfevre), var(--tr-wax-blank) 30%);
+  --m-halo: transparent;
+}
+
+/* `--e` : épaisseur de base. Vaut 1px sur un sceau, moins sur la vignette de
+   la légende — c'est ce qui permet aux deux de partager ces règles au lieu de
+   dupliquer cinq sertissures à deux échelles. */
+.seal,
+.trophy-legend-bezel {
+  --e: 1px;
+}
+
+/* Commun — cire nue, aucune sertissure. L'absence est ici un signal : c'est le
+   degré le plus bas, il doit se distinguer par le dépouillement. */
+.seal-rarity-commun {
+  --sertissure: 0 0 0 0 transparent;
+}
+
+/* Peu commun — un filet gravé. */
+.seal-rarity-peu-commun {
+  --sertissure: 0 0 0 calc(3 * var(--e)) var(--m-etain);
+}
+
+/* Rare — double filet : deux anneaux séparés par un vide de la couleur du
+   fond, qui creuse la gorge entre les deux. */
+.seal-rarity-rare {
+  --sertissure:
+    0 0 0 calc(3 * var(--e)) var(--m-etain),
+    0 0 0 calc(5 * var(--e)) var(--tr-bg),
+    0 0 0 calc(7 * var(--e)) var(--m-etain);
+}
+
+/* Très rare — sertissure d'argent, large, cerclée d'un trait sombre qui lui
+   donne son épaisseur de métal plutôt que de peinture. */
+.seal-rarity-tres-rare {
+  --sertissure:
+    0 0 0 calc(5 * var(--e)) var(--m-argent),
+    0 0 0 calc(7 * var(--e)) color-mix(in srgb, var(--tr-ink), transparent 55%);
+}
+
+/* Souverain — bulle d'or. Le seul degré à porter un rayonnement : c'est la
+   pièce sur laquelle toute la page mise, deux titres sur dix-neuf. */
+.seal-rarity-souverain {
+  --sertissure:
+    0 0 0 calc(4 * var(--e)) var(--m-or),
+    0 0 0 calc(6 * var(--e)) var(--tr-bg),
+    0 0 0 calc(9 * var(--e)) var(--m-or),
+    0 0 calc(22 * var(--e)) calc(3 * var(--e)) var(--m-halo);
+}
+
+/* Le degré, écrit sous le nom. La sertissure se lit d'un coup d'œil une fois la
+   légende connue ; ce libellé sert la première visite et les lecteurs d'écran,
+   pour qui une bordure ne dit rien. */
+.seal-rarity-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tr-ink-soft);
+  margin: -4px 0 0;
+}
+
+/* Pas de dorure sur le libellé du degré souverain : en thème clair, l'or sur
+   crème tombe sous 2:1, illisible pour du texte de 10 px. La sertissure
+   distingue déjà ce degré — le texte n'a pas à le redire en couleur. */
 
 .seal-name {
   font-family: 'Cormorant Garamond', serif;
@@ -252,34 +373,101 @@
    LÉGENDE HÉRALDIQUE
    =========================================== */
 
+/* ===========================================
+   LÉGENDE
+   ===========================================
+   Placée avant la grille, et non après : c'est la clé de lecture de tout ce
+   qui suit, elle ne peut pas arriver au terme de plusieurs écrans de
+   défilement. Deux groupes côte à côte, un par dimension. */
+
 .trophy-legend {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 40px;
   border-top: 1px solid var(--tr-rule);
-  padding-top: 18px;
+  border-bottom: 1px solid var(--tr-rule);
+  padding: 20px 0;
+  margin-bottom: 32px;
+}
+
+.trophy-legend-title {
+  font-family: 'Cinzel', serif;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tr-ink);
+  margin: 0 0 12px;
+}
+
+.trophy-legend-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 8px 22px;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.trophy-legend-item {
+  display: grid;
+  /* Colonne de vignettes à largeur fixe : les sertissures n'ont pas toutes le
+     même diamètre, sans cette colonne les libellés ne s'aligneraient pas. */
+  grid-template-columns: 22px minmax(0, 8rem) minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 11px;
   letter-spacing: 0.02em;
   color: var(--tr-ink-soft);
 }
 
-.trophy-legend-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+.trophy-legend-label {
+  color: var(--tr-ink);
+}
+
+.trophy-legend-sense {
+  font-style: italic;
 }
 
 .trophy-legend-swatch {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  display: inline-block;
+  justify-self: center;
   /* Cerne discret : sans lui, la pastille de cire vierge se confond presque
      avec le fond de la page, dans les deux thèmes. Les teintures saturées, elles,
      ne changent pas d'aspect. */
   box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tr-ink), transparent 75%);
+}
+
+/* Vignette de sertissure : un sceau miniature, qui consomme exactement les
+   mêmes règles `--sertissure` que la grille — d'où `--e` réduit plutôt qu'un
+   second jeu de bordures à maintenir en parallèle. */
+.trophy-legend-bezel {
+  --e: 0.7px;
+  --m-etain: var(--tr-etain);
+  --m-argent: var(--tr-argent);
+  --m-or: var(--tr-orfevre);
+  --m-halo: color-mix(in srgb, var(--tr-orfevre), transparent 65%);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  justify-self: center;
+  background: radial-gradient(circle at 35% 30%, var(--tr-wax-blank), var(--tr-wax-blank-shade) 80%);
+  box-shadow: var(--sertissure, 0 0 0 0 transparent);
+}
+
+/* La cire nue n'a pas de sertissure : sans ce cerne, la vignette du degré
+   « Commun » serait une pastille sans contour, illisible sur le fond. */
+.trophy-legend-bezel.seal-rarity-commun {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tr-ink), transparent 75%);
+}
+
+@media (max-width: 768px) {
+  .trophy-legend {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ===========================================
