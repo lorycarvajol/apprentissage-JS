@@ -60,10 +60,12 @@
 
   background: var(--tr-bg);
   border-radius: 16px;
-  padding: 40px clamp(16px, 4vw, 56px) 32px;
+  /* Marges resserrées en haut : la page n'a plus qu'une bannière d'une ligne,
+     et c'est le losange qu'on vient voir. */
+  padding: 24px clamp(16px, 4vw, 56px) 28px;
   display: flex;
   flex-direction: column;
-  gap: 36px;
+  gap: 22px;
   color: var(--tr-ink);
 }
 
@@ -145,33 +147,45 @@
    BANNIÈRE D'EN-TÊTE
    =========================================== */
 
+/* Bannière d'une seule ligne : emblème et titre côte à côte, sous-titre
+   dessous. Empilés, ils mangeaient près de 150 px de hauteur et repoussaient le
+   losange hors du premier écran — or c'est lui le sujet de la page. */
 .trophy-room-hero {
   text-align: center;
-  padding-bottom: 28px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--tr-rule);
   position: relative;
 }
 
+.trophy-room-crest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
 .trophy-emblem {
-  width: 52px;
-  height: 52px;
-  margin: 0 auto 14px;
+  width: 36px;
+  height: 36px;
+  flex: none;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 22px;
+  font-size: 16px;
+  line-height: 1;
   color: var(--tr-bg);
   background: radial-gradient(circle at 35% 30%, var(--tr-rule), var(--tr-gules) 75%);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 .trophy-room-hero h1 {
   font-family: 'Cinzel', serif;
   font-weight: 700;
-  font-size: clamp(26px, 3.4vw, 38px);
+  font-size: clamp(23px, 2.7vw, 31px);
   letter-spacing: 0.05em;
-  margin: 0 0 10px 0;
+  margin: 0;
   color: var(--tr-ink);
 }
 

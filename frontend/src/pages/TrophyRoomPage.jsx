@@ -19,19 +19,31 @@ const CATEGORY_GLYPH = {
 
 /**
  * Deux dimensions, lisibles indépendamment :
- *   - la teinture (couleur de la cire) dit CE QUE le titre récompense ;
- *   - la sertissure (bordure du sceau) dit COMBIEN il est difficile.
+ *   - la teinture (couleur de la cire) dit CE QUI fait gagner le titre ;
+ *   - la sertissure (bordure du sceau) dit ce qu'il rapporte, donc sa rareté.
  *
  * Le nom courant de la couleur vient en premier, le terme héraldique ensuite :
  * « gueules » ou « tenné » servent le thème mais n'apprennent rien à qui ne les
  * connaît pas, et la légende doit d'abord se lire.
+ *
+ * `sens` décrit ce qu'il faut FAIRE, pas comment la catégorie s'appelle. Les
+ * libellés précédents — « Accomplissements », « Titres spéciaux » — ne faisaient
+ * que traduire le nom technique de la catégorie : ils occupaient la place d'une
+ * explication sans en donner une. Chaque libellé ci-dessous est tiré des
+ * condition_type réellement semés dans schema.sql :
+ *   progression  complete_chapter x5, complete_module x2, complete_all_modules
+ *   streak       streak_days x4
+ *   achievement  first_try_success x3, points_total x2
+ *   special      time_of_day x2, late_success
+ *   grade        points_total x5, par paliers croissants
+ * Ajouter un badge d'une nature nouvelle suppose de revoir le libellé concerné.
  */
 const TEINTURES = [
-  { category: 'progression', label: 'Vert (sinople)', sens: 'Progression' },
-  { category: 'streak', label: 'Orangé (tenné)', sens: 'Séries' },
-  { category: 'achievement', label: 'Or', sens: 'Accomplissements' },
-  { category: 'special', label: 'Violet (pourpre)', sens: 'Titres spéciaux' },
-  { category: 'grade', label: 'Rouge (gueules)', sens: 'Grades' },
+  { category: 'progression', label: 'Vert (sinople)', sens: 'Chapitres et modules achevés' },
+  { category: 'streak', label: 'Orangé (tenné)', sens: "Jours d'affilée" },
+  { category: 'achievement', label: 'Or', sens: 'Sans-faute et points amassés' },
+  { category: 'special', label: 'Violet (pourpre)', sens: 'Heures indues, obstination' },
+  { category: 'grade', label: 'Rouge (gueules)', sens: 'Rang dans la hiérarchie' },
 ];
 
 /**
@@ -144,8 +156,13 @@ const TrophyRoomPage = () => {
     <MainLayout>
       <div className="trophy-room-page">
         <section className="trophy-room-hero">
-          <div className="trophy-emblem">♛</div>
-          <h1>Salle des trophées</h1>
+          {/* Emblème en ligne avec le titre plutôt qu'empilé au-dessus : la
+              bannière occupait trois blocs verticaux et repoussait le losange
+              sous la ligne de flottaison. */}
+          <div className="trophy-room-crest">
+            <span className="trophy-emblem" aria-hidden="true">♛</span>
+            <h1>Salle des trophées</h1>
+          </div>
           {!loading && (
             <p className="trophy-room-subtitle">
               {/* « frappés », et non « scellés » : c'est le mot déjà employé sur
@@ -254,7 +271,11 @@ const TrophyRoomPage = () => {
 
               <aside className="trophy-legend trophy-legend-right">
                 <h2 className="trophy-legend-title">Sertissure</h2>
-                <p className="trophy-legend-intro">ce qu'il a coûté</p>
+                {/* Énoncé de la règle exacte, et non « ce qu'il a coûté » : la
+                    rareté est déduite de points_reward, c'est-à-dire de ce que
+                    le titre rapporte. Le coût n'en est qu'une inférence — la
+                    formulation précédente prenait l'effet pour la cause. */}
+                <p className="trophy-legend-intro">plus il rapporte, plus il est rare</p>
                 <ul className="trophy-legend-list">
                   {RARETES.slice().reverse().map((item) => (
                     <li className="trophy-legend-item" key={item.id}>
