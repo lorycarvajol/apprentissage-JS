@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { TropheesProvider } from './contexts/TropheesContext';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import ScrollToTop from './components/common/ScrollToTop';
 import AdminRoute from './components/auth/AdminRoute';
@@ -27,6 +28,9 @@ function App() {
     <Router>
       <ThemeProvider>
         <AuthProvider>
+          {/* Dans AuthProvider : la collection de sceaux est celle d'un
+              utilisateur, le fournisseur a besoin de savoir qui est connecté. */}
+          <TropheesProvider>
           <ScrollToTop />
           <Routes>
             {/* Routes publiques */}
@@ -114,6 +118,7 @@ function App() {
             {/* Route 404 */}
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
+          </TropheesProvider>
         </AuthProvider>
       </ThemeProvider>
     </Router>

@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useTrophees } from '../../contexts/TropheesContext';
 import ThemeToggle from '../common/ThemeToggle';
 import '../../styles/Layout.css';
 
 const Header = () => {
   const { user, logout } = useAuth();
+  const { nonVus, intensite } = useTrophees();
   const location = useLocation();
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -46,9 +48,26 @@ const Header = () => {
             <span className="nav-icon">📖</span>
             Modules
           </Link>
+          {/*
+            La lueur annonce des titres décrochés et pas encore regardés, et son
+            intensité dit « un » contre « plusieurs » contre « beaucoup ». Elle
+            est portée par un attribut plutôt que par une classe : le niveau est
+            une donnée, et le CSS s'y accroche par [data-nouveaux="2"].
+
+            aria-label double l'information, parce qu'une lueur ne dit rien à un
+            lecteur d'écran — et le contenu de l'onglet, lui, ne change pas.
+          */}
           <Link
             to="/trophies"
             className={`nav-link ${isActive('/trophies') ? 'nav-link-active' : ''}`}
+            data-nouveaux={intensite || undefined}
+            aria-label={
+              nonVus.length > 0
+                ? `Trophées, ${nonVus.length} nouveau${nonVus.length > 1 ? 'x' : ''} titre${
+                    nonVus.length > 1 ? 's' : ''
+                  } à découvrir`
+                : undefined
+            }
             onClick={() => setMenuOpen(false)}
           >
             <span className="nav-icon">🏆</span>

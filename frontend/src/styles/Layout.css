@@ -402,3 +402,48 @@
     font-size: 22px;
   }
 }
+
+/* ===========================================
+   LUEUR DES TITRES NON REGARDÉS
+   ===========================================
+   Un sceau frappé allume l'onglet « Trophées », et la lueur s'intensifie tant
+   que les titres s'accumulent sans être regardés. Trois paliers seulement
+   (voir `intensite` dans TropheesContext) : l'en-tête n'a pas à compter, il a
+   à alerter, et une échelle continue produirait des écarts que personne ne
+   perçoit.
+
+   L'alpha et le rayon sont portés par des variables consommées dans les
+   keyframes : une seule animation sert les trois paliers, au lieu de trois
+   animations qui divergeraient à la première retouche. */
+
+.nav-link[data-nouveaux] {
+  --lueur-teinte: 212, 175, 90;
+  animation: lueur-sceau 2.6s ease-in-out infinite;
+}
+
+.nav-link[data-nouveaux] .nav-icon {
+  filter: brightness(1.25) saturate(1.15);
+}
+
+.nav-link[data-nouveaux="1"] { --lueur-alpha: 0.32; --lueur-rayon: 9px; }
+.nav-link[data-nouveaux="2"] { --lueur-alpha: 0.52; --lueur-rayon: 15px; }
+.nav-link[data-nouveaux="3"] { --lueur-alpha: 0.78; --lueur-rayon: 22px; }
+
+@keyframes lueur-sceau {
+  0%, 100% {
+    box-shadow: 0 0 var(--lueur-rayon) rgba(var(--lueur-teinte), calc(var(--lueur-alpha) * 0.5));
+  }
+  50% {
+    box-shadow: 0 0 calc(var(--lueur-rayon) * 1.7) rgba(var(--lueur-teinte), var(--lueur-alpha));
+  }
+}
+
+/* Le battement est supprimé, pas la lueur : c'est elle qui porte
+   l'information, et la retirer priverait du signal ceux qui ont justement
+   demandé moins de mouvement. */
+@media (prefers-reduced-motion: reduce) {
+  .nav-link[data-nouveaux] {
+    animation: none;
+    box-shadow: 0 0 var(--lueur-rayon) rgba(var(--lueur-teinte), var(--lueur-alpha));
+  }
+}

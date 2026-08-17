@@ -4,6 +4,7 @@ import api from '../../services/api';
 import JsCheatSheet from './JsCheatSheet';
 import { runJs, runJsWithDom } from '../../utils/jsSandbox';
 import { translateJsError } from '../../utils/jsErrorTranslator';
+import { useTrophees } from '../../contexts/TropheesContext';
 import '../../styles/Editor.css';
 
 const ExerciceSolver = ({ exercice, onClose }) => {
@@ -12,6 +13,7 @@ const ExerciceSolver = ({ exercice, onClose }) => {
   const [result, setResult] = useState(null);
   const [showCheatSheet, setShowCheatSheet] = useState(false);
   const startedAtRef = useRef(Date.now());
+  const { rafraichir: rafraichirTrophees } = useTrophees();
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -38,6 +40,20 @@ const ExerciceSolver = ({ exercice, onClose }) => {
         time_spent: timeSpent,
       });
       setResult(response.data);
+
+      /**
+       * La soumission peut décrocher un ou plusieurs titres — le backend appelle
+       * GamificationService::checkAndAwardBadges() — mais sa réponse ne les
+       * énumère pas. On relit donc la collection pour que l'onglet « Trophées »
+       * s'allume dans la seconde, et non au prochain chargement de page.
+       *
+       * Sans await ni catch remontant : l'exercice vient d'être noté, une
+       * lueur qui n'apparaît pas ne doit surtout pas transformer une réussite
+       * en message d'erreur.
+       */
+      if (response.data?.is_correct) {
+        rafraichirTrophees();
+      }
     } catch (err) {
       setResult({
         is_correct: false,

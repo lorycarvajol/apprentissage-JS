@@ -1,0 +1,302 @@
+/* ===========================================
+   CARTE DE RÉVÉLATION D'UN SCEAU
+   ===========================================
+   La carte réutilise les jetons de Trophies.css (teintures, sertissures,
+   `--sertissure`) : elle les hérite en portant les mêmes classes
+   `seal-category-*` et `seal-rarity-*`. Trophies.css est importé par la page
+   des trophées, seule à monter ce composant.
+
+   L'animation joue le geste réel du scellage, en trois temps :
+     1. la cire coulée      — le disque s'étale
+     2. la matrice frappée  — l'écrasement, puis l'onde de choc
+     3. l'empreinte révélée — le glyphe apparaît, la sertissure se pose
+   Les durées sont volontairement courtes : c'est une fanfare, pas une
+   cinématique, et on peut fermer à tout moment.
+*/
+
+.revelation-fond {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(12, 8, 4, 0.72);
+  backdrop-filter: blur(3px);
+  animation: revelation-fond-entree 0.25s ease forwards;
+}
+
+@keyframes revelation-fond-entree {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.revelation-carte {
+  position: relative;
+  width: min(100%, 430px);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: var(--tr-bg, #1b140d);
+  color: var(--tr-ink, #ede3cc);
+  border: 1px solid var(--tr-rule, #d4af5a);
+  border-radius: 14px;
+  padding: 26px 28px 22px;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  animation: revelation-carte-entree 0.32s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+
+  /* Métaux de la sertissure, dans leur version « titre acquis ». Trophies.css
+     les définit sur `.seal-earned` / `.seal-locked` ; la carte ne porte ni
+     l'une ni l'autre — un sceau qu'on révèle est acquis par construction. Sans
+     ces trois lignes, `--sertissure` référence des variables inexistantes, la
+     couleur du box-shadow est invalide et l'anneau ne se dessine tout
+     simplement pas. */
+  /* `--e` ici, et non sur le médaillon : une propriété personnalisée est
+     résolue sur l'élément qui la DÉCLARE. `--sertissure` est déclarée par
+     `.seal-rarity-*`, porté par cette carte ; tout ce que sa valeur référence
+     doit donc être en portée ICI. Posée sur le médaillon, `--e` arrivait trop
+     tard : `calc(3 * var(--e))` échouait, `--sertissure` devenait invalide, et
+     le descendant héritait d'une valeur vide — anneau absent, sans la moindre
+     erreur en console. Le sceau est plus gros qu'en salle, ses filets grossissent
+     en proportion, sinon la bulle d'or ressemble à un trait de crayon. */
+  --e: 1.5px;
+  --m-etain: var(--tr-etain, #9d8c6d);
+  --m-argent: var(--tr-argent, #b8bfc6);
+  --m-or: var(--tr-orfevre, #e0bb5f);
+  --m-halo: color-mix(in srgb, var(--tr-orfevre, #e0bb5f), transparent 45%);
+}
+
+@keyframes revelation-carte-entree {
+  from { opacity: 0; transform: translateY(14px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+.revelation-annonce {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tr-ink-soft, #b9aa8c);
+  margin: 0 0 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.revelation-compte {
+  border: 1px solid color-mix(in srgb, var(--tr-rule, #d4af5a), transparent 55%);
+  border-radius: 999px;
+  padding: 2px 8px;
+  letter-spacing: 0.08em;
+}
+
+/* ===========================================
+   LE SCELLAGE
+   =========================================== */
+
+.revelation-scene {
+  position: relative;
+  height: 128px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+/* Le médaillon hérite de `.seal-medallion` son relief et sa sertissure, mais
+   PAS sa cire : dans Trophies.css la teinture est posée par `.seal-earned
+   .seal-medallion`, un sélecteur descendant qui suppose un ancêtre marqué
+   comme obtenu. La carte n'en a pas — un sceau qu'on révèle vient d'être
+   frappé, l'état n'a pas à être répété. Le fond est donc peint ici, avec
+   exactement la même recette, à partir des `--t-*` hérités de la classe
+   `seal-category-*` portée par la carte. */
+.revelation-medaillon.seal-medallion {
+  width: 112px;
+  height: 112px;
+  font-size: 44px;
+  color: var(--tr-bg, #1b140d);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+  background:
+    radial-gradient(circle at 30% 22%, rgba(255, 255, 255, 0.42) 0%, rgba(255, 255, 255, 0) 24%),
+    radial-gradient(circle at 34% 26%, var(--t-haut) 0%, var(--t) 46%, var(--t-bas) 100%);
+  animation: revelation-coulee 0.72s cubic-bezier(0.18, 0.85, 0.3, 1.1) backwards;
+}
+
+/* 1. la cire coulée, 2. la frappe : le disque s'étale, dépasse, puis est
+   écrasé par la matrice avant de reprendre sa forme. */
+@keyframes revelation-coulee {
+  0% { transform: scale(0.15); opacity: 0; }
+  38% { transform: scale(1.14); opacity: 1; }
+  58% { transform: scale(0.94) translateY(2px); }
+  78% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* 3. l'empreinte : le glyphe n'apparaît qu'une fois la matrice retirée. */
+.revelation-glyphe {
+  display: block;
+  animation: revelation-empreinte 0.4s ease 0.5s backwards;
+}
+
+@keyframes revelation-empreinte {
+  from { opacity: 0; transform: scale(1.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* L'onde de choc de la frappe, calée sur le moment de l'écrasement. */
+.revelation-onde {
+  position: absolute;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  border: 2px solid color-mix(in srgb, var(--tr-rule, #d4af5a), transparent 40%);
+  opacity: 0;
+  animation: revelation-onde 0.6s ease-out 0.42s backwards;
+}
+
+@keyframes revelation-onde {
+  from { opacity: 0.7; transform: scale(1); }
+  to { opacity: 0; transform: scale(1.9); }
+}
+
+/* Le mouvement est un agrément, jamais le porteur de l'information : sans lui,
+   la carte s'affiche complète et immédiatement lisible. */
+@media (prefers-reduced-motion: reduce) {
+  .revelation-fond,
+  .revelation-carte,
+  .revelation-medaillon.seal-medallion,
+  .revelation-glyphe,
+  .revelation-onde {
+    animation: none;
+  }
+
+  .revelation-onde {
+    display: none;
+  }
+}
+
+/* ===========================================
+   TEXTE
+   =========================================== */
+
+.revelation-titre {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 25px;
+  letter-spacing: 0.04em;
+  margin: 0 0 8px;
+  color: var(--tr-ink, #ede3cc);
+}
+
+.revelation-description {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--tr-ink-soft, #b9aa8c);
+  margin: 0 0 20px;
+}
+
+.revelation-lecture {
+  margin: 0 0 22px;
+  padding: 16px 0 4px;
+  border-top: 1px solid color-mix(in srgb, var(--tr-rule, #d4af5a), transparent 60%);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+}
+
+.revelation-ligne {
+  display: grid;
+  /* 124px : « Sa sertissure » se coupait en deux lignes à 108px. */
+  grid-template-columns: 124px minmax(0, 1fr);
+  align-items: start;
+  gap: 12px;
+}
+
+.revelation-ligne dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--tr-ink-soft, #b9aa8c);
+  padding-top: 2px;
+}
+
+.revelation-ligne dd {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.revelation-ligne dd strong {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--tr-ink, #ede3cc);
+}
+
+.revelation-ligne dd span {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--tr-ink-soft, #b9aa8c);
+}
+
+/* Les deux vignettes reprennent exactement celles des légendes de la salle :
+   c'est ce qui permet de faire le lien entre la carte et la figure. */
+.revelation-vignette {
+  flex: none;
+}
+
+/* ===========================================
+   ACTIONS
+   =========================================== */
+
+.revelation-actions {
+  display: flex;
+  justify-content: center;
+}
+
+.revelation-bouton {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tr-bg, #1b140d);
+  background: var(--tr-rule, #d4af5a);
+  border: 0;
+  border-radius: 999px;
+  padding: 10px 26px;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.revelation-bouton:hover {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.revelation-bouton:focus-visible {
+  outline: 2px solid var(--tr-ink, #ede3cc);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .revelation-carte {
+    padding: 22px 18px 18px;
+  }
+
+  .revelation-ligne {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}

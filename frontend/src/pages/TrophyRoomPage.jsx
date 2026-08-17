@@ -1,106 +1,53 @@
 import { useState, useEffect, useMemo } from 'react';
 import MainLayout from '../components/layout/MainLayout';
+import SceauRevelation from '../components/trophies/SceauRevelation';
 import { getGamificationSummary } from '../services/gamificationService';
+import { useTrophees } from '../contexts/TropheesContext';
+import {
+  CATEGORY_GLYPH,
+  TEINTURES,
+  RARETES,
+  RANGEES,
+  rareteDe,
+  rangDe,
+} from '../utils/heraldique';
 import '../styles/Trophies.css';
-
-/**
- * Glyphes gravés dans la cire. Tous monochromes, volontairement : « 🔥 » avait
- * beau dire « série » plus clairement, il s'affiche en émoji couleur et cassait
- * l'illusion du sceau frappé au milieu de quatre glyphes noirs. La catégorie
- * est de toute façon portée par la teinture, le glyphe ne fait que la redire.
- */
-const CATEGORY_GLYPH = {
-  progression: '⚜',
-  streak: '✶',
-  achievement: '✦',
-  special: '✧',
-  grade: '♛',
-};
-
-/**
- * Deux dimensions, lisibles indépendamment :
- *   - la teinture (couleur de la cire) dit CE QUI fait gagner le titre ;
- *   - la sertissure (bordure du sceau) dit ce qu'il rapporte, donc sa rareté.
- *
- * Le nom courant de la couleur vient en premier, le terme héraldique ensuite :
- * « gueules » ou « tenné » servent le thème mais n'apprennent rien à qui ne les
- * connaît pas, et la légende doit d'abord se lire.
- *
- * `sens` décrit ce qu'il faut FAIRE, pas comment la catégorie s'appelle. Les
- * libellés précédents — « Accomplissements », « Titres spéciaux » — ne faisaient
- * que traduire le nom technique de la catégorie : ils occupaient la place d'une
- * explication sans en donner une. Chaque libellé ci-dessous est tiré des
- * condition_type réellement semés dans schema.sql :
- *   progression  complete_chapter x5, complete_module x2, complete_all_modules
- *   streak       streak_days x4
- *   achievement  first_try_success x3, points_total x2
- *   special      time_of_day x2, late_success
- *   grade        points_total x5, par paliers croissants
- * Ajouter un badge d'une nature nouvelle suppose de revoir le libellé concerné.
- */
-const TEINTURES = [
-  { category: 'progression', label: 'Vert (sinople)', sens: 'Chapitres et modules achevés' },
-  { category: 'streak', label: 'Orangé (tenné)', sens: "Jours d'affilée" },
-  { category: 'achievement', label: 'Or', sens: 'Sans-faute et points amassés' },
-  { category: 'special', label: 'Violet (pourpre)', sens: 'Heures indues, obstination' },
-  { category: 'grade', label: 'Rouge (gueules)', sens: 'Rang dans la hiérarchie' },
-];
-
-/**
- * La rareté est déduite de `points_reward`, déjà renvoyé par l'API pour tous les
- * badges, obtenus ou non — rien à changer côté serveur. Ce champ est la seule
- * mesure de difficulté que le modèle porte déjà : un titre qui rapporte 500
- * points est, par construction, plus dur qu'un titre à 25.
- *
- * L'échelle des sertissures reprend celle d'une chancellerie médiévale, où
- * l'importance d'un acte se lisait à la matière de son sceau bien avant sa
- * couleur : cire nue pour l'ordinaire, filet gravé, double filet, sertissure de
- * métal, et bulle d'or pendante pour les actes solennels.
- *
- * `part` est le nombre de sceaux du degré, et il n'est pas décoratif : c'est lui
- * qui donne les rangées du losange (voir RANGEES). Les seuils sont calés sur les
- * 25 badges semés par schema.sql pour produire exactement 1/3/5/7/9. Ajouter un
- * badge sans revoir ces deux tableaux casserait la figure.
- *
- * Ordre décroissant : le premier seuil atteint gagne.
- */
-const RARETES = [
-  { id: 'souverain', seuil: 500, part: 1, label: 'Souverain', matiere: "bulle d'or" },
-  { id: 'tres-rare', seuil: 250, part: 3, label: 'Très rare', matiere: "sertissure d'argent" },
-  { id: 'rare', seuil: 125, part: 5, label: 'Rare', matiere: 'double filet' },
-  { id: 'peu-commun', seuil: 60, part: 7, label: 'Peu commun', matiere: 'filet gravé' },
-  { id: 'commun', seuil: 0, part: 9, label: 'Commun', matiere: 'cire simple' },
-];
-
-/**
- * Le losange, de la pointe haute à la pointe basse. Somme = 25.
- *
- * Les sceaux étant triés par rareté décroissante, chaque rangée du haut est
- * exactement un degré : 1 souverain à la pointe, puis 3 très rares, 5 rares,
- * 7 peu communs, et les 9 communs qui remplissent les trois dernières rangées.
- * La figure n'est donc pas un habillage posé sur la grille — elle EST la
- * pyramide de rareté : plus on monte, plus c'est rare, et plus c'est étroit.
- */
-const RANGEES = [1, 3, 5, 7, 5, 3, 1];
-
-const rareteDe = (points) =>
-  RARETES.find((r) => (points ?? 0) >= r.seuil) || RARETES[RARETES.length - 1];
-
-const rangDe = (points) => RARETES.findIndex((r) => r.id === rareteDe(points).id);
 
 const TrophyRoomPage = () => {
   const [badges, setBadges] = useState([]);
   const [loading, setLoading] = useState(true);
   const [apercu, setApercu] = useState(null);
+  // File de la carte de révélation. Vide = carte fermée.
+  const [carte, setCarte] = useState({ sceaux: [], mode: 'revelation' });
+  const { nonVus, marquerVus, rafraichir } = useTrophees();
 
   useEffect(() => {
     fetchGamification();
   }, []);
 
+  /**
+   * Les titres décrochés mais pas encore regardés se dévoilent à l'arrivée sur
+   * la salle — c'est la contrepartie de la lueur dans l'en-tête : elle promet
+   * quelque chose, la page doit le tenir.
+   *
+   * `marquerVus` est appelé ici, à l'ouverture, et non à la fermeture de la
+   * carte : un utilisateur qui ferme au premier titre a quand même été averti,
+   * et rouvrir la même fanfare à chaque visite serait pénible. Les sceaux
+   * restent consultables au clic.
+   */
+  useEffect(() => {
+    if (loading || nonVus.length === 0) return;
+    setCarte({ sceaux: nonVus, mode: 'revelation' });
+    marquerVus(nonVus.map((b) => b.id));
+  }, [loading, nonVus, marquerVus]);
+
   const fetchGamification = async () => {
     try {
       const response = await getGamificationSummary();
       setBadges(response.badges || []);
+      // L'en-tête et la page lisent la même collection : la rafraîchir ici
+      // évite que la lueur survive à la visite qui l'a résolue.
+      rafraichir();
     } catch (error) {
       console.error('Erreur lors du chargement des badges:', error);
     } finally {
@@ -230,6 +177,10 @@ const TrophyRoomPage = () => {
                             onMouseLeave={() => setApercu(null)}
                             onFocus={() => setApercu(badge)}
                             onBlur={() => setApercu(null)}
+                            onClick={() =>
+                              badge.earned && setCarte({ sceaux: [badge], mode: 'consultation' })
+                            }
+                            disabled={!badge.earned}
                             aria-label={`${nom}, ${rarete.label}. ${
                               badge.earned ? badge.description : "Ce sceau n'a pas encore été frappé."
                             }`}
@@ -297,6 +248,14 @@ const TrophyRoomPage = () => {
           <div className="empty-state">
             <p>Le forgeron n'a encore coulé aucun sceau.</p>
           </div>
+        )}
+
+        {carte.sceaux.length > 0 && (
+          <SceauRevelation
+            sceaux={carte.sceaux}
+            mode={carte.mode}
+            onClose={() => setCarte({ sceaux: [], mode: 'revelation' })}
+          />
         )}
       </div>
     </MainLayout>
