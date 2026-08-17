@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { getModules, getChapitres, getTheories } from '../../services/contentService';
 import { createTheorie, updateTheorie, deleteTheorie } from '../../services/adminService';
 import Editor from '../common/CodeEditor';
 import '../../styles/Editor.css';
 
-const TheorieManager = () => {
+const TheorieManager = ({ isActive = true }) => {
   const [theories, setTheories] = useState([]);
   const [chapitres, setChapitres] = useState([]);
   const [modules, setModules] = useState([]);
@@ -30,6 +30,19 @@ const TheorieManager = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  // Le composant n'est jamais démonté (cf. AdminPage) : sans ce rechargement,
+  // la liste des chapitres sélectionnables resterait celle du premier montage
+  // de la page d'administration.
+  const montageInitial = useRef(true);
+  useEffect(() => {
+    if (montageInitial.current) {
+      montageInitial.current = false;
+      return;
+    }
+    if (!isActive) return;
+    fetchData({ silencieux: true });
+  }, [isActive]);
 
   // Module du chapitre en cours d'édition, pour surligner la bonne entrée
   // dans la sidebar de la preview (même composant SidebarNavigation que sur
@@ -68,9 +81,11 @@ const TheorieManager = () => {
     return () => window.removeEventListener('message', handlePreviewReady);
   }, [previewWindow, formData.content, formData.title, currentModuleId]);
 
-  const fetchData = async () => {
+  // `silencieux` : recharge sans repasser en état de chargement, pour ne pas
+  // faire clignoter un spinner à chaque retour sur l'onglet.
+  const fetchData = async ({ silencieux = false } = {}) => {
     try {
-      setLoading(true);
+      if (!silencieux) setLoading(true);
       const [theoriesResponse, chapitresResponse, modulesResponse] = await Promise.all([
         getTheories(),
         getChapitres(false),

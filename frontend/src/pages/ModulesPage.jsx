@@ -32,7 +32,13 @@ const ModulesPage = () => {
         {/* Page Header */}
         <div className="page-header-simple">
           <h1>Parcours de formation JavaScript</h1>
-          <p>Découvrez la Programmation Orientée Objet avec JavaScript</p>
+          {/*
+            Ne pas réintroduire « Découvrez la Programmation Orientée Objet » :
+            hérité du projet jumeau apprentissage-POO-PHP, dont la POO était bien
+            le sujet. Ici elle n'est qu'un module sur neuf (cf. ROADMAP.md), et
+            annoncer le parcours ainsi désorientait dès la page d'entrée.
+          */}
+          <p>Neuf modules, des bases du langage aux frameworks modernes</p>
         </div>
 
         {/* Main content */}

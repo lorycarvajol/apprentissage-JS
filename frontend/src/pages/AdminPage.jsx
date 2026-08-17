@@ -53,18 +53,29 @@ const AdminPage = () => {
           Garder les composants montés élimine le refetch et le spinner
           après la première visite de chaque onglet, et conserve aussi la
           sélection en cours dans la sidebar quand on revient sur un onglet.
+
+          Contrepartie découverte à l'usage : un composant jamais démonté ne
+          recharge jamais ses données. Un module créé dans l'onglet Modules
+          n'apparaissait donc pas dans la liste déroulante du formulaire de
+          l'onglet Chapitres, qui affichait ce qu'elle avait chargé au premier
+          montage de la page. Il fallait recharger la page entière.
+
+          D'où `isActive` : chaque manager recharge ses données quand son
+          onglet redevient visible, mais *silencieusement* — sans repasser en
+          état de chargement, donc sans réintroduire le spinner que ce montage
+          permanent servait précisément à supprimer.
         */}
         <div className="admin-content" style={{ display: activeTab === 'modules' ? 'block' : 'none' }}>
-          <ModuleManager />
+          <ModuleManager isActive={activeTab === 'modules'} />
         </div>
         <div className="admin-content" style={{ display: activeTab === 'chapitres' ? 'block' : 'none' }}>
-          <ChapitreManager />
+          <ChapitreManager isActive={activeTab === 'chapitres'} />
         </div>
         <div className="admin-content" style={{ display: activeTab === 'theories' ? 'block' : 'none' }}>
-          <TheorieManager />
+          <TheorieManager isActive={activeTab === 'theories'} />
         </div>
         <div className="admin-content" style={{ display: activeTab === 'exercices' ? 'block' : 'none' }}>
-          <ExerciceManager />
+          <ExerciceManager isActive={activeTab === 'exercices'} />
         </div>
       </div>
     </MainLayout>

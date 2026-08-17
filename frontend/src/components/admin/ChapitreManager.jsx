@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { getModules, getChapitres } from '../../services/contentService';
 import { createChapitre, updateChapitre, deleteChapitre } from '../../services/adminService';
 
-const ChapitreManager = () => {
+const ChapitreManager = ({ isActive = true }) => {
   const [chapitres, setChapitres] = useState([]);
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -25,9 +25,25 @@ const ChapitreManager = () => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  // Le composant n'est jamais démonté (cf. AdminPage) : sans ce rechargement,
+  // la liste déroulante « Module » du formulaire resterait figée sur l'état de
+  // la base au premier montage de la page d'administration, et un module tout
+  // juste créé dans l'onglet voisin y serait introuvable.
+  const montageInitial = useRef(true);
+  useEffect(() => {
+    if (montageInitial.current) {
+      montageInitial.current = false;
+      return;
+    }
+    if (!isActive) return;
+    fetchData({ silencieux: true });
+  }, [isActive]);
+
+  // `silencieux` : recharge sans repasser en état de chargement, pour ne pas
+  // faire clignoter un spinner à chaque retour sur l'onglet.
+  const fetchData = async ({ silencieux = false } = {}) => {
     try {
-      setLoading(true);
+      if (!silencieux) setLoading(true);
       const [chapitresResponse, modulesResponse] = await Promise.all([
         getChapitres(false), // Inclure non publiés
         getModules(false) // Inclure non publiés

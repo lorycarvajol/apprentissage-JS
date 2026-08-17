@@ -1,9 +1,9 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { getModules, getChapitres, getExercices } from '../../services/contentService';
 import { createExercice, updateExercice, deleteExercice } from '../../services/adminService';
 import { runJs, runJsWithDom } from '../../utils/jsSandbox';
 
-const ExerciceManager = () => {
+const ExerciceManager = ({ isActive = true }) => {
   const [exercices, setExercices] = useState([]);
   const [chapitres, setChapitres] = useState([]);
   const [modules, setModules] = useState([]);
@@ -34,9 +34,24 @@ const ExerciceManager = () => {
     fetchData();
   }, []);
 
-  const fetchData = async () => {
+  // Le composant n'est jamais démonté (cf. AdminPage) : sans ce rechargement,
+  // la liste déroulante « Chapitre » du formulaire ignorerait tout chapitre
+  // créé depuis l'onglet voisin après le premier montage de la page.
+  const montageInitial = useRef(true);
+  useEffect(() => {
+    if (montageInitial.current) {
+      montageInitial.current = false;
+      return;
+    }
+    if (!isActive) return;
+    fetchData({ silencieux: true });
+  }, [isActive]);
+
+  // `silencieux` : recharge sans repasser en état de chargement, pour ne pas
+  // faire clignoter un spinner à chaque retour sur l'onglet.
+  const fetchData = async ({ silencieux = false } = {}) => {
     try {
-      setLoading(true);
+      if (!silencieux) setLoading(true);
       const [exercicesResponse, chapitresResponse, modulesResponse] = await Promise.all([
         getExercices(),
         getChapitres(false), // Inclure non publiés

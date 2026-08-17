@@ -1,8 +1,8 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { getModules } from '../../services/contentService';
 import { createModule, updateModule, deleteModule } from '../../services/adminService';
 
-const ModuleManager = () => {
+const ModuleManager = ({ isActive = true }) => {
   const [modules, setModules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -24,9 +24,25 @@ const ModuleManager = () => {
     fetchModules();
   }, []);
 
-  const fetchModules = async () => {
+  // Le composant n'est jamais démonté (cf. AdminPage) : sans ce rechargement,
+  // il afficherait indéfiniment les données du premier montage. Le premier
+  // passage est ignoré, le useEffect de montage ci-dessus s'en est déjà chargé.
+  const montageInitial = useRef(true);
+  useEffect(() => {
+    if (montageInitial.current) {
+      montageInitial.current = false;
+      return;
+    }
+    if (!isActive) return;
+    fetchModules({ silencieux: true });
+  }, [isActive]);
+
+  // `silencieux` : recharge sans repasser en état de chargement. C'est ce qui
+  // permet de rafraîchir à chaque retour sur l'onglet sans faire clignoter un
+  // spinner par-dessus une liste déjà affichée.
+  const fetchModules = async ({ silencieux = false } = {}) => {
     try {
-      setLoading(true);
+      if (!silencieux) setLoading(true);
       const response = await getModules(false); // Inclure non publiés
       setModules(response.modules || []);
     } catch (error) {
